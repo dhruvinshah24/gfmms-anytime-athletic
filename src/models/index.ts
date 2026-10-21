@@ -1,0 +1,17 @@
+export {
+  Member,
+  MembershipPlan,
+  Membership,
+  Payment,
+  Notification,
+  FitnessClass,
+  Attendance,
+  ClassBooking,
+  MembershipStatus,
+  PaymentPurpose,
+  PaymentStatus,
+  NotificationChannel,
+  DeliveryStatus,
+  CheckInMethod,
+  BookingStatus,
+} from '@prisma/client';

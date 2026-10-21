@@ -1,0 +1,159 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum MembershipStatus {
+  Pending
+  Active
+  Expiring
+  Expired
+  Cancelled
+}
+
+enum PaymentPurpose {
+  Registration
+  Renewal
+  ClassCharge
+}
+
+enum PaymentStatus {
+  Pending
+  Success
+  Failed
+}
+
+enum NotificationChannel {
+  Email
+  SMS
+  Push
+}
+
+enum DeliveryStatus {
+  Sent
+  Failed
+  Retrying
+}
+
+enum CheckInMethod {
+  QR
+  Manual
+}
+
+enum BookingStatus {
+  Booked
+  Waitlisted
+  Cancelled
+  Attended
+}
+
+model Member {
+  membershipID     String           @id @default(uuid())
+  fullName         String
+  dateOfBirth      DateTime         @db.Date
+  contactNumber    String
+  emailAddress     String           @unique
+  emergencyContact String
+  qrCodeIdentifier String?          @unique
+  membershipStatus MembershipStatus @default(Pending)
+  joinDate         DateTime         @default(now()) @db.Date
+  profilePhoto     String?
+
+  memberships   Membership[]
+  payments      Payment[]
+  notifications Notification[]
+  attendances   Attendance[]
+  classBookings ClassBooking[]
+}
+
+model MembershipPlan {
+  planID              String       @id @default(uuid())
+  name                String
+  durationDays        Int
+  price               Decimal      @db.Decimal(10, 2)
+  featureEntitlements String[]
+  activeStatus        Boolean      @default(true)
+
+  memberships Membership[]
+}
+
+model Membership {
+  membershipRecordID String           @id @default(uuid())
+  membershipID       String
+  planID             String
+  startDate          DateTime         @db.Date
+  endDate            DateTime         @db.Date
+  status             MembershipStatus @default(Pending)
+  autoRenewFlag      Boolean          @default(false)
+
+  member Member         @relation(fields: [membershipID], references: [membershipID], onDelete: Cascade)
+  plan   MembershipPlan @relation(fields: [planID], references: [planID])
+}
+
+model Payment {
+  paymentID                  String         @id @default(uuid())
+  membershipID               String
+  amount                     Decimal        @db.Decimal(10, 2)
+  paymentMethod              String
+  paymentPurpose             PaymentPurpose
+  status                     PaymentStatus
+  timestamp                  DateTime       @default(now())
+  transactionReferenceNumber String
+
+  member Member @relation(fields: [membershipID], references: [membershipID], onDelete: Cascade)
+}
+
+model Notification {
+  notificationID String              @id @default(uuid())
+  recipientID    String
+  category       String
+  channel        NotificationChannel
+  content        String
+  deliveryStatus DeliveryStatus
+  timestamp      DateTime            @default(now())
+
+  recipient Member @relation(fields: [recipientID], references: [membershipID], onDelete: Cascade)
+}
+
+model FitnessClass {
+  classID         String   @id @default(uuid())
+  name            String
+  category        String
+  trainerID       String
+  schedule        DateTime
+  durationMinutes Int
+  capacity        Int
+  currentBookings Int      @default(0)
+  isRecurring     Boolean  @default(false)
+  weeklyPattern   String?
+
+  bookings ClassBooking[]
+}
+
+model Attendance {
+  attendanceID         String        @id @default(uuid())
+  membershipID         String
+  checkInTimestamp     DateTime      @default(now())
+  checkOutTimestamp    DateTime?
+  checkInMethod        CheckInMethod
+  linkedClassBookingID String?
+
+  member             Member        @relation(fields: [membershipID], references: [membershipID], onDelete: Cascade)
+  linkedClassBooking ClassBooking? @relation(fields: [linkedClassBookingID], references: [bookingID])
+}
+
+model ClassBooking {
+  bookingID        String        @id @default(uuid())
+  membershipID     String
+  classID          String
+  bookingTimestamp DateTime      @default(now())
+  status           BookingStatus
+
+  member       Member       @relation(fields: [membershipID], references: [membershipID], onDelete: Cascade)
+  fitnessClass FitnessClass @relation(fields: [classID], references: [classID])
+  attendances  Attendance[]
+}
