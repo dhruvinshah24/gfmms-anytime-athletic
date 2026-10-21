@@ -1,0 +1,146 @@
+{
+  "info": {
+    "_postman_id": "gfmms-backend-api-collection",
+    "name": "GFMMS - Gym & Fitness Center Membership Management System API",
+    "description": "Postman Collection for GFMMS backend core modules (Module A: Member Registration & Membership, Module B: Attendance Check-in & Class Booking)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Module A - Member Registration & Membership",
+      "item": [
+        {
+          "name": "POST /members/register - Register Member (Success)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fullName\": \"Rahul Sharma\",\n  \"dateOfBirth\": \"1996-08-15\",\n  \"contactNumber\": \"+919876543299\",\n  \"emailAddress\": \"rahul.sharma@example.com\",\n  \"emergencyContact\": \"+919876543290\",\n  \"planID\": \"<PLAN_ID>\",\n  \"paymentMethod\": \"CreditCard\"\n}"
+            },
+            "url": { "raw": "http://localhost:3000/members/register", "protocol": "http", "host": ["localhost"], "port": "3000", "path": ["members", "register"] }
+          }
+        },
+        {
+          "name": "POST /members/register - Register Member (Payment Failed)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fullName\": \"Simulated Fail\",\n  \"dateOfBirth\": \"1998-01-01\",\n  \"contactNumber\": \"+919876543298\",\n  \"emailAddress\": \"fail.test@example.com\",\n  \"emergencyContact\": \"+919876543297\",\n  \"planID\": \"<PLAN_ID>\",\n  \"paymentMethod\": \"FAIL\"\n}"
+            },
+            "url": { "raw": "http://localhost:3000/members/register", "protocol": "http", "host": ["localhost"], "port": "3000", "path": ["members", "register"] }
+          }
+        },
+        {
+          "name": "POST /members/:id/login - Member Login",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"emailAddress\": \"alice.johnson@example.com\"\n}"
+            },
+            "url": { "raw": "http://localhost:3000/members/:id/login", "protocol": "http", "host": ["localhost"], "port": "3000", "path": ["members", ":id", "login"] }
+          }
+        },
+        {
+          "name": "GET /plans - Available Membership Plans",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "http://localhost:3000/plans", "protocol": "http", "host": ["localhost"], "port": "3000", "path": ["plans"] }
+          }
+        },
+        {
+          "name": "PATCH /memberships/:id/extend - Extend Membership",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"durationDays\": 30\n}"
+            },
+            "url": { "raw": "http://localhost:3000/memberships/:id/extend", "protocol": "http", "host": ["localhost"], "port": "3000", "path": ["memberships", ":id", "extend"] }
+          }
+        },
+        {
+          "name": "GET /memberships/check-grace/:membershipID - Check Grace Period",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "http://localhost:3000/memberships/check-grace/:membershipID", "protocol": "http", "host": ["localhost"], "port": "3000", "path": ["memberships", "check-grace", ":membershipID"] }
+          }
+        },
+        {
+          "name": "GET /payments/:id/receipt - Generate Receipt",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "http://localhost:3000/payments/:id/receipt", "protocol": "http", "host": ["localhost"], "port": "3000", "path": ["payments", ":id", "receipt"] }
+          }
+        },
+        {
+          "name": "GET /payments/:id/invoice - Generate Invoice",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "http://localhost:3000/payments/:id/invoice", "protocol": "http", "host": ["localhost"], "port": "3000", "path": ["payments", ":id", "invoice"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Module B - Attendance & Class Booking",
+      "item": [
+        {
+          "name": "POST /attendance/checkin - Record Check-In (QR/Manual)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"membershipID\": \"<MEMBERSHIP_ID>\",\n  \"method\": \"QR\"\n}"
+            },
+            "url": { "raw": "http://localhost:3000/attendance/checkin", "protocol": "http", "host": ["localhost"], "port": "3000", "path": ["attendance", "checkin"] }
+          }
+        },
+        {
+          "name": "POST /classes - Create Fitness Class",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Evening Pilates\",\n  \"category\": \"Core\",\n  \"trainerID\": \"TR-202\",\n  \"schedule\": \"2026-10-25T18:00:00.000Z\",\n  \"durationMinutes\": 60,\n  \"capacity\": 15,\n  \"isRecurring\": true\n}"
+            },
+            "url": { "raw": "http://localhost:3000/classes", "protocol": "http", "host": ["localhost"], "port": "3000", "path": ["classes"] }
+          }
+        },
+        {
+          "name": "POST /classes/:classId/book - Book Class",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"membershipID\": \"<MEMBERSHIP_ID>\"\n}"
+            },
+            "url": { "raw": "http://localhost:3000/classes/:classId/book", "protocol": "http", "host": ["localhost"], "port": "3000", "path": ["classes", ":classId", "book"] }
+          }
+        },
+        {
+          "name": "POST /bookings/:bookingId/cancel - Cancel Booking",
+          "request": {
+            "method": "POST",
+            "url": { "raw": "http://localhost:3000/bookings/:bookingId/cancel", "protocol": "http", "host": ["localhost"], "port": "3000", "path": ["bookings", ":bookingId", "cancel"] }
+          }
+        },
+        {
+          "name": "GET /classes/:classId/waitlist - View Waitlist",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "http://localhost:3000/classes/:classId/waitlist", "protocol": "http", "host": ["localhost"], "port": "3000", "path": ["classes", ":classId", "waitlist"] }
+          }
+        }
+      ]
+    }
+  ]
+}
