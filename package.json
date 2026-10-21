@@ -11,6 +11,7 @@
     "prisma:migrate": "prisma migrate dev",
     "prisma:push": "prisma db push",
     "seed": "ts-node prisma/seed.ts",
+    "audit": "ts-node scripts/e2e-audit.ts",
     "test": "jest --runInBand --detectOpenHandles"
   },
   "keywords": [
