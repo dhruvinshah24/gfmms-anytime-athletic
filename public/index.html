@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GFMMS – Gym & Fitness Center Membership Management System</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#eef2ff',
+              100: '#e0e7ff',
+              500: '#6366f1',
+              600: '#4f46e5',
+              700: '#4338ca',
+            }
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col font-sans">
+
+  <!-- Header -->
+  <header class="bg-slate-800/80 backdrop-blur border-b border-slate-700 sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-500 to-emerald-400 flex items-center justify-center shadow-lg shadow-indigo-500/20">
+          <i class="fa-solid fa-dumbbell text-slate-950 font-bold text-lg"></i>
+        </div>
+        <div>
+          <span class="font-bold text-lg tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 to-emerald-400">
+            GFMMS
+          </span>
+          <span class="hidden sm:inline-block text-xs text-slate-400 ml-2 border-l border-slate-600 pl-2">
+            Gym & Fitness Center Membership Management
+          </span>
+        </div>
+      </div>
+      
+      <div class="flex items-center space-x-4">
+        <div id="connectionStatus" class="flex items-center space-x-2 text-xs bg-slate-950/60 px-3 py-1.5 rounded-full border border-slate-700">
+          <span class="w-2 h-2 rounded-full bg-amber-400 animate-ping"></span>
+          <span class="text-slate-300">Checking Backend...</span>
+        </div>
+        <button onclick="refreshData()" class="p-2 rounded-lg bg-slate-700/50 hover:bg-slate-700 text-slate-300 text-sm transition" title="Refresh Data">
+          <i class="fa-solid fa-arrows-rotate"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Navigation Tabs -->
+  <nav class="bg-slate-800/40 border-b border-slate-700/60">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex space-x-2 overflow-x-auto py-2 scrollbar-none">
+      <button onclick="switchTab('overview')" id="tab-overview" class="tab-btn px-4 py-2 rounded-lg text-sm font-medium transition flex items-center space-x-2 bg-indigo-600 text-white shadow">
+        <i class="fa-solid fa-chart-pie"></i>
+        <span>Dashboard & Kiosk</span>
+      </button>
+      <button onclick="switchTab('register')" id="tab-register" class="tab-btn px-4 py-2 rounded-lg text-sm font-medium text-slate-400 hover:text-slate-200 transition flex items-center space-x-2">
+        <i class="fa-solid fa-user-plus"></i>
+        <span>Member Registration (Mod A)</span>
+      </button>
+      <button onclick="switchTab('classes')" id="tab-classes" class="tab-btn px-4 py-2 rounded-lg text-sm font-medium text-slate-400 hover:text-slate-200 transition flex items-center space-x-2">
+        <i class="fa-solid fa-calendar-days"></i>
+        <span>Classes & Waitlist (Mod B)</span>
+      </button>
+      <button onclick="switchTab('members')" id="tab-members" class="tab-btn px-4 py-2 rounded-lg text-sm font-medium text-slate-400 hover:text-slate-200 transition flex items-center space-x-2">
+        <i class="fa-solid fa-users"></i>
+        <span>Members Directory</span>
+      </button>
+      <button onclick="switchTab('payments')" id="tab-payments" class="tab-btn px-4 py-2 rounded-lg text-sm font-medium text-slate-400 hover:text-slate-200 transition flex items-center space-x-2">
+        <i class="fa-solid fa-receipt"></i>
+        <span>Payments & Invoices</span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Notification Toast Container -->
+  <div id="toastContainer" class="fixed bottom-4 right-4 z-50 space-y-2 pointer-events-none"></div>
+
+  <!-- Main Content Area -->
+  <main class="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 w-full">
+
+    <!-- TAB 1: OVERVIEW & ATTENDANCE KIOSK -->
+    <div id="view-overview" class="tab-content space-y-6">
+      
+      <!-- Metrics row -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div class="bg-slate-800/60 p-4 rounded-xl border border-slate-700/80 shadow-sm">
+          <div class="flex justify-between items-start">
+            <span class="text-xs text-slate-400 font-medium">Active Members</span>
+            <i class="fa-solid fa-user-check text-emerald-400"></i>
+          </div>
+          <div class="text-2xl font-bold mt-2" id="statActiveMembers">--</div>
+          <span class="text-xs text-emerald-400">Verified Subscriptions</span>
+        </div>
+        <div class="bg-slate-800/60 p-4 rounded-xl border border-slate-700/80 shadow-sm">
+          <div class="flex justify-between items-start">
+            <span class="text-xs text-slate-400 font-medium">Available Classes</span>
+            <i class="fa-solid fa-dumbbell text-indigo-400"></i>
+          </div>
+          <div class="text-2xl font-bold mt-2" id="statClasses">--</div>
+          <span class="text-xs text-indigo-400">Cardio & Strength</span>
+        </div>
+        <div class="bg-slate-800/60 p-4 rounded-xl border border-slate-700/80 shadow-sm">
+          <div class="flex justify-between items-start">
+            <span class="text-xs text-slate-400 font-medium">Active Plans</span>
+            <i class="fa-solid fa-tags text-cyan-400"></i>
+          </div>
+          <div class="text-2xl font-bold mt-2" id="statPlans">--</div>
+          <span class="text-xs text-cyan-400">Tier Options</span>
+        </div>
+        <div class="bg-slate-800/60 p-4 rounded-xl border border-slate-700/80 shadow-sm">
+          <div class="flex justify-between items-start">
+            <span class="text-xs text-slate-400 font-medium">Completed Payments</span>
+            <i class="fa-solid fa-indian-rupee-sign text-amber-400"></i>
+          </div>
+          <div class="text-2xl font-bold mt-2" id="statPayments">--</div>
+          <span class="text-xs text-amber-400">Settled Transactions</span>
+        </div>
+      </div>
+
+      <!-- Quick Check-in Kiosk Card -->
+      <div class="bg-slate-800/80 rounded-2xl border border-slate-700 p-6 shadow-xl relative overflow-hidden">
+        <div class="absolute -right-12 -top-12 w-48 h-48 bg-indigo-500/10 rounded-full blur-2xl"></div>
+        <div class="max-w-2xl">
+          <div class="flex items-center space-x-2 text-indigo-400 font-semibold text-xs tracking-wider uppercase">
+            <i class="fa-solid fa-qrcode"></i>
+            <span>Module B: Entrance Check-in Kiosk Simulator</span>
+          </div>
+          <h2 class="text-xl font-bold text-white mt-1">Gym Check-in Scanner</h2>
+          <p class="text-sm text-slate-400 mt-1">
+            Simulates member QR scanning or front-desk receptionist manual entry. Enforces status verification, 3-day grace period, 60-min duplicate blocking, and 15-min class attendance auto-linking.
+          </p>
+
+          <form onsubmit="handleCheckIn(event)" class="mt-6 space-y-4">
+            <div>
+              <label class="block text-xs font-medium text-slate-300 mb-1">Select Member (from Seed Data or Registered)</label>
+              <select id="kioskMemberSelect" onchange="syncKioskMemberInput(this.value)" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2.5 text-sm text-white focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                <option value="">-- Choose a member to simulate --</option>
+              </select>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-xs font-medium text-slate-300 mb-1">Membership ID / QR Identifier</label>
+                <input type="text" id="kioskMemberIdInput" placeholder="UUID or GFMMS-QR-..." required class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-indigo-500">
+              </div>
+              <div>
+                <label class="block text-xs font-medium text-slate-300 mb-1">Check-in Method</label>
+                <select id="kioskMethodInput" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                  <option value="QR">QR Code Entrance Kiosk</option>
+                  <option value="Manual">Manual Receptionist Entry</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="flex items-center space-x-3 pt-2">
+              <button type="submit" class="bg-gradient-to-r from-indigo-500 to-indigo-600 hover:from-indigo-600 hover:to-indigo-700 text-white font-medium px-5 py-2.5 rounded-lg text-sm shadow-md transition flex items-center space-x-2">
+                <i class="fa-solid fa-arrow-right-to-bracket"></i>
+                <span>Simulate Check-in</span>
+              </button>
+              <button type="button" onclick="quickCheckInBob()" class="bg-slate-700 hover:bg-slate-600 text-slate-200 px-3.5 py-2.5 rounded-lg text-xs font-medium transition">
+                Test Active (Bob)
+              </button>
+              <button type="button" onclick="quickCheckInCharlie()" class="bg-rose-900/40 hover:bg-rose-900/60 border border-rose-700 text-rose-300 px-3.5 py-2.5 rounded-lg text-xs font-medium transition">
+                Test Expired (Charlie)
+              </button>
+            </div>
+          </form>
+
+          <!-- Live Check-in Result Box -->
+          <div id="checkInResultBox" class="mt-5 hidden p-4 rounded-xl text-sm border transition"></div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- TAB 2: MEMBER REGISTRATION (MODULE A) -->
+    <div id="view-register" class="tab-content hidden space-y-6">
+      <div class="bg-slate-800/80 rounded-2xl border border-slate-700 p-6 shadow-xl">
+        <div class="flex items-center space-x-2 text-indigo-400 font-semibold text-xs tracking-wider uppercase">
+          <i class="fa-solid fa-id-card"></i>
+          <span>Module A: Member Registration Flow</span>
+        </div>
+        <h2 class="text-xl font-bold text-white mt-1">New Member Registration & Payment</h2>
+        <p class="text-sm text-slate-400 mt-1">
+          Executes <code class="text-indigo-300">Member.register()</code>, validates unique email/contact, verifies active plan, triggers online payment gateway, generates unique QR code, and sends a Welcome Notification.
+        </p>
+
+        <form onsubmit="handleRegister(event)" class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-medium text-slate-300 mb-1">Full Name</label>
+            <input type="text" id="regFullName" required placeholder="e.g. Rahul Sharma" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-indigo-500">
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-slate-300 mb-1">Date of Birth</label>
+            <input type="date" id="regDOB" required value="1995-05-15" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-indigo-500">
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-slate-300 mb-1">Contact Number</label>
+            <input type="text" id="regContact" required placeholder="+919876543201" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-indigo-500">
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-slate-300 mb-1">Email Address</label>
+            <input type="email" id="regEmail" required placeholder="rahul@example.com" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-indigo-500">
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-slate-300 mb-1">Emergency Contact</label>
+            <input type="text" id="regEmergency" required placeholder="+919876543200" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-indigo-500">
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-slate-300 mb-1">Membership Plan</label>
+            <select id="regPlanSelect" required class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-indigo-500">
+              <option value="">-- Loading available plans --</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-slate-300 mb-1">Payment Method</label>
+            <select id="regPaymentMethod" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-indigo-500">
+              <option value="CreditCard">Credit Card</option>
+              <option value="DebitCard">Debit Card</option>
+              <option value="UPI">UPI</option>
+            </select>
+          </div>
+          <div class="flex items-center space-x-2 pt-6">
+            <input type="checkbox" id="regFailPayment" class="rounded bg-slate-900 border-slate-700 text-rose-500 focus:ring-rose-500 w-4 h-4">
+            <label for="regFailPayment" class="text-xs text-rose-300 font-medium">
+              Simulate Payment Failure (Alternative Failure Branch)
+            </label>
+          </div>
+
+          <div class="col-span-full pt-4">
+            <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white font-medium px-6 py-2.5 rounded-lg text-sm transition shadow-lg shadow-indigo-600/30 flex items-center space-x-2">
+              <i class="fa-solid fa-check"></i>
+              <span>Register & Process Payment</span>
+            </button>
+          </div>
+        </form>
+
+        <!-- Registration Result Container -->
+        <div id="regResultBox" class="mt-6 hidden p-5 rounded-xl border transition"></div>
+      </div>
+    </div>
+
+    <!-- TAB 3: CLASSES & WAITLIST (MODULE B) -->
+    <div id="view-classes" class="tab-content hidden space-y-6">
+      <div class="flex items-center justify-between">
+        <div>
+          <h2 class="text-xl font-bold text-white">Fitness Classes & Booking</h2>
+          <p class="text-sm text-slate-400">Class booking capacity enforcement, waitlist queueing, and promotion logic.</p>
+        </div>
+      </div>
+
+      <!-- Classes Grid -->
+      <div id="classesListContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+        <div class="p-6 bg-slate-800 rounded-xl text-center text-slate-400">Loading classes...</div>
+      </div>
+    </div>
+
+    <!-- TAB 4: MEMBERS DIRECTORY -->
+    <div id="view-members" class="tab-content hidden space-y-6">
+      <div class="flex items-center justify-between">
+        <div>
+          <h2 class="text-xl font-bold text-white">Members Directory</h2>
+          <p class="text-sm text-slate-400">Enrolled gym members and their subscription status.</p>
+        </div>
+      </div>
+
+      <div class="bg-slate-800/80 rounded-xl border border-slate-700 overflow-hidden shadow">
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-sm text-slate-300">
+            <thead class="bg-slate-900/60 text-xs text-slate-400 uppercase font-semibold border-b border-slate-700">
+              <tr>
+                <th class="px-4 py-3">Member</th>
+                <th class="px-4 py-3">Status</th>
+                <th class="px-4 py-3">Contact</th>
+                <th class="px-4 py-3">QR Code Identifier</th>
+                <th class="px-4 py-3">Membership End</th>
+                <th class="px-4 py-3 text-right">Action</th>
+              </tr>
+            </thead>
+            <tbody id="membersTableBody" class="divide-y divide-slate-700/60">
+              <tr>
+                <td colspan="6" class="px-4 py-6 text-center text-slate-400">Loading members...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 5: PAYMENTS & INVOICES -->
+    <div id="view-payments" class="tab-content hidden space-y-6">
+      <div>
+        <h2 class="text-xl font-bold text-white">Financial Transactions & Invoices</h2>
+        <p class="text-sm text-slate-400">Settled online and manual payments, receipts, and invoices.</p>
+      </div>
+
+      <div class="bg-slate-800/80 rounded-xl border border-slate-700 overflow-hidden shadow">
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-sm text-slate-300">
+            <thead class="bg-slate-900/60 text-xs text-slate-400 uppercase font-semibold border-b border-slate-700">
+              <tr>
+                <th class="px-4 py-3">Txn Reference</th>
+                <th class="px-4 py-3">Member</th>
+                <th class="px-4 py-3">Amount</th>
+                <th class="px-4 py-3">Purpose</th>
+                <th class="px-4 py-3">Status</th>
+                <th class="px-4 py-3">Timestamp</th>
+                <th class="px-4 py-3 text-right">Receipt / Invoice</th>
+              </tr>
+            </thead>
+            <tbody id="paymentsTableBody" class="divide-y divide-slate-700/60">
+              <tr>
+                <td colspan="7" class="px-4 py-6 text-center text-slate-400">Loading payments...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Reusable Modal (Receipt / Invoice / Waitlist) -->
+  <div id="appModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-slate-800 border border-slate-700 rounded-2xl max-w-lg w-full p-6 shadow-2xl relative">
+      <button onclick="closeModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white">
+        <i class="fa-solid fa-xmark text-lg"></i>
+      </button>
+      <div id="modalContent"></div>
+    </div>
+  </div>
+
+  <script>
+    let appState = {
+      members: [],
+      plans: [],
+      classes: [],
+      payments: []
+    };
+
+    async function checkHealth() {
+      try {
+        const res = await fetch('/health');
+        if (res.ok) {
+          document.getElementById('connectionStatus').innerHTML = `
+            <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+            <span class="text-emerald-300 font-medium">Backend Live (Port 3000)</span>
+          `;
+        }
+      } catch (e) {
+        document.getElementById('connectionStatus').innerHTML = `
+          <span class="w-2 h-2 rounded-full bg-rose-500"></span>
+          <span class="text-rose-400 font-medium">Backend Disconnected</span>
+        `;
+      }
+    }
+
+    async function loadPlans() {
+      try {
+        const res = await fetch('/plans');
+        const json = await res.json();
+        appState.plans = json.data || [];
+        document.getElementById('statPlans').innerText = appState.plans.length;
+
+        const select = document.getElementById('regPlanSelect');
+        select.innerHTML = appState.plans.map(p => `
+          <option value="${p.planID}">${p.name} - ₹${p.price} (${p.durationDays} days)</option>
+        `).join('');
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
+    async function loadMembers() {
+      try {
+        const res = await fetch('/members');
+        const json = await res.json();
+        appState.members = json.data || [];
+        
+        const activeCount = appState.members.filter(m => m.membershipStatus === 'Active').length;
+        document.getElementById('statActiveMembers').innerText = activeCount;
+
+        // Populate Kiosk dropdown
+        const kioskSelect = document.getElementById('kioskMemberSelect');
+        kioskSelect.innerHTML = `<option value="">-- Choose a member to simulate --</option>` +
+          appState.members.map(m => `
+            <option value="${m.membershipID}">[${m.membershipStatus}] ${m.fullName} (${m.emailAddress})</option>
+          `).join('');
+
+        // Populate Members Table
+        const tbody = document.getElementById('membersTableBody');
+        tbody.innerHTML = appState.members.map(m => {
+          const statusClass = m.membershipStatus === 'Active' ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30' :
+                              m.membershipStatus === 'Expired' ? 'bg-rose-500/20 text-rose-300 border-rose-500/30' :
+                              'bg-amber-500/20 text-amber-300 border-amber-500/30';
+          const endDate = m.memberships?.[0]?.endDate ? new Date(m.memberships[0].endDate).toLocaleDateString() : 'None';
+          return `
+            <tr class="hover:bg-slate-700/30 transition">
+              <td class="px-4 py-3 font-medium text-white">${m.fullName}</td>
+              <td class="px-4 py-3">
+                <span class="px-2 py-0.5 rounded-full text-xs font-semibold border ${statusClass}">${m.membershipStatus}</span>
+              </td>
+              <td class="px-4 py-3 text-xs text-slate-400">${m.contactNumber}</td>
+              <td class="px-4 py-3 font-mono text-xs text-indigo-300">${m.qrCodeIdentifier || 'Not Generated'}</td>
+              <td class="px-4 py-3 text-xs">${endDate}</td>
+              <td class="px-4 py-3 text-right">
+                <button onclick="selectForKiosk('${m.membershipID}')" class="px-2.5 py-1 text-xs rounded bg-slate-700 hover:bg-slate-600 text-slate-200 transition">
+                  Check-in Kiosk
+                </button>
+              </td>
+            </tr>
+          `;
+        }).join('');
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
+    async function loadClasses() {
+      try {
+        const res = await fetch('/classes');
+        const json = await res.json();
+        appState.classes = json.data || [];
+        document.getElementById('statClasses').innerText = appState.classes.length;
+
+        const container = document.getElementById('classesListContainer');
+        container.innerHTML = appState.classes.map(c => {
+          const pct = Math.min(100, Math.round((c.currentBookings / c.capacity) * 100));
+          const isFull = c.currentBookings >= c.capacity;
+          const badgeClass = isFull ? 'bg-amber-500/20 text-amber-300 border-amber-500/30' : 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30';
+          const badgeText = isFull ? 'Full (Waitlist Available)' : `${c.capacity - c.currentBookings} Seats Left`;
+
+          return `
+            <div class="bg-slate-800/80 border border-slate-700 rounded-xl p-5 shadow flex flex-col justify-between">
+              <div>
+                <div class="flex justify-between items-start">
+                  <div>
+                    <span class="text-xs font-semibold text-indigo-400 tracking-wider uppercase">${c.category}</span>
+                    <h3 class="text-lg font-bold text-white mt-0.5">${c.name}</h3>
+                  </div>
+                  <span class="px-2 py-0.5 rounded-full text-xs font-medium border ${badgeClass}">
+                    ${badgeText}
+                  </span>
+                </div>
+                <div class="text-xs text-slate-400 mt-2 space-y-1">
+                  <div><i class="fa-regular fa-clock w-4"></i> ${new Date(c.schedule).toLocaleString()} (${c.durationMinutes} mins)</div>
+                  <div><i class="fa-solid fa-user-tie w-4"></i> Trainer ID: ${c.trainerID}</div>
+                </div>
+
+                <!-- Capacity Bar -->
+                <div class="mt-4">
+                  <div class="flex justify-between text-xs mb-1">
+                    <span class="text-slate-400">Bookings</span>
+                    <span class="font-medium text-slate-200">${c.currentBookings} / ${c.capacity}</span>
+                  </div>
+                  <div class="w-full bg-slate-900 rounded-full h-2 overflow-hidden">
+                    <div class="bg-indigo-500 h-2 rounded-full" style="width: ${pct}%"></div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="mt-5 pt-3 border-t border-slate-700/60 flex space-x-2">
+                <button onclick="promptBookClass('${c.classID}', '${c.name}', ${isFull})" class="flex-1 ${isFull ? 'bg-amber-600 hover:bg-amber-700' : 'bg-indigo-600 hover:bg-indigo-700'} text-white py-2 rounded-lg text-xs font-medium transition flex items-center justify-center space-x-1">
+                  <i class="fa-solid ${isFull ? 'fa-hourglass-half' : 'fa-check'}"></i>
+                  <span>${isFull ? 'Join Waitlist' : 'Book Seat'}</span>
+                </button>
+                <button onclick="viewWaitlist('${c.classID}', '${c.name}')" class="px-3 py-2 bg-slate-700 hover:bg-slate-600 text-slate-200 rounded-lg text-xs transition" title="View Waitlist">
+                  <i class="fa-solid fa-list-ol"></i>
+                </button>
+              </div>
+            </div>
+          `;
+        }).join('');
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
+    async function loadPayments() {
+      try {
+        const res = await fetch('/payments');
+        const json = await res.json();
+        appState.payments = json.data || [];
+        document.getElementById('statPayments').innerText = appState.payments.length;
+
+        const tbody = document.getElementById('paymentsTableBody');
+        tbody.innerHTML = appState.payments.map(p => {
+          const statusClass = p.status === 'Success' ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30' :
+                              p.status === 'Failed' ? 'bg-rose-500/20 text-rose-300 border-rose-500/30' :
+                              'bg-amber-500/20 text-amber-300 border-amber-500/30';
+          const memberName = p.member?.fullName || p.membershipID.substring(0, 8);
+          return `
+            <tr class="hover:bg-slate-700/30 transition font-mono text-xs">
+              <td class="px-4 py-3 text-indigo-300">${p.transactionReferenceNumber}</td>
+              <td class="px-4 py-3 font-sans text-white">${memberName}</td>
+              <td class="px-4 py-3 font-semibold text-emerald-400">₹${p.amount}</td>
+              <td class="px-4 py-3 font-sans">${p.paymentPurpose}</td>
+              <td class="px-4 py-3"><span class="px-2 py-0.5 rounded-full border ${statusClass}">${p.status}</span></td>
+              <td class="px-4 py-3 text-slate-400 font-sans">${new Date(p.timestamp).toLocaleTimeString()}</td>
+              <td class="px-4 py-3 text-right space-x-1 font-sans">
+                <button onclick="viewReceipt('${p.paymentID}')" class="px-2 py-1 bg-slate-700 hover:bg-slate-600 text-slate-200 rounded text-xs transition">Receipt</button>
+                <button onclick="viewInvoice('${p.paymentID}')" class="px-2 py-1 bg-indigo-600/50 hover:bg-indigo-600 text-white rounded text-xs transition">Invoice</button>
+              </td>
+            </tr>
+          `;
+        }).join('');
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
+    async function handleCheckIn(event) {
+      event.preventDefault();
+      const membershipID = document.getElementById('kioskMemberIdInput').value.trim();
+      const method = document.getElementById('kioskMethodInput').value;
+      const resultBox = document.getElementById('checkInResultBox');
+
+      try {
+        const res = await fetch('/attendance/checkin', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ membershipID, method })
+        });
+        const json = await res.json();
+
+        resultBox.classList.remove('hidden');
+        if (res.ok && json.status === 'success') {
+          const autoAttended = json.data.linkedClassBookingID ? 
+            `<div class="mt-2 text-xs font-semibold text-emerald-300 bg-emerald-950/60 p-2 rounded border border-emerald-800"><i class="fa-solid fa-link mr-1"></i> Auto-Attended Linked Class Booking: ${json.data.linkedClassBookingID}</div>` : '';
+          
+          resultBox.className = 'mt-5 p-4 rounded-xl text-sm border bg-emerald-950/40 border-emerald-700 text-emerald-200';
+          resultBox.innerHTML = `
+            <div class="font-bold flex items-center space-x-2">
+              <i class="fa-solid fa-circle-check text-emerald-400 text-lg"></i>
+              <span>Access Granted: ${json.data.message}</span>
+            </div>
+            <div class="text-xs text-emerald-300/80 mt-1">Attendance ID: ${json.data.attendance.attendanceID} | Timestamp: ${new Date(json.data.attendance.checkInTimestamp).toLocaleTimeString()}</div>
+            ${autoAttended}
+          `;
+          showToast('Check-in recorded successfully!', 'success');
+        } else {
+          resultBox.className = 'mt-5 p-4 rounded-xl text-sm border bg-rose-950/40 border-rose-700 text-rose-200';
+          resultBox.innerHTML = `
+            <div class="font-bold flex items-center space-x-2">
+              <i class="fa-solid fa-triangle-exclamation text-rose-400 text-lg"></i>
+              <span>Access Denied</span>
+            </div>
+            <div class="text-xs text-rose-300 mt-1">${json.message || 'Check-in rejected'}</div>
+          `;
+          showToast(json.message || 'Check-in denied', 'error');
+        }
+      } catch (e) {
+        showToast('Error communicating with backend', 'error');
+      }
+      refreshData();
+    }
+
+    async function handleRegister(event) {
+      event.preventDefault();
+      const failPayment = document.getElementById('regFailPayment').checked;
+      const resultBox = document.getElementById('regResultBox');
+
+      const payload = {
+        fullName: document.getElementById('regFullName').value.trim(),
+        dateOfBirth: document.getElementById('regDOB').value,
+        contactNumber: document.getElementById('regContact').value.trim(),
+        emailAddress: document.getElementById('regEmail').value.trim(),
+        emergencyContact: document.getElementById('regEmergency').value.trim(),
+        planID: document.getElementById('regPlanSelect').value,
+        paymentMethod: document.getElementById('regPaymentMethod').value,
+        failPayment: failPayment
+      };
+
+      try {
+        const res = await fetch('/members/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const json = await res.json();
+
+        resultBox.classList.remove('hidden');
+        if (res.ok && json.status === 'success') {
+          resultBox.className = 'mt-6 p-5 rounded-xl border bg-emerald-950/40 border-emerald-700 text-emerald-200';
+          resultBox.innerHTML = `
+            <div class="flex justify-between items-start">
+              <div>
+                <h3 class="font-bold text-base text-white flex items-center space-x-2">
+                  <i class="fa-solid fa-circle-check text-emerald-400"></i>
+                  <span>Registration & Payment Successful!</span>
+                </h3>
+                <p class="text-xs text-emerald-300/80 mt-1">Membership activated for ${payload.fullName}.</p>
+              </div>
+              <span class="px-2.5 py-1 bg-emerald-500/20 text-emerald-300 rounded font-mono text-xs border border-emerald-500/30">Active</span>
+            </div>
+            
+            <div class="mt-4 p-4 bg-slate-900 rounded-lg border border-slate-700 font-mono text-xs space-y-1 text-slate-300">
+              <div><strong>Membership ID:</strong> ${json.data.member.membershipID}</div>
+              <div><strong>QR Identifier:</strong> <span class="text-indigo-400">${json.data.qrCodeIdentifier}</span></div>
+              <div><strong>Payment Ref:</strong> ${json.data.payment.transactionReferenceNumber} (₹${json.data.payment.amount})</div>
+              <div><strong>Valid Until:</strong> ${new Date(json.data.membership.endDate).toLocaleDateString()}</div>
+            </div>
+
+            <div class="mt-3 text-xs text-slate-400 bg-slate-800 p-3 rounded border border-slate-700">
+              <i class="fa-solid fa-envelope text-indigo-400 mr-1"></i>
+              <strong>Welcome Email Dispatched:</strong> "Welcome to GFMMS! Your Membership ID is ${json.data.member.membershipID}."
+            </div>
+          `;
+          showToast('Member registered and activated!', 'success');
+        } else {
+          resultBox.className = 'mt-6 p-5 rounded-xl border bg-rose-950/40 border-rose-700 text-rose-200';
+          resultBox.innerHTML = `
+            <h3 class="font-bold text-base text-white flex items-center space-x-2">
+              <i class="fa-solid fa-triangle-exclamation text-rose-400"></i>
+              <span>Registration Incomplete</span>
+            </h3>
+            <p class="text-xs text-rose-300 mt-1">${json.failureReason || json.message || 'Payment failed or validation error'}</p>
+            <div class="mt-2 text-xs text-slate-400">No active membership was created as specified in the sequence diagram.</div>
+          `;
+          showToast(json.failureReason || 'Registration failed', 'error');
+        }
+      } catch (e) {
+        showToast('Server error during registration', 'error');
+      }
+      refreshData();
+    }
+
+    async function promptBookClass(classID, className, isFull) {
+      if (appState.members.length === 0) {
+        alert('No members available. Please register or seed members first.');
+        return;
+      }
+
+      const memberOptions = appState.members
+        .filter(m => m.membershipStatus === 'Active')
+        .map(m => `<option value="${m.membershipID}">${m.fullName} (${m.emailAddress})</option>`).join('');
+
+      const content = `
+        <h3 class="text-lg font-bold text-white mb-2">Book Class: ${className}</h3>
+        <p class="text-xs text-slate-400 mb-4">
+          ${isFull ? 'Notice: This class is at capacity. Booking will place the member on the Waitlist.' : 'Seats are open! Booking will confirm the reservation.'}
+        </p>
+
+        <div class="space-y-4">
+          <div>
+            <label class="block text-xs font-medium text-slate-300 mb-1">Select Active Member</label>
+            <select id="modalMemberSelect" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-indigo-500">
+              ${memberOptions}
+            </select>
+          </div>
+          <button onclick="executeBookClass('${classID}')" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 rounded-lg text-sm transition">
+            Confirm Booking
+          </button>
+        </div>
+      `;
+      openModal(content);
+    }
+
+    async function executeBookClass(classID) {
+      const membershipID = document.getElementById('modalMemberSelect').value;
+      try {
+        const res = await fetch(`/classes/${classID}/book`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ membershipID })
+        });
+        const json = await res.json();
+        closeModal();
+
+        if (res.ok && json.status === 'success') {
+          showToast(`Success: ${json.data.status} status assigned!`, 'success');
+        } else {
+          showToast(json.message || 'Booking failed', 'error');
+        }
+      } catch (e) {
+        showToast('Error booking class', 'error');
+      }
+      refreshData();
+    }
+
+    async function viewWaitlist(classID, className) {
+      try {
+        const res = await fetch(`/classes/${classID}/waitlist`);
+        const json = await res.json();
+        const waitlist = json.data || [];
+
+        const rows = waitlist.length === 0 ? 
+          `<p class="text-xs text-slate-400 py-4 text-center">No members currently on the waitlist for this class.</p>` :
+          `<div class="space-y-2 max-h-60 overflow-y-auto pr-1">` +
+          waitlist.map((w, idx) => `
+            <div class="p-3 bg-slate-900 rounded-lg border border-slate-700 text-xs flex justify-between items-center">
+              <div>
+                <span class="font-bold text-indigo-400">#${idx + 1}</span>
+                <span class="text-white ml-2 font-medium">${w.member?.fullName || w.membershipID}</span>
+                <div class="text-slate-400 text-[10px] ml-5">Timestamp: ${new Date(w.bookingTimestamp).toLocaleTimeString()}</div>
+              </div>
+              <span class="px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 text-[10px] border border-amber-500/30">Waitlisted</span>
+            </div>
+          `).join('') + `</div>`;
+
+        openModal(`
+          <h3 class="text-lg font-bold text-white mb-1">Waitlist Queue</h3>
+          <p class="text-xs text-slate-400 mb-4">${className} (FIFO Order)</p>
+          ${rows}
+        `);
+      } catch (e) {
+        showToast('Error fetching waitlist', 'error');
+      }
+    }
+
+    async function viewReceipt(paymentID) {
+      try {
+        const res = await fetch(`/payments/${paymentID}/receipt`);
+        const json = await res.json();
+        const r = json.data;
+        openModal(`
+          <div class="text-center pb-3 border-b border-slate-700">
+            <i class="fa-solid fa-receipt text-3xl text-emerald-400 mb-1"></i>
+            <h3 class="text-lg font-bold text-white">Digital Payment Receipt</h3>
+            <p class="text-xs font-mono text-slate-400">${r.receiptNumber}</p>
+          </div>
+          <div class="py-4 space-y-2 text-xs font-mono text-slate-300">
+            <div class="flex justify-between"><span>Member:</span><strong class="text-white font-sans">${r.member?.fullName}</strong></div>
+            <div class="flex justify-between"><span>Amount Paid:</span><strong class="text-emerald-400 text-sm">₹${r.amountPaid}</strong></div>
+            <div class="flex justify-between"><span>Payment Method:</span><span>${r.paymentMethod}</span></div>
+            <div class="flex justify-between"><span>Purpose:</span><span>${r.purpose}</span></div>
+            <div class="flex justify-between"><span>Status:</span><span class="text-emerald-400">${r.status}</span></div>
+            <div class="flex justify-between"><span>Txn Reference:</span><span class="text-indigo-300">${r.transactionReference}</span></div>
+          </div>
+          <button onclick="closeModal()" class="w-full bg-slate-700 hover:bg-slate-600 text-white py-2 rounded-lg text-xs font-medium">Close</button>
+        `);
+      } catch (e) {
+        showToast('Failed to load receipt', 'error');
+      }
+    }
+
+    async function viewInvoice(paymentID) {
+      try {
+        const res = await fetch(`/payments/${paymentID}/invoice`);
+        const json = await res.json();
+        const inv = json.data;
+        openModal(`
+          <div class="border-b border-slate-700 pb-3">
+            <div class="flex justify-between items-start">
+              <div>
+                <h3 class="text-base font-bold text-white">TAX INVOICE</h3>
+                <p class="text-xs font-mono text-slate-400">${inv.invoiceNumber}</p>
+              </div>
+              <span class="text-xs px-2 py-0.5 rounded bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">Official</span>
+            </div>
+          </div>
+          <div class="py-4 text-xs font-mono space-y-2 text-slate-300">
+            <div class="flex justify-between"><span>Billed To:</span><strong class="text-white font-sans">${inv.billedTo?.fullName}</strong></div>
+            <div class="flex justify-between"><span>Date:</span><span>${new Date(inv.invoiceDate).toLocaleDateString()}</span></div>
+            <div class="flex justify-between"><span>Subtotal (Base):</span><span>₹${inv.subtotal}</span></div>
+            <div class="flex justify-between"><span>Applicable Tax (${inv.taxRate}):</span><span>₹${inv.taxAmount}</span></div>
+            <div class="flex justify-between pt-2 border-t border-slate-700 text-sm font-bold text-white">
+              <span>Total Amount:</span><span class="text-emerald-400">₹${inv.totalAmount}</span>
+            </div>
+          </div>
+          <button onclick="closeModal()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2 rounded-lg text-xs font-medium">Download / Close</button>
+        `);
+      } catch (e) {
+        showToast('Failed to load invoice', 'error');
+      }
+    }
+
+    function syncKioskMemberInput(val) {
+      document.getElementById('kioskMemberIdInput').value = val;
+    }
+
+    function selectForKiosk(memberId) {
+      switchTab('overview');
+      document.getElementById('kioskMemberSelect').value = memberId;
+      document.getElementById('kioskMemberIdInput').value = memberId;
+    }
+
+    function quickCheckInBob() {
+      const bob = appState.members.find(m => m.fullName.includes('Bob'));
+      if (bob) {
+        selectForKiosk(bob.membershipID);
+      }
+    }
+
+    function quickCheckInCharlie() {
+      const charlie = appState.members.find(m => m.fullName.includes('Charlie'));
+      if (charlie) {
+        selectForKiosk(charlie.membershipID);
+      }
+    }
+
+    function switchTab(tabName) {
+      document.querySelectorAll('.tab-btn').forEach(b => {
+        b.className = 'tab-btn px-4 py-2 rounded-lg text-sm font-medium text-slate-400 hover:text-slate-200 transition flex items-center space-x-2';
+      });
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.add('hidden'));
+
+      document.getElementById(`tab-${tabName}`).className = 'tab-btn px-4 py-2 rounded-lg text-sm font-medium transition flex items-center space-x-2 bg-indigo-600 text-white shadow';
+      document.getElementById(`view-${tabName}`).classList.remove('hidden');
+    }
+
+    function openModal(contentHtml) {
+      document.getElementById('modalContent').innerHTML = contentHtml;
+      document.getElementById('appModal').classList.remove('hidden');
+    }
+
+    function closeModal() {
+      document.getElementById('appModal').classList.add('hidden');
+    }
+
+    function showToast(message, type = 'info') {
+      const container = document.getElementById('toastContainer');
+      const toast = document.createElement('div');
+      const bg = type === 'success' ? 'bg-emerald-600 text-white' : type === 'error' ? 'bg-rose-600 text-white' : 'bg-slate-700 text-white';
+      const icon = type === 'success' ? 'fa-circle-check' : type === 'error' ? 'fa-triangle-exclamation' : 'fa-circle-info';
+      
+      toast.className = `${bg} px-4 py-2.5 rounded-xl shadow-xl flex items-center space-x-2 text-xs font-medium pointer-events-auto transform transition duration-300 translate-y-2 opacity-0`;
+      toast.innerHTML = `<i class="fa-solid ${icon}"></i><span>${message}</span>`;
+      container.appendChild(toast);
+
+      setTimeout(() => {
+        toast.classList.remove('translate-y-2', 'opacity-0');
+      }, 50);
+
+      setTimeout(() => {
+        toast.classList.add('opacity-0');
+        setTimeout(() => toast.remove(), 300);
+      }, 4000);
+    }
+
+    async function refreshData() {
+      await Promise.all([checkHealth(), loadPlans(), loadMembers(), loadClasses(), loadPayments()]);
+    }
+
+    // Initial Load
+    refreshData();
+  </script>
+</body>
+</html>

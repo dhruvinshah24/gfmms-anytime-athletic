@@ -220,6 +220,26 @@ export class MemberService {
   }
 
   /**
+   * List all members (for dashboard and administrative views)
+   */
+  async listMembers() {
+    return prisma.member.findMany({
+      orderBy: { joinDate: 'desc' },
+      include: {
+        memberships: {
+          orderBy: { endDate: 'desc' },
+          take: 1,
+          include: { plan: true },
+        },
+        attendances: {
+          orderBy: { checkInTimestamp: 'desc' },
+          take: 5,
+        },
+      },
+    });
+  }
+
+  /**
    * Get member by ID
    */
   async getMemberById(membershipID: string) {

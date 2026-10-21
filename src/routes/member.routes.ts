@@ -3,6 +3,9 @@ import { memberController } from '../controllers/member.controller';
 
 const router = Router();
 
+// GET /members -> list all members
+router.get('/', memberController.listMembers);
+
 // POST /members/register -> Member.register()
 router.post('/register', memberController.register);
 

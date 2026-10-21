@@ -181,6 +181,22 @@ export class PaymentService {
 
     return refundRecord;
   }
+  /**
+   * Helper: list all payments
+   */
+  async listPayments() {
+    return prisma.payment.findMany({
+      orderBy: { timestamp: 'desc' },
+      include: {
+        member: {
+          select: {
+            fullName: true,
+            emailAddress: true,
+          },
+        },
+      },
+    });
+  }
 }
 
 export const paymentService = new PaymentService();

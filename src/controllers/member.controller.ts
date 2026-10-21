@@ -42,6 +42,15 @@ export class MemberController {
     }
   }
 
+  async listMembers(req: Request, res: Response) {
+    try {
+      const members = await memberService.listMembers();
+      return res.status(200).json({ status: 'success', data: members });
+    } catch (error: any) {
+      return res.status(500).json({ status: 'error', message: error.message });
+    }
+  }
+
   async getMember(req: Request, res: Response) {
     try {
       const member = await memberService.getMemberById(req.params.id);

@@ -2,6 +2,15 @@ import { Request, Response } from 'express';
 import { paymentService } from '../services/payment.service';
 
 export class PaymentController {
+  async listPayments(req: Request, res: Response) {
+    try {
+      const payments = await paymentService.listPayments();
+      return res.status(200).json({ status: 'success', data: payments });
+    } catch (error: any) {
+      return res.status(500).json({ status: 'error', message: error.message });
+    }
+  }
+
   async processOnline(req: Request, res: Response) {
     try {
       const payment = await paymentService.processOnline(req.body);

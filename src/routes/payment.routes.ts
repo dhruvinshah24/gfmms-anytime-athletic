@@ -3,6 +3,9 @@ import { paymentController } from '../controllers/payment.controller';
 
 const router = Router();
 
+// GET /payments -> list all payments
+router.get('/', paymentController.listPayments);
+
 // Payment: processOnline(), recordManual(), generateReceipt(), generateInvoice(), refund()
 router.post('/online', paymentController.processOnline);
 router.post('/manual', paymentController.recordManual);
