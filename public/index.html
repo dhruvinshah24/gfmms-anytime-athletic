@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>GFMMS — Apex Athletic Sanctuary | Gym &amp; Fitness Management System</title>
+  <title>Anytime Fitness 24/7 — Gym &amp; Fitness Management System (GFMMS)</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   
   <!-- Preconnect Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -577,6 +578,8 @@
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
     }
   </style>
+  <!-- HTML5 Real Camera QR Scanner CDN -->
+  <script src="https://unpkg.com/html5-qrcode"></script>
 </head>
 <body class="bg-dark-950 text-white selection:bg-electric-red selection:text-white noise-layer min-h-screen flex flex-col">
 
@@ -591,15 +594,29 @@
       
       <!-- Brand Logo -->
       <a href="#" onclick="switchPage('home'); return false;" class="flex items-center gap-3.5 group">
-        <div class="w-11 h-11 bg-gradient-to-br from-electric-red to-fire-orange rounded flex items-center justify-center font-bebas text-2xl text-white shadow-glow-red group-hover:scale-105 transition-transform">
-          G
+        <!-- Creative Kinetic 24/7 Infinity Crest -->
+        <div class="relative w-11 h-11 flex items-center justify-center">
+          <div class="absolute inset-0 bg-gradient-to-tr from-electric-red via-fire-orange to-yellow-500 rounded-xl blur-[6px] opacity-70 group-hover:opacity-100 transition-opacity"></div>
+          <div class="relative w-11 h-11 bg-dark-900 border border-white/20 rounded-xl flex items-center justify-center shadow-2xl overflow-hidden group-hover:border-electric-red transition-all">
+            <svg class="w-6 h-6 text-white group-hover:scale-110 transition-transform" viewBox="0 0 40 40" fill="none">
+              <path d="M12 28C7.58172 28 4 24.4183 4 20C4 15.5817 7.58172 12 12 12C15.5 12 18.5 14.5 20 17.5C21.5 14.5 24.5 12 28 12C32.4183 12 36 15.5817 36 20C36 24.4183 32.4183 28 28 28C24.5 28 21.5 25.5 20 22.5C18.5 25.5 15.5 28 12 28Z" stroke="url(#paint0_linear)" stroke-width="3" stroke-linecap="round"/>
+              <circle cx="20" cy="20" r="3.5" fill="#E63946"/>
+              <defs>
+                <linearGradient id="paint0_linear" x1="4" y1="12" x2="36" y2="28" gradientUnits="userSpaceOnUse">
+                  <stop stop-color="#FF6B35"/>
+                  <stop offset="0.5" stop-color="#E63946"/>
+                  <stop offset="1" stop-color="#FFD166"/>
+                </linearGradient>
+              </defs>
+            </svg>
+          </div>
         </div>
         <div class="flex flex-col">
           <div class="flex items-center gap-2">
-            <span class="font-bebas text-2xl md:text-3xl tracking-widest text-white leading-none">GFMMS</span>
-            <span class="bg-electric-red/20 text-electric-red text-[9px] font-rajdhani font-bold px-1.5 py-0.5 rounded tracking-widest uppercase border border-electric-red/30">APEX</span>
+            <span class="font-bebas text-2xl md:text-3xl tracking-widest text-white leading-none">ANYTIME <span class="text-electric-red">ATHLETIC</span></span>
+            <span class="bg-gradient-to-r from-electric-red/25 to-fire-orange/25 text-fire-orange text-[9px] font-rajdhani font-bold px-2 py-0.5 rounded-full tracking-widest uppercase border border-fire-orange/40">AF·24</span>
           </div>
-          <span class="font-rajdhani text-[10px] text-silver-400 font-semibold tracking-mega uppercase mt-0.5">Gym &amp; Fitness Management System</span>
+          <span class="font-rajdhani text-[10px] text-silver-400 font-semibold tracking-wider uppercase mt-0.5">24/7 High-Performance Protocol</span>
         </div>
       </a>
 
@@ -627,26 +644,22 @@
         </button>
       </div>
 
-      <!-- Right Header Actions: Server Health & Kiosk Access -->
-      <div class="flex items-center gap-4">
-        <!-- Live Server Status Indicator -->
-        <div id="apiHealthBadge" class="hidden sm:flex items-center gap-2.5 text-xs font-rajdhani font-semibold bg-dark-900/80 px-3.5 py-1.5 rounded-full border border-white/10" title="API Status">
-          <span class="w-2 h-2 rounded-full bg-neon-green animate-pulse"></span>
-          <span class="text-silver-300">Checking API...</span>
-        </div>
+      <!-- Right Header Actions: Auth State & Kiosk Access -->
+      <div class="flex items-center gap-3">
+        <!-- Auth Container: Google Login OR Active User with QR Pass -->
+        <div id="authNavContainer" class="flex items-center gap-2.5"></div>
 
         <!-- Check-in Kiosk Action Button -->
-        <button onclick="switchPage('kiosk')" class="btn-fire-primary text-xs md:text-sm px-4 md:px-6 py-2.5 rounded flex items-center gap-2.5 cursor-pointer shadow-glow-red">
-          <i class="fa-solid fa-qrcode text-base"></i>
-          <span class="font-bold tracking-widest">CHECK-IN KIOSK</span>
+        <button onclick="switchPage('kiosk')" class="btn-fire-primary text-xs md:text-sm px-4 md:px-5 py-2.5 rounded-lg flex items-center gap-2 cursor-pointer shadow-glow-red hover:shadow-glow-red-lg transition-all">
+          <i class="fa-solid fa-camera text-sm text-yellow-300"></i>
+          <span class="font-bold tracking-widest uppercase">KIOSK SCANNER</span>
         </button>
 
         <!-- Mobile Hamburger Menu Button -->
-        <button onclick="toggleMobileMenu()" class="lg:hidden w-10 h-10 flex items-center justify-center text-white bg-dark-850 border border-white/10 rounded focus:outline-none">
+        <button onclick="toggleMobileMenu()" class="lg:hidden w-10 h-10 flex items-center justify-center text-white bg-dark-850 border border-white/10 rounded-lg focus:outline-none">
           <i id="hamburgerIcon" class="fa-solid fa-bars text-lg"></i>
         </button>
       </div>
-
     </div>
 
     <!-- Mobile Navigation Drawer -->
@@ -681,8 +694,15 @@
     
     <!-- Hero Section with Athletic Imagery -->
     <section class="hero-viewport relative flex flex-col justify-center overflow-hidden pt-28 pb-20">
+      <!-- Dynamic Parallax Athletic Background Layer -->
+      <div id="heroParallaxBg" class="absolute inset-0 w-full h-[130%] -top-[15%] bg-cover bg-center pointer-events-none transition-transform duration-75 ease-out will-change-transform" style="background-image: linear-gradient(135deg, rgba(5,5,5,0.92) 0%, rgba(12,12,12,0.80) 50%, rgba(230,57,70,0.22) 100%), url('https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=1920&q=85');"></div>
+      
+      <!-- Ambient Radiant Energy Orbs -->
+      <div id="heroOrb1" class="absolute top-1/4 -left-32 w-96 h-96 bg-electric-red/15 rounded-full blur-[120px] pointer-events-none will-change-transform"></div>
+      <div id="heroOrb2" class="absolute bottom-10 right-10 w-96 h-96 bg-fire-orange/15 rounded-full blur-[140px] pointer-events-none will-change-transform"></div>
+
       <!-- Watermark Decoration -->
-      <div class="watermark-number top-16 right-8">01</div>
+      <div class="watermark-number top-16 right-8 select-none">24/7</div>
       
       <!-- Background Ambient Geometric Accent -->
       <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-electric-red/15 via-transparent to-transparent pointer-events-none"></div>
@@ -842,7 +862,7 @@
               Enforces a strict 3-day post-expiration grace period and 60-minute anti-passback rule. Auto-attends any class scheduled within a 15-minute window upon scan.
             </p>
             <div class="flex items-center gap-2 text-xs font-rajdhani font-bold text-electric-red tracking-wider uppercase">
-              <span>MODULE B COMPLIANT</span>
+              <span>24/7 OPTICAL ACCESS</span>
               <i class="fa-solid fa-angle-right"></i>
             </div>
           </div>
@@ -1025,7 +1045,7 @@
 
 
   <!-- ══════════════════════════════════════════════════════════════════
-       VIEW 2: ENTRANCE CHECK-IN KIOSK (MODULE B SIMULATOR)
+       VIEW 2: ENTRANCE CHECK-IN KIOSK (24/7 HARDWARE ACCESS)
        ══════════════════════════════════════════════════════════════════ -->
   <main id="view-kiosk" class="view-section flex-1 pt-28 pb-20">
     <div class="max-w-7xl mx-auto px-6 sm:px-8">
@@ -1034,61 +1054,88 @@
       <div class="mb-10">
         <div class="inline-flex items-center gap-3 text-electric-red font-rajdhani font-bold text-xs tracking-widest uppercase mb-2">
           <span class="w-8 h-0.5 bg-electric-red"></span>
-          MODULE B • ACCESS CONTROLLER
+          24/7 OPTICAL &amp; BIOMETRIC TURNSTILE
         </div>
         <h1 class="font-bebas text-5xl lg:text-6xl text-white tracking-tight uppercase">ENTRANCE CHECK-IN KIOSK</h1>
         <p class="text-silver-400 text-sm mt-1 max-w-3xl">
-          Simulates hardware turnstile QR scanner with 3-day grace period verification, 60-minute duplicate check-in anti-passback guard, and automatic class attendance matching within 15 minutes.
+          Point your phone or card at the camera scanner below. Verifies active membership, 3-day grace period, 60-minute anti-passback guard, and automatic fitness class attendance.
         </p>
       </div>
 
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
         
-        <!-- Left: Interactive Scanner Panel & Form (7 cols) -->
+        <!-- Left: Interactive Real Camera Scanner Panel & Form (7 cols) -->
         <div class="lg:col-span-7 space-y-6">
           
-          <!-- Scanner Visual Display Card -->
-          <div class="scanner-frame rounded-2xl overflow-hidden p-8 border border-electric-red/30 relative">
-            <div class="flex items-center justify-between pb-6 border-b border-white/10 mb-6">
+          <!-- Scanner Visual Display Card with Real Camera Support -->
+          <div class="scanner-frame rounded-2xl overflow-hidden p-6 sm:p-8 border border-electric-red/30 relative shadow-2xl bg-dark-900/90">
+            
+            <div class="flex items-center justify-between pb-4 border-b border-white/10 mb-6">
               <div class="flex items-center gap-3">
-                <span class="w-3 h-3 rounded-full bg-electric-red animate-pulse shadow-glow-red"></span>
-                <span class="font-rajdhani font-bold text-sm tracking-widest uppercase text-white">HARDWARE SCANNER VIEWPORT</span>
+                <span id="cameraStatusDot" class="w-3 h-3 rounded-full bg-electric-red animate-pulse shadow-glow-red"></span>
+                <span id="cameraStatusText" class="font-rajdhani font-bold text-sm tracking-widest uppercase text-white">OPTICAL CAMERA SCANNER</span>
               </div>
-              <span class="font-rajdhani text-xs font-bold px-2.5 py-1 bg-electric-red/20 text-electric-red border border-electric-red/40 rounded tracking-wider uppercase">
-                SENSOR READY
+              <span id="cameraStateBadge" class="font-rajdhani text-xs font-bold px-2.5 py-1 bg-electric-red/20 text-electric-red border border-electric-red/40 rounded tracking-wider uppercase">
+                SENSOR STANDBY
               </span>
             </div>
 
-            <!-- Viewport with Animated Laser Scanline -->
-            <div class="relative w-64 h-64 mx-auto bg-dark-950 rounded-xl border border-white/15 overflow-hidden flex items-center justify-center shadow-inner">
-              <div class="scan-beam"></div>
+            <!-- Viewport: Live Camera Feed or Standby Graphic -->
+            <div class="relative w-full max-w-sm h-72 mx-auto bg-dark-950 rounded-2xl border-2 border-white/15 overflow-hidden flex items-center justify-center shadow-inner group">
               
-              <!-- Glowing Red Corners -->
+              <!-- Real HTML5 Video Scanner Viewport -->
+              <div id="kioskQrReader" class="w-full h-full object-cover"></div>
+
+              <!-- Animated Laser Scanline (Visible during camera scanning) -->
+              <div id="scannerLaserBeam" class="scan-beam"></div>
+              
+              <!-- Glowing Corners -->
               <div class="corner-bracket corner-tl"></div>
               <div class="corner-bracket corner-tr"></div>
               <div class="corner-bracket corner-bl"></div>
               <div class="corner-bracket corner-br"></div>
 
-              <!-- Monochromatic QR Target Silhouette -->
-              <div class="qr-pixel-grid opacity-35 select-none pointer-events-none">
-                <div class="qr-cell on"></div><div class="qr-cell on"></div><div class="qr-cell on"></div><div class="qr-cell on"></div><div class="qr-cell on"></div><div class="qr-cell"></div><div class="qr-cell on"></div><div class="qr-cell"></div><div class="qr-cell on"></div><div class="qr-cell"></div><div class="qr-cell on"></div><div class="qr-cell on"></div><div class="qr-cell on"></div><div class="qr-cell on"></div><div class="qr-cell on"></div><div class="qr-cell"></div><div class="qr-cell on"></div>
-                <div class="qr-cell on"></div><div class="qr-cell"></div><div class="qr-cell"></div><div class="qr-cell"></div><div class="qr-cell on"></div><div class="qr-cell"></div><div class="qr-cell on"></div><div class="qr-cell on"></div><div class="qr-cell"></div><div class="qr-cell"></div><div class="qr-cell on"></div><div class="qr-cell"></div><div class="qr-cell"></div><div class="qr-cell"></div><div class="qr-cell on"></div><div class="qr-cell"></div><div class="qr-cell"></div>
-                <div class="qr-cell on"></div><div class="qr-cell"></div><div class="qr-cell on"></div><div class="qr-cell"></div><div class="qr-cell on"></div><div class="qr-cell"></div><div class="qr-cell accent"></div><div class="qr-cell accent"></div><div class="qr-cell accent"></div><div class="qr-cell"></div><div class="qr-cell on"></div><div class="qr-cell"></div><div class="qr-cell on"></div><div class="qr-cell"></div><div class="qr-cell on"></div><div class="qr-cell"></div><div class="qr-cell on"></div>
-                <div class="qr-cell on"></div><div class="qr-cell"></div><div class="qr-cell"></div><div class="qr-cell"></div><div class="qr-cell on"></div><div class="qr-cell"></div><div class="qr-cell"></div><div class="qr-cell on"></div><div class="qr-cell"></div><div class="qr-cell"></div><div class="qr-cell on"></div><div class="qr-cell"></div><div class="qr-cell"></div><div class="qr-cell"></div><div class="qr-cell on"></div><div class="qr-cell"></div><div class="qr-cell"></div>
-                <div class="qr-cell on"></div><div class="qr-cell on"></div><div class="qr-cell on"></div><div class="qr-cell on"></div><div class="qr-cell on"></div><div class="qr-cell"></div><div class="qr-cell on"></div><div class="qr-cell"></div><div class="qr-cell on"></div><div class="qr-cell"></div><div class="qr-cell on"></div><div class="qr-cell on"></div><div class="qr-cell on"></div><div class="qr-cell on"></div><div class="qr-cell on"></div><div class="qr-cell"></div><div class="qr-cell on"></div>
+              <!-- Standby Overlay (Hidden when camera is active) -->
+              <div id="cameraStandbyPrompt" class="absolute inset-0 flex flex-col items-center justify-center bg-dark-950/85 p-6 text-center z-10 transition-opacity">
+                <div class="w-16 h-16 rounded-full bg-electric-red/10 border border-electric-red/40 flex items-center justify-center text-electric-red text-2xl mb-3 shadow-glow-red">
+                  <i class="fa-solid fa-camera"></i>
+                </div>
+                <h4 class="font-bebas text-xl text-white tracking-wider">LIVE WEBCAM SCANNER</h4>
+                <p class="text-xs text-silver-400 font-inter mt-1 max-w-xs">
+                  Click below to open your camera and scan your 24/7 QR Pass in real-time.
+                </p>
+                <button onclick="toggleCameraScanner()" class="mt-4 px-5 py-2.5 rounded-lg bg-electric-red hover:bg-electric-crimson text-white text-xs font-rajdhani font-bold tracking-wider uppercase shadow-glow-red transition-all cursor-pointer">
+                  <i class="fa-solid fa-video mr-1.5"></i> ACTIVATE CAMERA
+                </button>
               </div>
+
+            </div>
+
+            <!-- Camera & File Controls Toolbar -->
+            <div class="mt-6 flex flex-wrap items-center justify-center gap-3">
+              <button id="cameraToggleBtn" onclick="toggleCameraScanner()" class="btn-fire-primary text-xs px-5 py-2.5 rounded-lg font-bold tracking-wider uppercase flex items-center gap-2 cursor-pointer shadow-glow-red">
+                <i class="fa-solid fa-camera"></i>
+                <span id="cameraToggleLabel">START LIVE CAMERA SCANNER</span>
+              </button>
+
+              <!-- Upload QR Image Fallback -->
+              <label class="px-4 py-2.5 rounded-lg bg-dark-800 hover:bg-dark-750 border border-white/10 hover:border-white/20 text-silver-300 hover:text-white text-xs font-rajdhani font-bold tracking-wider uppercase cursor-pointer flex items-center gap-2 transition-all">
+                <i class="fa-solid fa-file-image text-electric-red"></i>
+                <span>SCAN QR IMAGE</span>
+                <input type="file" id="qrFileInput" accept="image/*" onchange="handleQRFileUpload(event)" class="sr-only" />
+              </label>
             </div>
 
             <p class="text-center font-rajdhani text-xs tracking-widest text-silver-400 uppercase mt-4">
-              ALIGN OPTICAL QR PASS OR BIOMETRIC TOKEN
+              HOLDS CAMERA OR CODE AGAINST SENSOR TO TRIGGER TURNSTILE
             </p>
           </div>
 
-          <!-- Kiosk Scan Form -->
+          <!-- Kiosk Scan Manual Input Form -->
           <div class="glass-panel rounded-2xl p-8 border border-white/10">
             <h3 class="font-bebas text-2xl text-white tracking-wider mb-6 flex items-center gap-2">
               <i class="fa-solid fa-id-badge text-electric-red"></i>
-              SIMULATE TURNSTILE SCAN
+              MANUAL PASSCODE OR CARD OVERRIDE
             </h3>
 
             <form id="kioskForm" onsubmit="handleCheckIn(event)" class="space-y-5">
@@ -1106,9 +1153,14 @@
               <!-- Membership Identifier Input -->
               <div>
                 <label class="block font-rajdhani font-bold text-xs uppercase tracking-widest text-silver-300 mb-2">
-                  Membership ID or QR Token <span class="text-electric-red">*</span>
+                  Membership ID or QR Token Passcode <span class="text-electric-red">*</span>
                 </label>
-                <input type="text" id="kioskMemberIdInput" placeholder="Enter Membership UUID or GFMMS-QR-..." required class="lux-input font-mono text-xs" />
+                <div class="relative">
+                  <input type="text" id="kioskMemberIdInput" placeholder="e.g. AF-QR-ALICE001 or Membership UUID" required class="lux-input font-mono text-xs pr-10" />
+                  <button type="button" onclick="clearKioskInput()" class="absolute right-3 top-1/2 -translate-y-1/2 text-silver-400 hover:text-white">
+                    <i class="fa-solid fa-xmark"></i>
+                  </button>
+                </div>
               </div>
 
               <!-- Verification Method -->
@@ -1121,21 +1173,21 @@
                     <input type="radio" name="checkMethod" value="QR" class="sr-only peer" checked>
                     <div class="bg-dark-850 border border-white/10 peer-checked:border-electric-red peer-checked:bg-electric-red/10 rounded-lg p-3 text-center transition-all">
                       <i class="fa-solid fa-qrcode text-xl text-silver-400 peer-checked:text-electric-red mb-1 block"></i>
-                      <span class="font-rajdhani font-bold text-xs uppercase tracking-wider text-silver-300 peer-checked:text-white">Optical QR Kiosk</span>
+                      <span class="font-rajdhani font-bold text-xs uppercase tracking-wider text-silver-300 peer-checked:text-white">Optical QR Camera</span>
                     </div>
                   </label>
                   <label class="relative cursor-pointer">
                     <input type="radio" name="checkMethod" value="Manual" class="sr-only peer">
                     <div class="bg-dark-850 border border-white/10 peer-checked:border-electric-red peer-checked:bg-electric-red/10 rounded-lg p-3 text-center transition-all">
                       <i class="fa-solid fa-keyboard text-xl text-silver-400 peer-checked:text-electric-red mb-1 block"></i>
-                      <span class="font-rajdhani font-bold text-xs uppercase tracking-wider text-silver-300 peer-checked:text-white">Desk Manual Override</span>
+                      <span class="font-rajdhani font-bold text-xs uppercase tracking-wider text-silver-300 peer-checked:text-white">Reception Desk Override</span>
                     </div>
                   </label>
                 </div>
               </div>
 
               <!-- Submit Button -->
-              <button type="submit" class="btn-fire-primary w-full py-4 rounded text-sm font-bold flex items-center justify-center gap-2 cursor-pointer shadow-glow-red">
+              <button type="submit" class="btn-fire-primary w-full py-4 rounded-xl text-sm font-bold flex items-center justify-center gap-2 cursor-pointer shadow-glow-red">
                 <i class="fa-solid fa-arrow-right-to-bracket text-base"></i>
                 <span>TRIGGER ACCESS SCAN</span>
               </button>
@@ -1149,98 +1201,117 @@
 
         </div>
 
-        <!-- Right: Quick Scenarios & Business Rules (5 cols) -->
+        <!-- Right: Quick Scenarios & Live Gate Feed (5 cols) -->
         <div class="lg:col-span-5 space-y-6">
           
-          <!-- Quick Test Scenarios Card -->
+          <!-- Quick 1-Click Athletes Card -->
           <div class="glass-panel rounded-2xl p-6 border border-white/10">
             <div class="flex items-center justify-between pb-4 border-b border-white/10 mb-4">
-              <h3 class="font-bebas text-xl text-white tracking-wider">PRESET TEST SCENARIOS</h3>
-              <span class="text-[10px] font-rajdhani font-bold text-silver-400 tracking-wider uppercase">1-CLICK VALIDATION</span>
+              <h3 class="font-bebas text-xl text-white tracking-wider">1-CLICK DEMO ATHLETES</h3>
+              <span class="text-[10px] font-rajdhani font-bold text-silver-400 tracking-wider uppercase">INSTANT VERIFICATION</span>
             </div>
 
             <div class="space-y-3">
-              
-              <!-- Test 1: Bob (Active) -->
-              <div class="bg-dark-850/80 p-4 rounded-xl border border-white/5 hover:border-neon-green/40 transition-all flex items-center justify-between group">
+              <!-- Preset 1: Alice Johnson Active 1-Year Pass -->
+              <div onclick="executePresetScan('AF-QR-ALICE001', 'Alice Johnson')" class="p-3.5 bg-dark-900/90 hover:bg-dark-800 border border-neon-green/30 hover:border-neon-green rounded-xl cursor-pointer transition-all flex items-center justify-between group shadow-md">
                 <div class="flex items-center gap-3">
-                  <div class="w-10 h-10 rounded-full bg-neon-green/15 flex items-center justify-center text-neon-green">
-                    <i class="fa-solid fa-user-check"></i>
+                  <div class="w-9 h-9 rounded-full bg-neon-green/10 text-neon-green font-bebas text-lg flex items-center justify-center border border-neon-green/30">
+                    AJ
                   </div>
                   <div>
-                    <h4 class="font-bold text-sm text-white font-inter">Bob Smith (Active)</h4>
-                    <p class="text-xs text-silver-400 mt-0.5">Expects: ✅ Access Granted &amp; DB Attendance Logged</p>
+                    <div class="text-xs font-bold text-white flex items-center gap-2">
+                      Alice Johnson
+                      <span class="px-1.5 py-0.5 rounded text-[9px] font-rajdhani font-bold bg-neon-green/20 text-neon-green">ACTIVE 1-YEAR</span>
+                    </div>
+                    <div class="font-mono text-[11px] text-silver-400">AF-QR-ALICE001</div>
                   </div>
                 </div>
-                <button onclick="quickTestCheckin('bob')" class="px-3 py-1.5 bg-neon-green/10 hover:bg-neon-green/25 text-neon-green border border-neon-green/30 rounded text-xs font-rajdhani font-bold tracking-wider uppercase cursor-pointer transition-colors">
-                  TEST
+                <button class="px-3 py-1 bg-neon-green/10 text-neon-green rounded text-xs font-rajdhani font-bold uppercase group-hover:bg-neon-green group-hover:text-dark-950 transition-colors">
+                  SCAN →
                 </button>
               </div>
 
-              <!-- Test 2: Charlie (Expired) -->
-              <div class="bg-dark-850/80 p-4 rounded-xl border border-white/5 hover:border-electric-red/40 transition-all flex items-center justify-between group">
+              <!-- Preset 2: Bob Smith Active 3-Month Pass -->
+              <div onclick="executePresetScan('AF-QR-BOB002', 'Bob Smith')" class="p-3.5 bg-dark-900/90 hover:bg-dark-800 border border-white/10 hover:border-electric-red rounded-xl cursor-pointer transition-all flex items-center justify-between group shadow-md">
                 <div class="flex items-center gap-3">
-                  <div class="w-10 h-10 rounded-full bg-electric-red/15 flex items-center justify-center text-electric-red">
-                    <i class="fa-solid fa-user-xmark"></i>
+                  <div class="w-9 h-9 rounded-full bg-electric-red/10 text-electric-red font-bebas text-lg flex items-center justify-center border border-electric-red/30">
+                    BS
                   </div>
                   <div>
-                    <h4 class="font-bold text-sm text-white font-inter">Charlie (Expired &gt; 3 Days)</h4>
-                    <p class="text-xs text-silver-400 mt-0.5">Expects: ❌ Access Denied — Renewal Required</p>
+                    <div class="text-xs font-bold text-white flex items-center gap-2">
+                      Bob Smith
+                      <span class="px-1.5 py-0.5 rounded text-[9px] font-rajdhani font-bold bg-white/10 text-silver-300">ACTIVE 3-MO</span>
+                    </div>
+                    <div class="font-mono text-[11px] text-silver-400">AF-QR-BOB002</div>
                   </div>
                 </div>
-                <button onclick="quickTestCheckin('charlie')" class="px-3 py-1.5 bg-electric-red/10 hover:bg-electric-red/25 text-electric-red border border-electric-red/30 rounded text-xs font-rajdhani font-bold tracking-wider uppercase cursor-pointer transition-colors">
-                  TEST
+                <button class="px-3 py-1 bg-white/10 text-silver-300 rounded text-xs font-rajdhani font-bold uppercase group-hover:bg-electric-red group-hover:text-white transition-colors">
+                  SCAN →
                 </button>
               </div>
 
-              <!-- Test 3: Duplicate Guard -->
-              <div class="bg-dark-850/80 p-4 rounded-xl border border-white/5 hover:border-fire-amber/40 transition-all flex items-center justify-between group">
+              <!-- Preset 3: Charlie Davis Expired Pass -->
+              <div onclick="executePresetScan('AF-QR-CHARLIE003', 'Charlie Davis')" class="p-3.5 bg-dark-900/90 hover:bg-dark-800 border border-white/10 hover:border-yellow-500 rounded-xl cursor-pointer transition-all flex items-center justify-between group shadow-md">
                 <div class="flex items-center gap-3">
-                  <div class="w-10 h-10 rounded-full bg-fire-amber/15 flex items-center justify-center text-fire-amber">
-                    <i class="fa-solid fa-ban"></i>
+                  <div class="w-9 h-9 rounded-full bg-yellow-500/10 text-yellow-500 font-bebas text-lg flex items-center justify-center border border-yellow-500/30">
+                    CD
                   </div>
                   <div>
-                    <h4 class="font-bold text-sm text-white font-inter">Anti-Passback Duplicate Guard</h4>
-                    <p class="text-xs text-silver-400 mt-0.5">Expects: ❌ 60-Minute Double Scan Rejection</p>
+                    <div class="text-xs font-bold text-white flex items-center gap-2">
+                      Charlie Davis
+                      <span class="px-1.5 py-0.5 rounded text-[9px] font-rajdhani font-bold bg-yellow-500/20 text-yellow-400">EXPIRED</span>
+                    </div>
+                    <div class="font-mono text-[11px] text-silver-400">AF-QR-CHARLIE003</div>
                   </div>
                 </div>
-                <button onclick="quickTestCheckin('bob')" class="px-3 py-1.5 bg-fire-amber/10 hover:bg-fire-amber/25 text-fire-amber border border-fire-amber/30 rounded text-xs font-rajdhani font-bold tracking-wider uppercase cursor-pointer transition-colors">
-                  TEST
+                <button class="px-3 py-1 bg-yellow-500/10 text-yellow-400 rounded text-xs font-rajdhani font-bold uppercase group-hover:bg-yellow-500 group-hover:text-dark-950 transition-colors">
+                  TEST →
                 </button>
               </div>
-
             </div>
           </div>
 
-          <!-- Business Rules Specification Reference -->
-          <div class="glass-panel rounded-2xl p-6 border border-electric-red/20 bg-dark-900/90">
-            <div class="flex items-center gap-2 text-electric-red font-rajdhani font-bold text-sm uppercase tracking-widest mb-4">
-              <i class="fa-solid fa-clipboard-check"></i>
-              <span>KIOSK BUSINESS RULES AUDIT</span>
+          <!-- Turnstile Hardware & Policy Specifications -->
+          <div class="glass-panel rounded-2xl p-6 border border-white/10 space-y-4">
+            <h3 class="font-bebas text-xl text-white tracking-wider flex items-center gap-2">
+              <i class="fa-solid fa-shield-halved text-electric-red"></i>
+              ACCESS CONTROLLER SPECIFICATIONS
+            </h3>
+
+            <div class="space-y-3 text-xs font-inter text-silver-300">
+              <div class="p-3 bg-dark-900/80 rounded-xl border border-white/5 flex items-start gap-3">
+                <i class="fa-solid fa-fingerprint text-neon-green text-sm mt-0.5"></i>
+                <div>
+                  <strong class="text-white block font-rajdhani uppercase tracking-wider">Dual Identifier Resolution:</strong>
+                  Accepts hardware QR passcodes (e.g. <code>AF-QR-ALICE001</code>) and internal UUIDs.
+                </div>
+              </div>
+
+              <div class="p-3 bg-dark-900/80 rounded-xl border border-white/5 flex items-start gap-3">
+                <i class="fa-solid fa-hourglass-half text-yellow-400 text-sm mt-0.5"></i>
+                <div>
+                  <strong class="text-white block font-rajdhani uppercase tracking-wider">3-Day Grace Buffer:</strong>
+                  Athletes with expired subscriptions within 72 hours are granted emergency entrance with renewal reminders.
+                </div>
+              </div>
+
+              <div class="p-3 bg-dark-900/80 rounded-xl border border-white/5 flex items-start gap-3">
+                <i class="fa-solid fa-ban text-electric-red text-sm mt-0.5"></i>
+                <div>
+                  <strong class="text-white block font-rajdhani uppercase tracking-wider">60-Minute Anti-Passback Guard:</strong>
+                  A second check-in by the same member within 60 minutes is immediately blocked to prevent badge sharing.
+                </div>
+              </div>
+
+              <div class="p-3 bg-dark-900/80 rounded-xl border border-white/5 flex items-start gap-3">
+                <i class="fa-solid fa-dumbbell text-neon-green text-sm mt-0.5"></i>
+                <div>
+                  <strong class="text-white block font-rajdhani uppercase tracking-wider">Automatic Class Check-In:</strong>
+                  Scanning within 15 minutes of a scheduled fitness class auto-marks the attendee as <em>Attended</em>.
+                </div>
+              </div>
             </div>
-            
-            <ul class="space-y-3 font-inter text-xs text-silver-400">
-              <li class="flex items-start gap-2.5">
-                <span class="text-neon-green font-bold">✓</span>
-                <span><strong class="text-silver-200">Active Membership:</strong> Direct entry granted with instant timestamp logging.</span>
-              </li>
-              <li class="flex items-start gap-2.5">
-                <span class="text-neon-green font-bold">✓</span>
-                <span><strong class="text-silver-200">3-Day Grace Period:</strong> Members expired within &le; 72 hours still obtain entrance with warning flag.</span>
-              </li>
-              <li class="flex items-start gap-2.5">
-                <span class="text-electric-red font-bold">✗</span>
-                <span><strong class="text-silver-200">60-Min Anti-Passback:</strong> Re-scanning within 60 minutes is strictly rejected to eliminate token sharing.</span>
-              </li>
-              <li class="flex items-start gap-2.5">
-                <span class="text-neon-green font-bold">✓</span>
-                <span><strong class="text-silver-200">15-Min Proximity Auto-Attendance:</strong> Any booked class starting within 15 minutes is automatically marked Attended.</span>
-              </li>
-              <li class="flex items-start gap-2.5">
-                <span class="text-electric-red font-bold">✗</span>
-                <span><strong class="text-silver-200">Hard Expiration (&gt;3 Days):</strong> Turnstile access completely blocked until plan renewal.</span>
-              </li>
-            </ul>
+
           </div>
 
         </div>
@@ -1249,7 +1320,6 @@
 
     </div>
   </main>
-
 
   <!-- ══════════════════════════════════════════════════════════════════
        VIEW 3: JOIN NOW / REGISTRATION FLOW (MODULE A)
@@ -1463,35 +1533,50 @@
   <main id="view-members" class="view-section flex-1 pt-28 pb-20">
     <div class="max-w-7xl mx-auto px-6 sm:px-8">
       
-      <!-- Section Header -->
+      <!-- Header with Search & View Toggle -->
       <div class="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-6">
         <div>
           <div class="inline-flex items-center gap-3 text-electric-red font-rajdhani font-bold text-xs tracking-widest uppercase mb-2">
             <span class="w-8 h-0.5 bg-electric-red"></span>
-            CENTRAL ATHLETE DATABASE
+            ATHLETE ROSTER &amp; PROFILES
           </div>
-          <h1 class="font-bebas text-5xl lg:text-6xl text-white tracking-tight uppercase">REGISTERED ATHLETES</h1>
+          <h1 class="font-bebas text-5xl lg:text-6xl text-white tracking-tight uppercase">ACTIVE MEMBERS</h1>
           <p class="text-silver-400 text-sm mt-1">
-            Searchable member records with real-time subscription lifecycle, QR credentials, and direct 1-click kiosk redirection.
+            Browse registered athletes, inspect complete attendance and payment histories, or open official 24/7 QR passes.
           </p>
         </div>
 
         <div class="flex flex-wrap items-center gap-3">
+          <!-- View Mode Toggle: Cards vs Table -->
+          <div class="bg-dark-900 p-1 rounded-xl border border-white/10 flex items-center">
+            <button id="memberViewCardsBtn" onclick="switchMemberViewMode('cards')" class="px-3 py-1.5 rounded-lg text-xs font-rajdhani font-bold tracking-wider uppercase transition-all bg-electric-red text-white shadow-glow-red cursor-pointer flex items-center gap-1.5">
+              <i class="fa-solid fa-grip"></i> CARDS
+            </button>
+            <button id="memberViewTableBtn" onclick="switchMemberViewMode('table')" class="px-3 py-1.5 rounded-lg text-xs font-rajdhani font-bold tracking-wider uppercase transition-all text-silver-400 hover:text-white cursor-pointer flex items-center gap-1.5">
+              <i class="fa-solid fa-list"></i> TABLE
+            </button>
+          </div>
+
           <!-- Search Input -->
           <div class="relative">
             <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-silver-400 text-xs"></i>
-            <input type="text" id="memberSearchInput" oninput="filterMembersTable()" placeholder="Search athlete by name, email, ID..." class="lux-input text-xs pl-9 pr-4 py-2.5 w-64" />
+            <input type="text" id="memberSearchInput" oninput="filterMembersTable()" placeholder="Search athlete by name, email, ID..." class="lux-input text-xs pl-9 pr-4 py-2.5 w-60 rounded-xl" />
           </div>
 
-          <button onclick="switchPage('register')" class="btn-fire-primary text-xs px-5 py-3 rounded flex items-center gap-2 cursor-pointer shadow-glow-red">
+          <button onclick="switchPage('register')" class="btn-fire-primary text-xs px-5 py-2.5 rounded-xl flex items-center gap-2 cursor-pointer shadow-glow-red">
             <i class="fa-solid fa-user-plus"></i>
-            <span>NEW REGISTRATION</span>
+            <span>ENROLL ATHLETE</span>
           </button>
         </div>
       </div>
 
-      <!-- Members Data Table -->
-      <div class="glass-panel rounded-2xl border border-white/10 overflow-hidden shadow-2xl">
+      <!-- Athlete Cards Grid View Container -->
+      <div id="membersCardsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+        <!-- Rendered dynamically by renderMemberCards() -->
+      </div>
+
+      <!-- Members Data Table View Container -->
+      <div id="membersTableContainer" class="hidden glass-panel rounded-2xl border border-white/10 overflow-hidden shadow-2xl">
         <div class="overflow-x-auto">
           <table class="w-full text-left font-inter text-sm">
             <thead class="bg-dark-900 border-b border-white/10 font-rajdhani text-xs font-bold text-silver-300 tracking-wider uppercase">
@@ -1598,20 +1683,23 @@
     <div class="max-w-7xl mx-auto px-6 sm:px-8 flex flex-col md:flex-row items-center justify-between gap-6">
       
       <div class="flex items-center gap-4">
-        <div class="w-10 h-10 bg-electric-red rounded flex items-center justify-center font-bebas text-xl text-white shadow-glow-red">
-          G
+        <div class="flex items-center gap-4">
+        <div class="w-10 h-10 bg-gradient-to-br from-electric-red to-fire-orange rounded-lg flex items-center justify-center font-bebas text-xl text-white shadow-glow-red">
+          AF
         </div>
         <div>
-          <div class="font-bebas text-xl text-white tracking-widest leading-none">GFMMS APEX</div>
-          <div class="text-[10px] text-silver-400 font-rajdhani uppercase tracking-mega mt-0.5">Gym &amp; Fitness Management System</div>
+          <div class="font-bebas text-xl text-white tracking-widest leading-none">ANYTIME FITNESS 24/7</div>
+          <div class="text-[10px] text-silver-400 font-rajdhani uppercase tracking-wider mt-0.5">Global Athletic Club • Gym &amp; Fitness Management System</div>
+        </div>
+      </div>
         </div>
       </div>
 
       <div class="flex flex-wrap items-center gap-6 text-xs text-silver-400 font-rajdhani uppercase tracking-wider">
-        <span>Engineered with Express.js + Prisma + PostgreSQL 17</span>
+        <span>© 2026 Anytime Athletic Protocol. All rights reserved. 24/7 Global Sanctuary.</span>
         <div class="flex items-center gap-2">
           <span class="w-2 h-2 rounded-full bg-neon-green"></span>
-          <span class="text-neon-green font-bold">ALL SUBSYSTEMS NOMINAL</span>
+          <span class="text-neon-green font-bold">24/7 GLOBAL CLUB ACCESS ACTIVE</span>
         </div>
       </div>
 
@@ -1772,37 +1860,14 @@
 
     // ── ASCII / GRID QR GENERATOR HELPER ──────────────────────────
     function generateQRVisual(qrIdentifier) {
-      // Deterministic pseudo-random seed based on qrIdentifier
-      let seed = 0;
-      for (let i = 0; i < (qrIdentifier || '').length; i++) {
-        seed = ((seed << 5) - seed) + qrIdentifier.charCodeAt(i);
-        seed |= 0;
-      }
-      
-      let cells = '';
-      for (let r = 0; r < 17; r++) {
-        for (let c = 0; c < 17; c++) {
-          // Standard QR corner targets: (0,0), (0,10), (10,0)
-          const isCornerTL = (r < 5 && c < 5);
-          const isCornerTR = (r < 5 && c >= 12);
-          const isCornerBL = (r >= 12 && c < 5);
-          const isTarget = isCornerTL || isCornerTR || isCornerBL;
-          
-          if (isTarget) {
-            const isBorder = (r === 0 || r === 4 || c === 0 || c === 4 || (r >= 12 && (r === 12 || r === 16)) || (c >= 12 && (c === 12 || c === 16)));
-            const isCenter = (r === 2 && c === 2) || (r === 2 && c === 14) || (r === 14 && c === 2);
-            cells += `<div class="qr-cell ${isBorder || isCenter ? 'accent' : 'on'}"></div>`;
-          } else {
-            // Algorithmic hash bit
-            const bit = Math.abs(Math.sin(seed + (r * 17 + c)) * 10000) % 2 > 1;
-            cells += `<div class="qr-cell ${bit ? 'on' : ''}"></div>`;
-          }
-        }
-      }
+      const cleanId = (qrIdentifier || 'AF-PASS').trim();
+      const qrImgUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=260x260&margin=8&data=' + encodeURIComponent(cleanId);
       return `
-        <div class="qr-matrix-box rounded">
-          <div class="qr-pixel-grid">${cells}</div>
-          <div class="text-[9px] font-mono tracking-widest text-silver-400 text-center mt-2">${qrIdentifier || 'TOKEN'}</div>
+        <div class="relative p-3.5 bg-white rounded-xl shadow-2xl flex flex-col items-center">
+          <img src="${qrImgUrl}" alt="Digital Access QR" class="w-44 h-44 object-contain rounded" onerror="this.onerror=null; this.src='https://chart.googleapis.com/chart?cht=qr&chs=260x260&chl=' + encodeURIComponent(cleanId)"/>
+          <div class="mt-2.5 text-xs font-mono font-bold tracking-wider text-dark-950 bg-gray-100 px-3 py-1 rounded border border-gray-300">
+            ${cleanId}
+          </div>
         </div>
       `;
     }
@@ -1810,6 +1875,7 @@
     // ── API: HEALTH CHECK ─────────────────────────────────────────
     async function checkHealth() {
       const badge = document.getElementById('apiHealthBadge');
+      if (!badge) return;
       try {
         const res = await fetch('/health');
         if (res.ok) {
@@ -1924,6 +1990,7 @@
         }
 
         renderMembersTable(appState.members);
+        renderMembersCards(appState.members);
       } catch (err) {
         console.error('Failed to load members:', err);
       }
@@ -1985,9 +2052,14 @@
               <div class="text-silver-400">Valid Until: ${endDate}</div>
             </td>
             <td class="px-6 py-4 text-right">
-              <button onclick="selectForKiosk('${m.membershipID}')" class="px-3 py-1.5 bg-electric-red/10 hover:bg-electric-red/25 text-electric-red border border-electric-red/30 rounded text-xs font-rajdhani font-bold tracking-wider uppercase transition-colors cursor-pointer" title="Direct to Kiosk">
-                Kiosk →
-              </button>
+              <div class="flex items-center justify-end gap-2">
+                <button onclick="viewMemberPassModal('${m.membershipID}')" class="px-3 py-1.5 bg-white/10 hover:bg-electric-red hover:text-white text-silver-200 border border-white/15 rounded text-xs font-rajdhani font-bold tracking-wider uppercase transition-all cursor-pointer flex items-center gap-1.5" title="View 24/7 Digital QR Pass">
+                  <i class="fa-solid fa-qrcode text-electric-red"></i>PASS
+                </button>
+                <button onclick="selectForKiosk('${m.membershipID}')" class="px-3 py-1.5 bg-electric-red/10 hover:bg-electric-red/25 text-electric-red border border-electric-red/30 rounded text-xs font-rajdhani font-bold tracking-wider uppercase transition-colors cursor-pointer" title="Direct to Kiosk">
+                  Kiosk →
+                </button>
+              </div>
             </td>
           </tr>
         `;
@@ -2008,6 +2080,7 @@
         (m.qrCodeIdentifier && m.qrCodeIdentifier.toLowerCase().includes(q))
       );
       renderMembersTable(filtered);
+      renderMembersCards(filtered);
     }
 
     // ── API: LOAD CLASSES ─────────────────────────────────────────
@@ -2494,7 +2567,7 @@
               ${json.failureReason || json.message || 'Payment processing failed.'}
             </div>
             <p class="text-[11px] text-silver-400 font-inter mt-3 leading-relaxed">
-              Per GFMMS Module A specifications: membership state remains Cancelled and no active QR token is generated until an authorized payment is settled.
+              Payment authorization was not settled; membership activation remains pending and no active QR token is generated until an authorized payment is settled.
             </p>
           `;
 
@@ -2810,6 +2883,792 @@
       }
     }
 
+    
+    // ══════════════════════════════════════════════════════════════════
+    // GOOGLE 1-CLICK AUTHENTICATION & DIGITAL PASS SYSTEM
+    // ══════════════════════════════════════════════════════════════════
+
+    function getStoredUser() {
+      try {
+        const u = localStorage.getItem('gfmms_user');
+        return u ? JSON.parse(u) : null;
+      } catch (e) {
+        return null;
+      }
+    }
+
+    function setStoredUser(user) {
+      if (!user) {
+        localStorage.removeItem('gfmms_user');
+      } else {
+        localStorage.setItem('gfmms_user', JSON.stringify(user));
+      }
+      renderAuthNav();
+    }
+
+    function logoutSession() {
+      localStorage.removeItem('gfmms_user');
+      renderAuthNav();
+      showToast('Logged out of Anytime Fitness session.', 'info');
+    }
+
+    function renderAuthNav() {
+      const container = document.getElementById('authNavContainer');
+      if (!container) return;
+      const user = getStoredUser();
+
+      if (!user) {
+        container.innerHTML = `
+          <button onclick="openGoogleModal()" class="flex items-center gap-2.5 px-3.5 py-2 rounded-lg bg-white/5 hover:bg-white/10 border border-white/15 hover:border-white/30 transition-all text-xs font-rajdhani font-bold tracking-wider text-white cursor-pointer shadow-sm">
+            <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24">
+              <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+              <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+              <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+              <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+            </svg>
+            <span class="hidden sm:inline">SIGN IN WITH GOOGLE</span>
+            <span class="sm:hidden">SIGN IN</span>
+          </button>
+        `;
+        return;
+      }
+
+      if (user.role === 'owner') {
+        container.innerHTML = `
+          <div class="flex items-center gap-2 bg-dark-900 border border-electric-red/40 px-3 py-1.5 rounded-lg text-xs font-rajdhani">
+            <span class="w-2 h-2 rounded-full bg-neon-green shadow-glow-neon animate-pulse"></span>
+            <span class="font-bold text-white uppercase tracking-wider">CLUB OWNER: DHRUVIN</span>
+            <button onclick="logoutSession()" class="text-silver-400 hover:text-electric-red ml-1.5 transition-colors" title="Logout">
+              <i class="fa-solid fa-right-from-bracket"></i>
+            </button>
+          </div>
+        `;
+        return;
+      }
+
+      // Member Logged In
+      const m = user.member;
+      const memberId = m?.membershipID || '';
+      const name = m?.fullName || 'Athlete';
+      const isActive = m?.membershipStatus === 'Active';
+
+      container.innerHTML = `
+        <div class="flex items-center gap-2">
+          <button onclick="viewMemberPassModal('${memberId}')" class="btn-fire-primary text-xs px-3 py-1.5 rounded flex items-center gap-2 cursor-pointer shadow-glow-red animate-pulse">
+            <i class="fa-solid fa-qrcode text-sm"></i>
+            <span class="font-bold tracking-wider">⚡ MY 24/7 QR PASS</span>
+          </button>
+          <div class="hidden sm:flex items-center gap-2 bg-dark-900 border border-white/10 px-3 py-1.5 rounded-lg text-xs font-rajdhani">
+            <span class="w-2 h-2 rounded-full ${isActive ? 'bg-neon-green shadow-glow-neon' : 'bg-electric-red'}"></span>
+            <span class="font-bold text-silver-200 uppercase tracking-wider">${name}</span>
+            <button onclick="logoutSession()" class="text-silver-400 hover:text-electric-red ml-1.5 transition-colors" title="Logout">
+              <i class="fa-solid fa-right-from-bracket"></i>
+            </button>
+          </div>
+        </div>
+      `;
+    }
+
+    function openGoogleModal() {
+      openModal(`
+        <div class="p-6 bg-gradient-to-r from-dark-900 via-dark-850 to-dark-900 border-b border-white/10">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-3">
+              <div class="w-9 h-9 rounded-full bg-white flex items-center justify-center shadow-lg">
+                <svg class="w-5 h-5" viewBox="0 0 24 24">
+                  <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                  <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                  <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+                  <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+                </svg>
+              </div>
+              <div>
+                <h3 class="font-bebas text-2xl text-white tracking-wider">1-CLICK GOOGLE SIGN-IN</h3>
+                <p class="text-[11px] text-silver-400 font-rajdhani font-semibold uppercase tracking-wider">Anytime Fitness Direct Authentication</p>
+              </div>
+            </div>
+            <button onclick="closeModal()" class="text-silver-400 hover:text-white transition-colors"><i class="fa-solid fa-xmark text-lg"></i></button>
+          </div>
+        </div>
+
+        <div class="p-6 space-y-4">
+          <p class="text-xs text-silver-300 font-inter">
+            Select an account to instantly authenticate, load active subscriptions, and view your <strong>24/7 Digital Entrance Pass &amp; QR Code</strong>:
+          </p>
+
+          <!-- Quick Account 1: Alice Johnson (1-Year Pass) -->
+          <div onclick="loginWithGoogle('alice.johnson@example.com', 'Alice Johnson')" class="p-4 bg-dark-900/90 hover:bg-dark-800 border border-neon-green/30 hover:border-neon-green rounded-xl cursor-pointer transition-all flex items-center justify-between group shadow-lg">
+            <div class="flex items-center gap-3.5">
+              <div class="w-10 h-10 rounded-full bg-neon-green/10 text-neon-green font-bebas text-xl flex items-center justify-center border border-neon-green/30">
+                AJ
+              </div>
+              <div>
+                <div class="text-sm font-bold text-white flex items-center gap-2">
+                  Alice Johnson
+                  <span class="px-2 py-0.5 rounded text-[9px] font-rajdhani font-bold bg-neon-green/20 text-neon-green border border-neon-green/40">1-YEAR VIP ACTIVE</span>
+                </div>
+                <div class="text-xs text-silver-400 font-inter">alice.johnson@example.com</div>
+              </div>
+            </div>
+            <span class="text-xs font-rajdhani font-bold text-neon-green group-hover:translate-x-1 transition-transform">LOGIN →</span>
+          </div>
+
+          <!-- Quick Account 2: Bob Smith (3-Month Pass) -->
+          <div onclick="loginWithGoogle('bob.smith@example.com', 'Bob Smith')" class="p-4 bg-dark-900/90 hover:bg-dark-800 border border-white/10 hover:border-electric-red rounded-xl cursor-pointer transition-all flex items-center justify-between group shadow-lg">
+            <div class="flex items-center gap-3.5">
+              <div class="w-10 h-10 rounded-full bg-electric-red/10 text-electric-red font-bebas text-xl flex items-center justify-center border border-electric-red/30">
+                BS
+              </div>
+              <div>
+                <div class="text-sm font-bold text-white flex items-center gap-2">
+                  Bob Smith
+                  <span class="px-2 py-0.5 rounded text-[9px] font-rajdhani font-bold bg-white/10 text-silver-300">3-MONTH ACTIVE</span>
+                </div>
+                <div class="text-xs text-silver-400 font-inter">bob.smith@example.com</div>
+              </div>
+            </div>
+            <span class="text-xs font-rajdhani font-bold text-silver-400 group-hover:text-electric-red group-hover:translate-x-1 transition-transform">LOGIN →</span>
+          </div>
+
+          <!-- Quick Account 3: Charlie Davis (Expired) -->
+          <div onclick="loginWithGoogle('charlie.davis@example.com', 'Charlie Davis')" class="p-4 bg-dark-900/90 hover:bg-dark-800 border border-white/10 hover:border-yellow-500 rounded-xl cursor-pointer transition-all flex items-center justify-between group shadow-lg">
+            <div class="flex items-center gap-3.5">
+              <div class="w-10 h-10 rounded-full bg-yellow-500/10 text-yellow-500 font-bebas text-xl flex items-center justify-center border border-yellow-500/30">
+                CD
+              </div>
+              <div>
+                <div class="text-sm font-bold text-white flex items-center gap-2">
+                  Charlie Davis
+                  <span class="px-2 py-0.5 rounded text-[9px] font-rajdhani font-bold bg-yellow-500/20 text-yellow-400">EXPIRED PASS</span>
+                </div>
+                <div class="text-xs text-silver-400 font-inter">charlie.davis@example.com</div>
+              </div>
+            </div>
+            <span class="text-xs font-rajdhani font-bold text-silver-400 group-hover:text-yellow-400 group-hover:translate-x-1 transition-transform">LOGIN →</span>
+          </div>
+
+          <!-- Quick Account 4: Club Owner Dhruvin -->
+          <div onclick="loginWithGoogle('dynamitedhruvin@gmail.com', 'Dhruvin Owner')" class="p-4 bg-dark-900/90 hover:bg-dark-800 border border-electric-red/30 hover:border-electric-red rounded-xl cursor-pointer transition-all flex items-center justify-between group shadow-lg">
+            <div class="flex items-center gap-3.5">
+              <div class="w-10 h-10 rounded-full bg-gradient-to-br from-electric-red to-fire-orange text-white font-bebas text-xl flex items-center justify-center shadow-glow-red">
+                DO
+              </div>
+              <div>
+                <div class="text-sm font-bold text-white flex items-center gap-2">
+                  Dhruvin (Club Owner)
+                  <span class="px-2 py-0.5 rounded text-[9px] font-rajdhani font-bold bg-electric-red/20 text-electric-red border border-electric-red/30">ADMINISTRATOR</span>
+                </div>
+                <div class="text-xs text-silver-400 font-inter">dynamitedhruvin@gmail.com</div>
+              </div>
+            </div>
+            <span class="text-xs font-rajdhani font-bold text-electric-red group-hover:translate-x-1 transition-transform">ADMIN LOGIN →</span>
+          </div>
+
+          <!-- Custom Google Email Input -->
+          <div class="pt-2 border-t border-white/10">
+            <div class="text-[11px] font-rajdhani font-bold text-silver-400 uppercase tracking-wider mb-2">Or Use Any Custom Google Account</div>
+            <div class="space-y-2">
+              <input type="text" id="customGoogleName" placeholder="Full Name (e.g. Alex Hunter)" class="lux-input py-2 text-xs rounded-lg bg-dark-900 border border-white/10 text-white w-full px-3" />
+              <div class="flex gap-2">
+                <input type="email" id="customGoogleEmail" placeholder="your-google-email@gmail.com" class="lux-input py-2 text-xs rounded-lg bg-dark-900 border border-white/10 text-white flex-1 px-3" />
+                <button onclick="handleCustomGoogleLogin()" class="btn-fire-primary text-xs px-4 py-2 rounded-lg font-bold tracking-wider uppercase cursor-pointer">
+                  SIGN IN
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      `);
+    }
+
+    async function handleCustomGoogleLogin() {
+      const email = document.getElementById('customGoogleEmail')?.value?.trim();
+      const name = document.getElementById('customGoogleName')?.value?.trim() || 'Google Athlete';
+      if (!email) {
+        showToast('Please enter your Google account email.', 'error');
+        return;
+      }
+      await loginWithGoogle(email, name);
+    }
+
+    async function loginWithGoogle(email, name) {
+      try {
+        const res = await fetch('/auth/google', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, name })
+        });
+        const json = await res.json();
+        if (res.ok && json.status === 'success') {
+          setStoredUser(json.data);
+          closeModal();
+          showToast(`Signed in successfully as ${json.data.user?.name || json.data.member?.fullName}!`, 'success');
+
+          // If member has active pass, auto-open their pass
+          if (json.data.member) {
+            setTimeout(() => {
+              viewMemberPassModal(json.data.member.membershipID);
+            }, 300);
+          }
+        } else {
+          showToast(json.message || 'Google authentication failed.', 'error');
+        }
+      } catch (err) {
+        showToast('Network error during Google authentication.', 'error');
+      }
+    }
+
+    // ── DIGITAL ENTRANCE PASS & QR MODAL ─────────────────────────
+    async function viewMemberPassModal(memberId) {
+      let m = appState.members.find(x => x.membershipID === memberId);
+      if (!m) {
+        try {
+          const res = await fetch(`/members/${memberId}`);
+          const json = await res.json();
+          m = json.data;
+        } catch (e) {
+          console.error(e);
+        }
+      }
+
+      if (!m) {
+        showToast('Member pass information could not be retrieved.', 'error');
+        return;
+      }
+
+      const qrId = (m.qrCodeIdentifier || 'AF-QR-' + m.membershipID.substring(0, 8)).trim();
+      const planName = m.memberships?.[0]?.plan?.name || '12-Month Anytime All-Access (Best Value)';
+      const endDate = m.memberships?.[0]?.endDate ? new Date(m.memberships[0].endDate).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) : '23 Oct 2027';
+      const isActive = m.membershipStatus === 'Active';
+      const qrImgUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=280x280&margin=8&data=' + encodeURIComponent(qrId);
+
+      openModal(`
+        <div class="relative bg-gradient-to-b from-dark-900 via-dark-950 to-black p-6 sm:p-8 rounded-2xl border border-electric-red/40 shadow-glow-red overflow-hidden">
+          <!-- Ambient Glow Accent -->
+          <div class="absolute -top-24 -right-24 w-48 h-48 bg-electric-red/20 rounded-full blur-3xl pointer-events-none"></div>
+
+          <!-- Header -->
+          <div class="flex items-center justify-between pb-4 border-b border-white/10 mb-6">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 bg-gradient-to-br from-electric-red to-fire-orange rounded-lg flex items-center justify-center font-bebas text-xl text-white shadow-glow-red">
+                AF
+              </div>
+              <div>
+                <h3 class="font-bebas text-2xl text-white tracking-widest leading-none">ANYTIME FITNESS 24/7</h3>
+                <span class="text-[10px] font-rajdhani font-bold tracking-widest text-silver-400 uppercase">OFFICIAL VIP DIGITAL PASS</span>
+              </div>
+            </div>
+            <button onclick="closeModal()" class="text-silver-400 hover:text-white transition-colors cursor-pointer"><i class="fa-solid fa-xmark text-lg"></i></button>
+          </div>
+
+          <!-- Pass Body -->
+          <div class="flex flex-col items-center">
+            
+            <!-- Real High-Res Scannable QR -->
+            <div class="p-3 bg-white rounded-2xl shadow-2xl border-4 border-electric-red/40 relative group mb-4">
+              <img src="${qrImgUrl}" alt="VIP QR Entrance Pass" class="w-48 h-48 sm:w-56 sm:h-56 object-contain rounded" onerror="this.onerror=null; this.src='https://chart.googleapis.com/chart?cht=qr&chs=280x280&chl=' + encodeURIComponent('${qrId}')"/>
+            </div>
+
+            <!-- Token & Status Tag -->
+            <div class="flex items-center gap-2 mb-4">
+              <span class="font-mono text-sm font-bold text-electric-red bg-dark-900 border border-electric-red/30 px-3 py-1 rounded-full">
+                ${qrId}
+              </span>
+              <span class="px-2.5 py-1 rounded-full text-xs font-rajdhani font-bold uppercase tracking-wider ${isActive ? 'bg-neon-green/20 text-neon-green border border-neon-green/40' : 'bg-electric-red/20 text-electric-red border border-electric-red/40'}">
+                ● ${m.membershipStatus}
+              </span>
+            </div>
+
+            <!-- Member Information Block -->
+            <div class="w-full bg-dark-900/90 rounded-xl p-4 border border-white/10 space-y-2.5 text-xs font-inter mb-6">
+              <div class="flex justify-between items-center pb-2 border-b border-white/5">
+                <span class="text-silver-400 uppercase font-rajdhani font-bold tracking-wider">ATHLETE NAME</span>
+                <span class="text-white font-bold text-sm">${m.fullName}</span>
+              </div>
+              <div class="flex justify-between items-center pb-2 border-b border-white/5">
+                <span class="text-silver-400 uppercase font-rajdhani font-bold tracking-wider">MEMBERSHIP PLAN</span>
+                <span class="text-silver-200 font-semibold">${planName}</span>
+              </div>
+              <div class="flex justify-between items-center pb-2 border-b border-white/5">
+                <span class="text-silver-400 uppercase font-rajdhani font-bold tracking-wider">VALIDITY PERIOD</span>
+                <span class="text-neon-green font-mono font-bold">Expires: ${endDate}</span>
+              </div>
+              <div class="flex justify-between items-center">
+                <span class="text-silver-400 uppercase font-rajdhani font-bold tracking-wider">MEMBER ID</span>
+                <span class="text-silver-400 font-mono text-[11px]">${m.membershipID}</span>
+              </div>
+            </div>
+
+            <!-- Action Controls -->
+            <div class="grid grid-cols-2 gap-3 w-full">
+              <button onclick="testKioskWithPass('${qrId}')" class="btn-fire-primary py-3 rounded-lg text-xs font-bold tracking-wider uppercase cursor-pointer flex items-center justify-center gap-2 shadow-glow-red">
+                <i class="fa-solid fa-door-open"></i> TEST SCAN AT KIOSK
+              </button>
+              <button onclick="closeModal()" class="btn-ghost-luxury py-3 rounded-lg text-xs font-bold tracking-wider uppercase cursor-pointer flex items-center justify-center gap-2">
+                CLOSE PASS
+              </button>
+            </div>
+
+          </div>
+        </div>
+      `);
+    }
+
+    function testKioskWithPass(qrId) {
+      closeModal();
+      switchPage('kiosk');
+      setTimeout(() => {
+        const input = document.getElementById('kioskInput');
+        if (input) {
+          input.value = qrId;
+          input.focus();
+          showToast(`QR Token ${qrId} loaded into Kiosk. Ready for check-in!`, 'info');
+        }
+      }, 250);
+    }
+
+    
+    // ══════════════════════════════════════════════════════════════════
+    // REAL WEBCAM SCANNER & AUDIO SYNTHESIZER ENGINE
+    // ══════════════════════════════════════════════════════════════════
+
+    let html5QrScannerInstance = null;
+    let isCameraScanning = false;
+
+    function playScannerBeep() {
+      try {
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        if (!AudioContext) return;
+        const ctx = new AudioContext();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(987.77, ctx.currentTime); // B5 note
+        osc.frequency.exponentialRampToValueAtTime(1975.53, ctx.currentTime + 0.14); // B6 note
+        gain.gain.setValueAtTime(0.3, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.14);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start();
+        osc.stop(ctx.currentTime + 0.14);
+      } catch (e) {
+        console.warn('AudioContext not allowed or not supported:', e);
+      }
+    }
+
+    async function toggleCameraScanner() {
+      if (isCameraScanning) {
+        await stopCameraScanner();
+      } else {
+        await startCameraScanner();
+      }
+    }
+
+    async function startCameraScanner() {
+      const readerElem = document.getElementById('kioskQrReader');
+      const standbyPrompt = document.getElementById('cameraStandbyPrompt');
+      const toggleLabel = document.getElementById('cameraToggleLabel');
+      const statusDot = document.getElementById('cameraStatusDot');
+      const stateBadge = document.getElementById('cameraStateBadge');
+      const laser = document.getElementById('scannerLaserBeam');
+
+      if (!window.Html5Qrcode) {
+        showToast('HTML5 QRCode library still loading. Please try again in a moment.', 'warning');
+        return;
+      }
+
+      try {
+        if (!html5QrScannerInstance) {
+          html5QrScannerInstance = new Html5Qrcode("kioskQrReader");
+        }
+
+        if (standbyPrompt) standbyPrompt.classList.add('opacity-0', 'pointer-events-none');
+        if (laser) laser.classList.remove('hidden');
+
+        await html5QrScannerInstance.start(
+          { facingMode: "environment" },
+          { fps: 15, qrbox: { width: 220, height: 220 } },
+          (decodedText) => {
+            onCameraQrDetected(decodedText);
+          },
+          (errorMessage) => {
+            // Frame parsing callback, ignore
+          }
+        );
+
+        isCameraScanning = true;
+        if (toggleLabel) toggleLabel.textContent = 'STOP CAMERA SCANNER';
+        if (statusDot) {
+          statusDot.className = 'w-3 h-3 rounded-full bg-neon-green animate-pulse shadow-glow-neon';
+        }
+        if (stateBadge) {
+          stateBadge.className = 'font-rajdhani text-xs font-bold px-2.5 py-1 bg-neon-green/20 text-neon-green border border-neon-green/40 rounded tracking-wider uppercase';
+          stateBadge.textContent = 'SENSOR ACTIVE';
+        }
+        showToast('Live camera scanner active. Align any QR code inside the viewfinder!', 'info');
+      } catch (err) {
+        console.error('Camera activation error:', err);
+        showToast('Camera access denied or unavailable. You can enter code or upload QR image!', 'error');
+        if (standbyPrompt) standbyPrompt.classList.remove('opacity-0', 'pointer-events-none');
+        isCameraScanning = false;
+      }
+    }
+
+    async function stopCameraScanner() {
+      const standbyPrompt = document.getElementById('cameraStandbyPrompt');
+      const toggleLabel = document.getElementById('cameraToggleLabel');
+      const statusDot = document.getElementById('cameraStatusDot');
+      const stateBadge = document.getElementById('cameraStateBadge');
+      const laser = document.getElementById('scannerLaserBeam');
+
+      if (html5QrScannerInstance && isCameraScanning) {
+        try {
+          await html5QrScannerInstance.stop();
+        } catch (e) {
+          console.warn('Error stopping scanner:', e);
+        }
+      }
+      isCameraScanning = false;
+      if (standbyPrompt) standbyPrompt.classList.remove('opacity-0', 'pointer-events-none');
+      if (toggleLabel) toggleLabel.textContent = 'START LIVE CAMERA SCANNER';
+      if (statusDot) {
+        statusDot.className = 'w-3 h-3 rounded-full bg-electric-red animate-pulse shadow-glow-red';
+      }
+      if (stateBadge) {
+        stateBadge.className = 'font-rajdhani text-xs font-bold px-2.5 py-1 bg-electric-red/20 text-electric-red border border-electric-red/40 rounded tracking-wider uppercase';
+        stateBadge.textContent = 'SENSOR STANDBY';
+      }
+    }
+
+    function onCameraQrDetected(decodedText) {
+      playScannerBeep();
+      const cleanCode = (decodedText || '').trim();
+      const input = document.getElementById('kioskMemberIdInput');
+      if (input) input.value = cleanCode;
+
+      showToast(`Optical Scan Verified: ${cleanCode}`, 'success');
+
+      // Trigger automatic turnstile check-in
+      handleCheckIn({ preventDefault: () => {} });
+    }
+
+    async function handleQRFileUpload(event) {
+      const file = event.target.files?.[0];
+      if (!file) return;
+
+      try {
+        if (!window.Html5Qrcode) {
+          showToast('QR Scanner library not loaded.', 'error');
+          return;
+        }
+        const fileScanner = new Html5Qrcode("kioskQrReader");
+        const result = await fileScanner.scanFile(file, true);
+        if (result) {
+          onCameraQrDetected(result);
+        }
+      } catch (err) {
+        showToast('No recognizable QR code found in uploaded image.', 'error');
+      }
+    }
+
+    function clearKioskInput() {
+      const input = document.getElementById('kioskMemberIdInput');
+      if (input) {
+        input.value = '';
+        input.focus();
+      }
+    }
+
+    function executePresetScan(qrId, athleteName) {
+      playScannerBeep();
+      const input = document.getElementById('kioskMemberIdInput');
+      if (input) input.value = qrId;
+      showToast(`Simulated scan for ${athleteName} (${qrId})`, 'info');
+      handleCheckIn({ preventDefault: () => {} });
+    }
+
+    // ══════════════════════════════════════════════════════════════════
+    // MEMBERS VIEW: CARDS VS TABLE TOGGLE & DOSSIER MODAL
+    // ══════════════════════════════════════════════════════════════════
+
+    let memberCurrentViewMode = 'cards'; // 'cards' | 'table'
+
+    function switchMemberViewMode(mode) {
+      memberCurrentViewMode = mode;
+      const cardsGrid = document.getElementById('membersCardsGrid');
+      const tableContainer = document.getElementById('membersTableContainer');
+      const cardsBtn = document.getElementById('memberViewCardsBtn');
+      const tableBtn = document.getElementById('memberViewTableBtn');
+
+      if (mode === 'cards') {
+        cardsGrid?.classList.remove('hidden');
+        tableContainer?.classList.add('hidden');
+        cardsBtn.className = 'px-3 py-1.5 rounded-lg text-xs font-rajdhani font-bold tracking-wider uppercase transition-all bg-electric-red text-white shadow-glow-red cursor-pointer flex items-center gap-1.5';
+        tableBtn.className = 'px-3 py-1.5 rounded-lg text-xs font-rajdhani font-bold tracking-wider uppercase transition-all text-silver-400 hover:text-white cursor-pointer flex items-center gap-1.5';
+      } else {
+        cardsGrid?.classList.add('hidden');
+        tableContainer?.classList.remove('hidden');
+        tableBtn.className = 'px-3 py-1.5 rounded-lg text-xs font-rajdhani font-bold tracking-wider uppercase transition-all bg-electric-red text-white shadow-glow-red cursor-pointer flex items-center gap-1.5';
+        cardsBtn.className = 'px-3 py-1.5 rounded-lg text-xs font-rajdhani font-bold tracking-wider uppercase transition-all text-silver-400 hover:text-white cursor-pointer flex items-center gap-1.5';
+      }
+    }
+
+    function renderMembersCards(members) {
+      const grid = document.getElementById('membersCardsGrid');
+      if (!grid) return;
+
+      if (!members || !members.length) {
+        grid.innerHTML = `
+          <div class="col-span-3 text-center py-16 text-silver-400 font-inter text-sm">
+            <i class="fa-solid fa-users-slash text-4xl mb-3 text-silver-600 block"></i>
+            No registered athletes match the search criteria.
+          </div>
+        `;
+        return;
+      }
+
+      grid.innerHTML = members.map((m) => {
+        const initials = m.fullName.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+        const latestMembership = m.memberships?.[0];
+        const planName = latestMembership?.plan?.name || 'Anytime Flex Pass';
+        const endDate = latestMembership?.endDate ? new Date(latestMembership.endDate).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) : '23 Oct 2027';
+        const isActive = m.membershipStatus === 'Active';
+        const qrId = m.qrCodeIdentifier || 'AF-QR-' + m.membershipID.substring(0, 8);
+
+        return `
+          <div class="luxury-card glass-panel rounded-2xl p-6 border border-white/10 hover:border-electric-red/50 transition-all duration-300 relative group flex flex-col justify-between shadow-xl">
+            
+            <!-- Top Status & Avatar -->
+            <div>
+              <div class="flex items-start justify-between mb-4">
+                <div class="flex items-center gap-3.5">
+                  <div class="w-12 h-12 rounded-xl bg-dark-800 border ${isActive ? 'border-neon-green/50 text-neon-green shadow-glow-neon' : 'border-electric-red/50 text-electric-red'} flex items-center justify-center font-bebas text-2xl">
+                    ${initials}
+                  </div>
+                  <div>
+                    <h3 class="font-bold text-white text-base group-hover:text-electric-red transition-colors">${m.fullName}</h3>
+                    <div class="text-xs text-silver-400 font-inter">${m.emailAddress}</div>
+                  </div>
+                </div>
+
+                <span class="px-2.5 py-1 rounded-full text-[10px] font-rajdhani font-bold uppercase tracking-wider ${isActive ? 'bg-neon-green/20 text-neon-green border border-neon-green/40' : 'bg-electric-red/20 text-electric-red border border-electric-red/40'}">
+                  ● ${m.membershipStatus}
+                </span>
+              </div>
+
+              <!-- Membership Details Box -->
+              <div class="bg-dark-900/90 rounded-xl p-3.5 border border-white/5 space-y-2 mb-4 font-inter text-xs">
+                <div class="flex justify-between items-center">
+                  <span class="text-silver-400 font-rajdhani uppercase font-bold text-[11px]">Plan:</span>
+                  <span class="text-silver-200 font-semibold">${planName}</span>
+                </div>
+                <div class="flex justify-between items-center">
+                  <span class="text-silver-400 font-rajdhani uppercase font-bold text-[11px]">Valid Until:</span>
+                  <span class="font-mono ${isActive ? 'text-neon-green' : 'text-electric-red'} font-bold">${endDate}</span>
+                </div>
+                <div class="flex justify-between items-center">
+                  <span class="text-silver-400 font-rajdhani uppercase font-bold text-[11px]">QR Passcode:</span>
+                  <span class="font-mono text-electric-red font-bold">${qrId}</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Card Action Footer -->
+            <div class="grid grid-cols-2 gap-2 pt-3 border-t border-white/10">
+              <button onclick="openMemberDossier('${m.membershipID}')" class="px-3 py-2 bg-white/10 hover:bg-white/20 text-white rounded-lg text-xs font-rajdhani font-bold tracking-wider uppercase transition-colors flex items-center justify-center gap-1.5 cursor-pointer">
+                <i class="fa-solid fa-address-card text-electric-red"></i> DOSSIER
+              </button>
+              <button onclick="viewMemberPassModal('${m.membershipID}')" class="btn-fire-primary py-2 rounded-lg text-xs font-bold tracking-wider uppercase flex items-center justify-center gap-1.5 cursor-pointer shadow-glow-red">
+                <i class="fa-solid fa-qrcode"></i> 24/7 PASS
+              </button>
+            </div>
+
+          </div>
+        `;
+      }).join('');
+    }
+
+    // ── DEEP ATHLETE DOSSIER & HISTORY MODAL ──────────────────────
+    async function openMemberDossier(membershipID) {
+      try {
+        const res = await fetch(`/members/${membershipID}`);
+        const json = await res.json();
+        const m = json.data;
+
+        if (!m) {
+          showToast('Failed to load athlete profile.', 'error');
+          return;
+        }
+
+        const latestMembership = m.memberships?.[0];
+        const plan = latestMembership?.plan;
+        const planName = plan?.name || '12-Month Anytime All-Access (Best Value)';
+        const startDate = latestMembership?.startDate ? new Date(latestMembership.startDate).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) : '23 Oct 2026';
+        const endDate = latestMembership?.endDate ? new Date(latestMembership.endDate).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) : '23 Oct 2027';
+        const isActive = m.membershipStatus === 'Active';
+        const qrId = m.qrCodeIdentifier || 'AF-QR-' + m.membershipID.substring(0, 8);
+        const payments = m.payments || [];
+        const attendances = m.attendances || [];
+        const bookings = m.classBookings || [];
+
+        openModal(`
+          <div class="p-6 bg-gradient-to-r from-dark-950 via-dark-900 to-dark-950 border-b border-white/10">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-4">
+                <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-electric-red to-fire-orange text-white font-bebas text-3xl flex items-center justify-center shadow-glow-red">
+                  ${m.fullName.substring(0, 2).toUpperCase()}
+                </div>
+                <div>
+                  <div class="flex items-center gap-2.5">
+                    <h2 class="font-bebas text-3xl text-white tracking-wider leading-none">${m.fullName}</h2>
+                    <span class="px-2.5 py-0.5 rounded-full text-[10px] font-rajdhani font-bold uppercase ${isActive ? 'bg-neon-green/20 text-neon-green border border-neon-green/40' : 'bg-electric-red/20 text-electric-red border border-electric-red/40'}">
+                      ● ${m.membershipStatus}
+                    </span>
+                  </div>
+                  <div class="text-xs text-silver-400 font-inter mt-1">${m.emailAddress} • ${m.contactNumber}</div>
+                </div>
+              </div>
+              <button onclick="closeModal()" class="text-silver-400 hover:text-white transition-colors cursor-pointer"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+          </div>
+
+          <!-- Dossier Body with Tabs -->
+          <div class="p-6 space-y-6 max-h-[75vh] overflow-y-auto">
+            
+            <!-- Key Identifiers Banner -->
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs font-inter">
+              <div class="p-3 bg-dark-900 rounded-xl border border-white/5">
+                <span class="text-silver-400 text-[10px] font-rajdhani uppercase font-bold block">UUID</span>
+                <span class="font-mono text-silver-200 text-[11px] truncate block" title="${m.membershipID}">${m.membershipID.substring(0, 10)}…</span>
+              </div>
+              <div class="p-3 bg-dark-900 rounded-xl border border-white/5">
+                <span class="text-silver-400 text-[10px] font-rajdhani uppercase font-bold block">QR Passcode</span>
+                <span class="font-mono text-electric-red font-bold text-[11px] block">${qrId}</span>
+              </div>
+              <div class="p-3 bg-dark-900 rounded-xl border border-white/5">
+                <span class="text-silver-400 text-[10px] font-rajdhani uppercase font-bold block">Joined Date</span>
+                <span class="text-silver-200 text-[11px] block">${new Date(m.joinDate).toLocaleDateString('en-GB')}</span>
+              </div>
+              <div class="p-3 bg-dark-900 rounded-xl border border-white/5">
+                <span class="text-silver-400 text-[10px] font-rajdhani uppercase font-bold block">Emergency Phone</span>
+                <span class="text-silver-200 text-[11px] block">${m.emergencyContact || 'Not Specified'}</span>
+              </div>
+            </div>
+
+            <!-- Active Membership Overview -->
+            <div class="p-5 bg-dark-900/90 rounded-2xl border border-white/10">
+              <div class="flex items-center justify-between mb-3">
+                <h4 class="font-bebas text-xl text-white tracking-wider flex items-center gap-2">
+                  <i class="fa-solid fa-id-card text-electric-red"></i> ACTIVE MEMBERSHIP SUBSCRIPTION
+                </h4>
+                <button onclick="viewMemberPassModal('${m.membershipID}')" class="px-3 py-1 bg-electric-red/20 text-electric-red border border-electric-red/40 rounded-lg text-xs font-rajdhani font-bold uppercase tracking-wider hover:bg-electric-red hover:text-white transition-all cursor-pointer">
+                  VIEW 24/7 QR PASS →
+                </button>
+              </div>
+
+              <div class="space-y-2 text-xs font-inter text-silver-300">
+                <div class="flex justify-between items-center pb-2 border-b border-white/5">
+                  <span class="text-silver-400">Plan Tier:</span>
+                  <span class="text-white font-bold">${planName}</span>
+                </div>
+                <div class="flex justify-between items-center pb-2 border-b border-white/5">
+                  <span class="text-silver-400">Validity Span:</span>
+                  <span class="font-mono text-neon-green font-semibold">${startDate} to ${endDate}</span>
+                </div>
+                <div class="flex justify-between items-center pb-2 border-b border-white/5">
+                  <span class="text-silver-400">Auto-Renew Policy:</span>
+                  <span class="${latestMembership?.autoRenewFlag ? 'text-neon-green' : 'text-silver-400'} font-bold uppercase">
+                    ${latestMembership?.autoRenewFlag ? '● Enabled' : '○ Manual Settlement'}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Attendance Check-in History -->
+            <div class="p-5 bg-dark-900/90 rounded-2xl border border-white/10">
+              <h4 class="font-bebas text-xl text-white tracking-wider mb-3 flex items-center gap-2">
+                <i class="fa-solid fa-door-open text-electric-red"></i> ATTENDANCE &amp; TURNSTILE HISTORY
+              </h4>
+              ${!attendances.length ? `
+                <p class="text-xs text-silver-500 font-inter py-3">No recorded entrance scans yet for this athlete.</p>
+              ` : `
+                <div class="space-y-2 max-h-40 overflow-y-auto">
+                  ${attendances.map(a => `
+                    <div class="p-2.5 bg-dark-950 rounded-xl border border-white/5 flex items-center justify-between text-xs font-inter">
+                      <div class="flex items-center gap-2.5">
+                        <span class="w-2 h-2 rounded-full bg-neon-green"></span>
+                        <span class="text-white font-semibold">${new Date(a.checkInTimestamp).toLocaleString('en-GB')}</span>
+                        <span class="px-2 py-0.5 rounded text-[10px] font-rajdhani font-bold uppercase bg-white/10 text-silver-300">${a.checkInMethod || 'QR'}</span>
+                      </div>
+                      <span class="text-[11px] text-silver-400">${a.linkedClassBooking ? 'Class Attended' : 'General Access'}</span>
+                    </div>
+                  `).join('')}
+                </div>
+              `}
+            </div>
+
+            <!-- Payment & Invoices History -->
+            <div class="p-5 bg-dark-900/90 rounded-2xl border border-white/10">
+              <h4 class="font-bebas text-xl text-white tracking-wider mb-3 flex items-center gap-2">
+                <i class="fa-solid fa-receipt text-neon-green"></i> INVOICES &amp; SETTLED PAYMENTS
+              </h4>
+              ${!payments.length ? `
+                <p class="text-xs text-silver-500 font-inter py-3">No transactions recorded.</p>
+              ` : `
+                <div class="space-y-2">
+                  ${payments.map(p => `
+                    <div class="p-3 bg-dark-950 rounded-xl border border-white/5 flex items-center justify-between text-xs font-inter">
+                      <div>
+                        <div class="font-mono text-silver-200 text-xs font-bold">${p.transactionReferenceNumber}</div>
+                        <div class="text-[11px] text-silver-400">${new Date(p.timestamp).toLocaleDateString('en-GB')} • ${p.paymentMethod}</div>
+                      </div>
+                      <div class="flex items-center gap-3">
+                        <span class="font-bebas text-lg text-neon-green">₹${Number(p.amount).toLocaleString('en-IN')}</span>
+                        <button onclick="viewInvoice('${p.paymentID}')" class="px-2.5 py-1 bg-white/10 hover:bg-electric-red hover:text-white rounded text-[10px] font-rajdhani font-bold uppercase transition-all">
+                          INVOICE
+                        </button>
+                      </div>
+                    </div>
+                  `).join('')}
+                </div>
+              `}
+            </div>
+
+          </div>
+        `);
+      } catch (err) {
+        showToast('Error opening athlete dossier.', 'error');
+      }
+    }
+
+    // ── PARALLAX SCROLL & SMOOTH TRANSITIONS OBSERVER ─────────────
+    function initParallaxEngine() {
+      window.addEventListener('scroll', () => {
+        const scrolled = window.pageYOffset;
+        
+        // Hero Background Parallax Translation
+        const heroBg = document.getElementById('heroParallaxBg');
+        if (heroBg && scrolled < window.innerHeight * 1.5) {
+          heroBg.style.transform = `translate3d(0, ${scrolled * 0.35}px, 0) scale(${1 + scrolled * 0.00025})`;
+        }
+
+        // Ambient Orb Shift
+        const orb1 = document.getElementById('heroOrb1');
+        const orb2 = document.getElementById('heroOrb2');
+        if (orb1 && scrolled < window.innerHeight * 1.5) {
+          orb1.style.transform = `translate3d(0, ${scrolled * 0.18}px, 0)`;
+        }
+        if (orb2 && scrolled < window.innerHeight * 1.5) {
+          orb2.style.transform = `translate3d(0, ${scrolled * -0.15}px, 0)`;
+        }
+
+        // Watermark Numbers Parallax
+        document.querySelectorAll('.watermark-number').forEach(el => {
+          el.style.transform = `translate3d(0, ${scrolled * 0.20}px, 0)`;
+        });
+      }, { passive: true });
+    }
+
     // ── DATA REFRESH ORCHESTRATOR ─────────────────────────────────
     async function refreshData() {
       await Promise.all([
@@ -2838,6 +3697,8 @@
     window.addEventListener('DOMContentLoaded', () => {
       refreshData();
       initScrollObserver();
+      initParallaxEngine();
+      renderAuthNav();
     });
   </script>
 
