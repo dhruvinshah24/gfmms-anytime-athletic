@@ -32,7 +32,11 @@ export class AttendanceController {
 
   async checkOut(req: Request, res: Response) {
     try {
-      const result = await attendanceService.recordCheckOut(req.params.id);
+      const attendanceId = req.params.id || req.body?.attendanceID || req.body?.id;
+      if (!attendanceId) {
+        return res.status(400).json({ status: 'error', message: 'Attendance ID is required' });
+      }
+      const result = await attendanceService.recordCheckOut(attendanceId);
       return res.status(200).json({ status: 'success', data: result });
     } catch (error: any) {
       return res.status(400).json({ status: 'error', message: error.message });

@@ -6,6 +6,7 @@ import {
   MembershipStatus,
 } from '@prisma/client';
 import { membershipService } from './membership.service';
+import { EmailService } from './email.service';
 
 export interface CheckInDTO {
   membershipID: string;
@@ -23,11 +24,16 @@ export class AttendanceService {
 
   /**
    * Attendance.verifyMemberStatus()
-   * Verifies member and membership status. Returns statusActive boolean.
+   * Verifies member and membership status. Accepts membershipID or qrCodeIdentifier.
    */
   async verifyMemberStatus(membershipID: string) {
-    const member = await prisma.member.findUnique({
-      where: { membershipID },
+    const member = await prisma.member.findFirst({
+      where: {
+        OR: [
+          { membershipID },
+          { qrCodeIdentifier: membershipID },
+        ],
+      },
     });
 
     if (!member) {
@@ -38,7 +44,7 @@ export class AttendanceService {
     }
 
     // Direct Active check or 3-day grace period check
-    const graceCheck = await this.checkGracePeriod(membershipID);
+    const graceCheck = await this.checkGracePeriod(member.membershipID);
     if (!graceCheck.isValid) {
       return {
         statusActive: false,
@@ -102,8 +108,10 @@ export class AttendanceService {
       throw new Error('checkInDenied – please renew');
     }
 
+    const resolvedMemberID = statusCheck.member?.membershipID || dto.membershipID;
+
     // 2. Prevent Duplicate Check-In (60 minutes)
-    const duplicateCheck = await this.preventDuplicate(dto.membershipID, 60);
+    const duplicateCheck = await this.preventDuplicate(resolvedMemberID, 60);
     if (duplicateCheck.isDuplicate) {
       throw new Error(
         'Duplicate check-in: Member already checked in within the last 60 minutes'
@@ -122,7 +130,7 @@ export class AttendanceService {
 
     const upcomingBooking = await prisma.classBooking.findFirst({
       where: {
-        membershipID: dto.membershipID,
+        membershipID: resolvedMemberID,
         status: BookingStatus.Booked,
         fitnessClass: {
           schedule: {
@@ -149,12 +157,21 @@ export class AttendanceService {
     // 4. Create Attendance row
     const attendance = await prisma.attendance.create({
       data: {
-        membershipID: dto.membershipID,
+        membershipID: resolvedMemberID,
         checkInTimestamp: now,
         checkInMethod: checkInMethod,
         linkedClassBookingID: linkedClassBookingID,
       },
     });
+
+    // Notify Owner via Email asynchronously
+    EmailService.sendCheckinAlertToOwner({
+      memberName: statusCheck.member?.fullName || 'Gym Member',
+      memberID: resolvedMemberID,
+      checkInTime: now,
+      method: checkInMethod,
+      linkedClass: upcomingBooking?.fitnessClass?.name || null,
+    }).catch((err) => console.error('[EmailService] Owner check-in alert error:', err.message));
 
     return {
       success: true,
