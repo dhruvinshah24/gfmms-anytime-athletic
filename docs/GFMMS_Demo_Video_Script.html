@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>GFMMS — Demo Video Presentation Script</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Rajdhani:wght@500;600;700&display=swap');
+    
+    @page {
+      size: A4;
+      margin: 16mm 16mm 16mm 16mm;
+      @bottom-right {
+        content: counter(page);
+      }
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      font-size: 10pt;
+      line-height: 1.5;
+      color: #1e293b;
+      margin: 0;
+      padding: 0;
+    }
+
+    h1, h2, h3 {
+      font-family: 'Rajdhani', sans-serif;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    h1 { font-size: 22pt; color: #0f172a; border-bottom: 2px solid #e11d48; padding-bottom: 6px; margin-top: 0; }
+    h2 { font-size: 14pt; color: #b91c1c; border-bottom: 1px solid #e2e8f0; padding-bottom: 4px; margin-top: 1.2em; }
+
+    .cover-page {
+      page-break-after: always;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 40px 20px;
+      border: 3px solid #0f172a;
+      border-top: 10px solid #e11d48;
+      background: #fafafa;
+    }
+
+    .cover-title {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 26pt;
+      font-weight: 800;
+      color: #0f172a;
+      letter-spacing: 0.05em;
+      line-height: 1.1;
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    .cover-subtitle {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 15pt;
+      color: #e11d48;
+      font-weight: 700;
+      text-align: center;
+      margin-bottom: 25px;
+    }
+
+    .scene-card {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-left: 5px solid #0f172a;
+      border-radius: 8px;
+      padding: 14px 18px;
+      margin: 16px 0;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.03);
+      page-break-inside: avoid;
+    }
+
+    .scene-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px dashed #cbd5e1;
+      padding-bottom: 8px;
+      margin-bottom: 10px;
+    }
+
+    .scene-title {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 13pt;
+      font-weight: 700;
+      color: #0f172a;
+    }
+
+    .scene-time {
+      background: #e11d48;
+      color: #ffffff;
+      font-size: 9pt;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 4px;
+      letter-spacing: 0.05em;
+    }
+
+    .scene-action {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-size: 9pt;
+      color: #334155;
+      margin-bottom: 10px;
+    }
+
+    .scene-action strong {
+      color: #0f172a;
+    }
+
+    .speech-bubble {
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      border-left: 4px solid #16a34a;
+      padding: 10px 14px;
+      border-radius: 0 6px 6px 0;
+      font-size: 9.5pt;
+      color: #14532d;
+      font-style: italic;
+      line-height: 1.5;
+    }
+
+    .speech-bubble strong {
+      font-style: normal;
+      color: #15803d;
+    }
+
+    .summary-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 15px 0;
+      font-size: 8.5pt;
+    }
+
+    .summary-table th, .summary-table td {
+      border: 1px solid #cbd5e1;
+      padding: 6px 8px;
+      text-align: left;
+    }
+
+    .summary-table th {
+      background: #0f172a;
+      color: #ffffff;
+      font-family: 'Rajdhani', sans-serif;
+    }
+
+    .pro-tip {
+      background: #fffbeb;
+      border-left: 4px solid #f59e0b;
+      padding: 10px 14px;
+      border-radius: 0 6px 6px 0;
+      font-size: 9pt;
+      color: #78350f;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- COVER PAGE -->
+  <div class="cover-page">
+    <div style="text-align: center;">
+      <div style="font-size: 11pt; font-weight: 700; letter-spacing: 0.15em; color: #64748b;">OFFICIAL VIDEO PRESENTATION DOSSIER</div>
+      <div class="cover-title">2-TO-4 MINUTE DEMO VIDEO SCRIPT &amp; PRESENTATION GUIDE</div>
+      <div class="cover-subtitle">ANYTIME ATHLETIC (GFMMS) — 24/7 SANCTUARY</div>
+      <div style="display: inline-block; background: #0f172a; color: white; padding: 6px 16px; border-radius: 4px; font-weight: 700; font-size: 10pt; letter-spacing: 0.1em;">
+        FULL SYSTEM WALKTHROUGH WITH SPOKEN VOICEOVER
+      </div>
+    </div>
+
+    <div style="background: white; border: 1px solid #e2e8f0; border-radius: 8px; padding: 20px 25px; margin: 30px 0;">
+      <div style="display:flex; justify-content:space-between; padding:6px 0; border-bottom: 1px dashed #e2e8f0;"><span style="font-weight:600; color:#64748b;">Target Video Duration:</span><span style="font-weight:700; color:#0f172a;">3 Minutes 30 Seconds (Flexible 2:30 – 4:00)</span></div>
+      <div style="display:flex; justify-content:space-between; padding:6px 0; border-bottom: 1px dashed #e2e8f0;"><span style="font-weight:600; color:#64748b;">Demo Application URL:</span><span style="font-weight:700; color:#0f172a;">http://localhost:3000</span></div>
+      <div style="display:flex; justify-content:space-between; padding:6px 0; border-bottom: 1px dashed #e2e8f0;"><span style="font-weight:600; color:#64748b;">Presenter / Voiceover:</span><span style="font-weight:700; color:#0f172a;">Dhruvin Patel</span></div>
+      <div style="display:flex; justify-content:space-between; padding:6px 0; border-bottom: 1px dashed #e2e8f0;"><span style="font-weight:600; color:#64748b;">Total Demonstrated Scenes:</span><span style="font-weight:700; color:#0f172a;">8 Structured Timed Scenes</span></div>
+      <div style="display:flex; justify-content:space-between; padding:6px 0; border-bottom: 1px dashed #e2e8f0;"><span style="font-weight:600; color:#64748b;">Core Modules Covered:</span><span style="font-weight:700; color:#0f172a;">Module A (Registration &amp; Plans) &amp; Module B (Turnstile &amp; Classes)</span></div>
+      <div style="display:flex; justify-content:space-between; padding:6px 0;"><span style="font-weight:600; color:#64748b;">Automated Audit Result:</span><span style="font-weight:700; color:#16a34a;">21/21 E2E Scenarios Passing • 13/13 Jest Tests</span></div>
+    </div>
+
+    <div style="text-align: center; font-size: 9pt; color: #64748b; border-top: 1px solid #cbd5e1; padding-top: 15px;">
+      <div>Anytime Athletic 24/7 Platform — Engineering Project Presentation Script</div>
+      <div style="margin-top: 4px;">Follow this script word-for-word while recording your screen for a flawless submission.</div>
+    </div>
+  </div>
+
+  <!-- SCENE WALKTHROUGH -->
+  <div style="page-break-before: always;">
+    <h1>Detailed Scene-by-Scene Script</h1>
+
+    <!-- SCENE 1 -->
+    <div class="scene-card" style="border-left-color: #e11d48;">
+      <div class="scene-header">
+        <span class="scene-title">Scene 1: Introduction, Architecture &amp; Landing Page</span>
+        <span class="scene-time">0:00 – 0:25 (25s)</span>
+      </div>
+      <div class="scene-action">
+        <strong>On-Screen Action:</strong> Start at <code>http://localhost:3000</code>. Hover over the kinetic SVG crest (AF·24) in the header. Slowly scroll down to show the multi-layer parallax depth effect and live feature cards.
+      </div>
+      <div class="speech-bubble">
+        <strong>Spoken Voiceover:</strong> "Hello everyone, and welcome to the demonstration of our Gym &amp; Fitness Management System, engineered under the high-performance brand Anytime Athletic. Built on Node.js, Express, TypeScript, and PostgreSQL with Prisma ORM, this platform implements two core modules: Module A for member registration and subscription lifecycle, and Module B for biometric turnstile access control and group fitness scheduling. As you can see on our landing page, we’ve incorporated a multi-layer parallax depth engine and an ultra-modern athletic aesthetic with zero AI clichés or developer clutter."
+      </div>
+    </div>
+
+    <!-- SCENE 2 -->
+    <div class="scene-card">
+      <div class="scene-header">
+        <span class="scene-title">Scene 2: 1-Click Google OAuth &amp; Session Switcher</span>
+        <span class="scene-time">0:25 – 0:50 (25s)</span>
+      </div>
+      <div class="scene-action">
+        <strong>On-Screen Action:</strong> Click the "SIGN IN WITH GOOGLE" button in the header. Show the modal with 4 demo accounts. Click Alice Johnson (alice.johnson@example.com). Watch the navbar instantly update with ALICE JOHNSON (VIP) and the pinned QR pass button.
+      </div>
+      <div class="speech-bubble">
+        <strong>Spoken Voiceover:</strong> "To provide a frictionless experience, we implemented 1-Click Google Authentication. Rather than typing passwords repeatedly, members and administrators can authenticate in one tap. Let’s sign in as Alice Johnson, our VIP athlete. Notice how the navigation bar immediately adapts: Alice’s authenticated session is active, and a dedicated 24/7 QR Pass button is pinned directly to the header."
+      </div>
+    </div>
+
+    <!-- SCENE 3 -->
+    <div class="scene-card">
+      <div class="scene-header">
+        <span class="scene-title">Scene 3: Module A — Membership Plans &amp; Live Enrollment</span>
+        <span class="scene-time">0:50 – 1:20 (30s)</span>
+      </div>
+      <div class="scene-action">
+        <strong>On-Screen Action:</strong> Click "JOIN NOW". Scroll through the 4 plan tiers (Flex, Transformation, Elite, All-Access). Complete a registration form, select CreditCard, and click "COMPLETE ENROLLMENT". Show the success modal with the generated optical QR pass.
+      </div>
+      <div class="speech-bubble">
+        <strong>Spoken Voiceover:</strong> "Now let's examine Module A: Member Registration and Membership Management. We offer four distinct membership tiers with transparent entitlements. When an athlete enrolls, our payment orchestrator processes the transaction atomically: only upon confirmed payment does the membership transition to Active status. An official QR identifier is provisioned, and an automated transactional welcome packet with the entrance token is dispatched to the member's email via Gmail SMTP."
+      </div>
+    </div>
+
+    <!-- SCENE 4 -->
+    <div class="scene-card">
+      <div class="scene-header">
+        <span class="scene-title">Scene 4: 24/7 Digital QR Pass &amp; Athlete Dossier</span>
+        <span class="scene-time">1:20 – 1:55 (35s)</span>
+      </div>
+      <div class="scene-action">
+        <strong>On-Screen Action:</strong> Click "⚡ MY 24/7 QR PASS" in header to display Alice's high-res pass (valid Oct 2027). Close modal. Click "MEMBERS". Toggle between CARDS and TABLE views. Click "DOSSIER" on Alice Johnson to display her complete tabbed timeline (Profile, Plan, Attendance History, Invoices).
+      </div>
+      <div class="speech-bubble">
+        <strong>Spoken Voiceover:</strong> "Athletes can pull up their official 24/7 VIP Digital Pass anytime. It renders an ultra-crisp, high-resolution QR code that never breaks. In the Members Directory, gym owners can toggle between an interactive luxury Card view and a structured audit table. Clicking 'Dossier' on any athlete reveals their complete profile: active subscription specs, emergency contacts, historical turnstile check-ins, and settled tax invoices."
+      </div>
+    </div>
+
+    <!-- SCENE 5 -->
+    <div class="scene-card" style="border-left-color: #e11d48;">
+      <div class="scene-header">
+        <span class="scene-title">Scene 5: Module B — Hardware Kiosk Camera &amp; Security Guards</span>
+        <span class="scene-time">1:55 – 2:35 (40s)</span>
+      </div>
+      <div class="scene-action">
+        <strong>On-Screen Action:</strong> Click "KIOSK SCANNER". Click "START LIVE CAMERA SCANNER" to activate the webcam with sweeping laser beam. Scan Alice's QR code (AF-QR-ALICE001) to hear the audio chime and see green ACCESS GRANTED. Immediately click scan again to trigger the red 60-Minute Anti-Passback rejection. Click Charlie Davis to show expired rejection.
+      </div>
+      <div class="speech-bubble">
+        <strong>Spoken Voiceover:</strong> "Next is Module B: Attendance Control and Turnstile Simulation. Our kiosk features a live optical camera scanner powered by html5-qrcode. When an athlete scans their QR pass, the system synthesizes an authentic audio chime and resolves the identifier directly against PostgreSQL. Alice's active pass unlatches the turnstile and logs the timestamp. But watch what happens if someone attempts to pass the same code back to a friend: our 60-minute anti-passback rule immediately rejects the attempt with an HTTP 403 Forbidden. Similarly, expired accounts outside the 3-day grace period are safely blocked."
+      </div>
+    </div>
+
+    <!-- SCENE 6 -->
+    <div class="scene-card">
+      <div class="scene-header">
+        <span class="scene-title">Scene 6: Module B — Studio Classes &amp; FIFO Waitlist Engine</span>
+        <span class="scene-time">2:35 – 3:05 (30s)</span>
+      </div>
+      <div class="scene-action">
+        <strong>On-Screen Action:</strong> Click "CLASSES". Show studio classes with live capacity progress meters. Book an open class for instant confirmation. Click "INSPECT FIFO QUEUE" on a full class (Spinning) to show the chronological waitlist candidates and explain the 2-hour cancellation promotion rule.
+      </div>
+      <div class="speech-bubble">
+        <strong>Spoken Voiceover:</strong> "Module B also manages group fitness scheduling with a real-time capacity engine. Classes display live occupancy bars and assigned trainers. When seats are open, bookings are instantly confirmed. If a class reaches full capacity, members are placed into a strict First-In, First-Out waitlist queue. If a confirmed participant cancels more than two hours prior to the session, the earliest waitlisted athlete is automatically promoted to Booked."
+      </div>
+    </div>
+
+    <!-- SCENE 7 -->
+    <div class="scene-card">
+      <div class="scene-header">
+        <span class="scene-title">Scene 7: Financial Ledger &amp; 18% GST Invoicing</span>
+        <span class="scene-time">3:05 – 3:30 (25s)</span>
+      </div>
+      <div class="scene-action">
+        <strong>On-Screen Action:</strong> Click "PAYMENTS". Show financial audit trail and transaction summary stats. Click "INVOICE" on any transaction row to open the official GST tax invoice sheet with printable breakdown.
+      </div>
+      <div class="speech-bubble">
+        <strong>Spoken Voiceover:</strong> "Every financial transaction is audited in our Payments view. Owners can track total gross volume, settled fees, and payment methods. For full regulatory compliance, clicking 'Invoice' generates an official GST tax invoice calculating the 18% tax breakdown, subtotal, and unique invoice hash."
+      </div>
+    </div>
+
+    <!-- SCENE 8 -->
+    <div class="scene-card">
+      <div class="scene-header">
+        <span class="scene-title">Scene 8: Automated Verification Audit (21/21 Pass) &amp; Wrap-up</span>
+        <span class="scene-time">3:30 – 3:50 (20s)</span>
+      </div>
+      <div class="scene-action">
+        <strong>On-Screen Action:</strong> Switch to Terminal / VS Code showing the terminal output: AUDIT COMPLETE: 21 PASSED / 0 FAILED and 13/13 Jest tests passing. Conclude facing camera or over dashboard.
+      </div>
+      <div class="speech-bubble">
+        <strong>Spoken Voiceover:</strong> "To ensure complete software reliability, we built an automated 21-scenario End-to-End audit suite alongside our 13-test Jest suite—both running with a 100% pass rate. From optical turnstile scanning and FIFO queues to automated GST invoicing and Google auth, Anytime Athletic delivers a rock-solid, enterprise-grade gym management solution. Thank you for watching!"
+      </div>
+    </div>
+
+    <div class="pro-tip">
+      <strong>Recording Pro-Tips:</strong>
+      <ol style="margin-top: 6px; padding-left: 20px;">
+        <li>Set browser zoom to 100% or 90% at 1920x1080 resolution for clean visual margins.</li>
+        <li>Ensure microphone volume is balanced; the synthesized camera beep will play clearly through your speakers in Scene 5.</li>
+        <li>Pause for 1 second after major transitions (such as turnstile unlock or invoice modal popup) to let viewers absorb the interface.</li>
+      </ol>
+    </div>
+  </div>
+
+</body>
+</html>

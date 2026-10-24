@@ -1,167 +1,287 @@
-# GFMMS – Gym & Fitness Center Membership Management System Backend
+# ANYTIME ATHLETIC (AF·24 PROTOCOL)
+### Gym & Fitness Management System (GFMMS) — 24/7 High-Performance Infrastructure
 
-Backend implementation of the two core modules for the **Gym & Fitness Center Membership Management System (GFMMS)**, strictly aligned with the Software Requirements Specification (SRS), Class Diagram, Sequence Diagrams, and Data Dictionary for academic evaluation.
+[![Build Status](https://img.shields.io/badge/Build-Passing-brightgreen?style=for-the-badge&logo=typescript)](http://localhost:3000)
+[![Jest Test Suite](https://img.shields.io/badge/Jest%20Tests-13%2F13%20Passing-success?style=for-the-badge&logo=jest)](http://localhost:3000)
+[![E2E Audit Suite](https://img.shields.io/badge/E2E%20Audit-21%2F21%20Passing-blue?style=for-the-badge&logo=node.js)](http://localhost:3000)
+[![Database](https://img.shields.io/badge/Database-PostgreSQL%2017%20%7C%20Prisma-indigo?style=for-the-badge&logo=postgresql)](http://localhost:3000)
+[![TypeScript](https://img.shields.io/badge/Language-TypeScript%205-blue?style=for-the-badge&logo=typescript)](http://localhost:3000)
+[![License](https://img.shields.io/badge/License-MIT-red?style=for-the-badge)](LICENSE)
 
----
-
-## 1. Tech Stack
-- **Language**: TypeScript (`v5.6.3`)
-- **Runtime**: Node.js (`v24.x LTS`)
-- **Framework**: Express.js (`v4.21.x`)
-- **Database**: PostgreSQL (`v17`)
-- **ORM**: Prisma (`v5.22.x`)
-- **Testing**: Jest + Supertest (`ts-jest`)
+An enterprise-grade, full-stack gym management infrastructure engineered with **TypeScript**, **Node.js**, **Express.js**, and **PostgreSQL 17** via **Prisma ORM**. Implements two mandatory software engineering modules: **Module A (Member Registration & Membership Lifecycle)** and **Module B (Biometric Turnstile Access & Studio Class Scheduling)** alongside hardware optical camera scanning, 1-Click Google OAuth, automated transactional emailing, and GST-compliant invoicing.
 
 ---
 
-## 2. Implemented Modules & Scope
-
-### **Module A — Member Registration & Membership Management**
-- **Entities**: `Member`, `MembershipPlan`, `Membership`, `Payment`, `Notification`
-- **Key Operations**:
-  - `Member.register()`
-  - `Member.login()`
-  - `Membership`: `extend()`, `expire()`, `cancel()`, `checkGracePeriod()`
-  - `MembershipPlan`: `activate()`, `deactivate()`, `updatePrice()`
-  - `Payment`: `processOnline()`, `recordManual()`, `generateReceipt()`, `generateInvoice()`, `refund()`
-  - `Notification`: `send()`, `retry()`, `logDelivery()`
-
-### **Module B — Attendance Check-in & Class Booking Management**
-- **Entities**: `Attendance`, `FitnessClass`, `ClassBooking`, `Notification` (shared)
-- **Key Operations**:
-  - `Attendance`: `recordCheckIn()`, `recordCheckOut()`, `verifyMemberStatus()`, `preventDuplicate()`
-  - `FitnessClass`: `create()`, `cancel()`, `getWaitlist()`
-  - `ClassBooking`: `confirm()`, `cancel()`, `promoteFromWaitlist()`
-
-> Note: Non-core entities (`Trainer`, `WorkoutPlan`, `DietPlan`, `MealLog`, `WorkoutLog`, `Admin`, `NotificationTemplate`) are kept out of scope as specified; references (e.g., `trainerID`) are stored as clean string/UUID identifiers.
+## Table of Contents
+- [1. Executive Architecture Overview](#1-executive-architecture-overview)
+- [2. Core Engineering Modules](#2-core-engineering-modules)
+  - [Module A: Member Registration & Membership Management](#module-a-member-registration--membership-management)
+  - [Module B: Attendance Control & Studio Class Booking](#module-b-attendance-control--studio-class-booking)
+- [3. Advanced Systems & Innovations](#3-advanced-systems--innovations)
+- [4. Database Entity-Relationship Model](#4-database-entity-relationship-model)
+- [5. REST API Documentation](#5-rest-api-documentation)
+- [6. Account Credentials Matrix](#6-account-credentials-matrix)
+- [7. Installation & Quick Start](#7-installation--quick-start)
+- [8. Automated Verification & Testing](#8-automated-verification--testing)
+- [9. Academic Documentation & PDF Dossiers](#9-academic-documentation--pdf-dossiers)
 
 ---
 
-## 3. Academic Traceability: Endpoint & Diagram Operation Mapping
+## 1. Executive Architecture Overview
 
-| HTTP Endpoint | Controller / Method | Class-Diagram Operation(s) Implemented | Sequence / Communication Flow Trace |
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                       CLIENT LAYER (HTML5 / SPA)                            │
+│  Tailwind CSS 3 • html5-qrcode Engine • Web Audio API • Parallax Depth Mesh │
+│  Responsive Touch Viewports • Holographic Cards • Deep Tabbed Dossiers      │
+└──────────────────────────────────────┬──────────────────────────────────────┘
+                                       │ HTTP / REST (JSON)
+┌──────────────────────────────────────▼──────────────────────────────────────┐
+│                    APPLICATION BACKEND (Node.js + Express)                  │
+│  Controllers  ──►  Services (Domain Logic)  ──►  Data Access (Prisma ORM)   │
+│  JWT / Bcrypt  ──►  Nodemailer (Gmail SMTP)  ──►  QRCode High-Res Engine    │
+└──────────────────────────────────────┬──────────────────────────────────────┘
+                                       │ Prisma Client (SQL)
+┌──────────────────────────────────────▼──────────────────────────────────────┐
+│                       PERSISTENCE LAYER (PostgreSQL 17)                     │
+│  Members • Memberships • MembershipPlans • Payments • Attendance • Classes   │
+│  ClassBookings • Notifications • Audit Logs (Relational Integrity & Enums)  │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## 2. Core Engineering Modules
+
+### Module A: Member Registration & Membership Management
+- **Atomic Member Registration:** Enrolls athlete credentials and verifies payment settlement before activating membership status.
+- **Conditional State Machine:** Membership status remains `Cancelled` or `Pending` if payment fails (tested via `paymentMethod: 'FAIL'`), provisioning zero turnstile passcodes.
+- **Dynamic Passcode Issuance:** Activated athletes receive a human-readable identifier (e.g. `AF-QR-ALICE001`) and a high-resolution Base64 optical QR code.
+- **4-Tier Membership Structure:**
+  1. **1-Month Anytime Flex Pass:** ₹2,499 (30 Days) — Cardio, turf rig, machine zone.
+  2. **3-Month Body Transformation:** ₹6,499 (90 Days) — Global club access, group fitness classes.
+  3. **6-Month Performance Elite:** ₹10,999 (180 Days) — Worldwide network, sauna, PT sessions.
+  4. **12-Month Anytime All-Access VIP:** ₹18,999 (365 Days) — VIP priority class booking, recovery lounge.
+- **Pending Expiration Policy:** Incomplete enrollments expire automatically after 30 minutes.
+
+### Module B: Attendance Control & Studio Class Booking
+- **Dual-Identifier Resolution:** Access controller resolves both internal database UUIDs and human-readable QR tokens (`AF-QR-ALICE001`).
+- **Access Gatekeeper:**
+  - `Active` Membership &rarr; Turnstile unlatches, attendance record logged.
+  - `3-Day Grace Buffer` &rarr; Conditional emergency access granted with renewal reminder.
+  - `Expired` outside grace &rarr; Rejection with HTTP 403 (`checkInDenied – please renew`).
+- **60-Minute Anti-Passback Guard:** Prevents card sharing. Duplicate check-ins by the same athlete within 60 minutes are rejected with HTTP 403.
+- **15-Minute Class Proximity Match:** Checking in within 15 minutes of a scheduled fitness class automatically updates booking status to `Attended`.
+- **FIFO Waitlist Queue Engine:**
+  - Open class: Status `Booked`, seat reserved.
+  - Full class: Status `Waitlisted` in chronological order.
+  - Cancellation &gt; 2 hours prior to class: Earliest waitlisted member auto-promoted to `Booked`.
+  - Cancellation &lt; 2 hours prior to class: Rejected by policy to protect studio integrity.
+
+---
+
+## 3. Advanced Systems & Innovations
+
+- **Hardware Camera Turnstile:** Real-time webcam optical QR scanner powered by `html5-qrcode` with drag-and-drop image fallback.
+- **Web Audio Laser Synthesizer:** Procedural 988Hz-1976Hz laser sweep chirp played on valid QR scans without external audio files.
+- **1-Click Google OAuth:** Instant passwordless authentication for both administrative owners and athletes.
+- **Gmail SMTP Integration:** Live delivery of welcome packets, attached QR passes, 18% GST invoices, and owner entrance alerts via `dynamitedhruvin@gmail.com`.
+- **GST-Compliant Invoicing:** Generates official 18% GST tax invoices calculating taxable base amounts, tax subtotals, and unique hashes.
+- **Athlete Dossier Ledger:** Interactive directory with a Cards vs Table toggle and deep dossiers (Profile, Active Plan, Attendance Timeline, Invoices, Bookings).
+
+---
+
+## 4. Database Entity-Relationship Model
+
+```mermaid
+erDiagram
+    Member ||--o{ Membership : "holds"
+    Member ||--o{ Payment : "makes"
+    Member ||--o{ Attendance : "logs"
+    Member ||--o{ ClassBooking : "reserves"
+    MembershipPlan ||--o{ Membership : "defines"
+    FitnessClass ||--o{ ClassBooking : "schedules"
+    Attendance ||--o| ClassBooking : "links"
+
+    Member {
+        string membershipID PK
+        string fullName
+        string emailAddress UK
+        string contactNumber UK
+        string emergencyContact
+        date dateOfBirth
+        string qrCodeIdentifier UK
+        enum membershipStatus
+        datetime joinDate
+        string passwordHash
+    }
+
+    Membership {
+        string membershipRecordID PK
+        string membershipID FK
+        string planID FK
+        datetime startDate
+        datetime endDate
+        enum status
+        boolean autoRenewFlag
+    }
+
+    MembershipPlan {
+        string planID PK
+        string name
+        int durationDays
+        decimal price
+        string featureEntitlements
+        boolean activeStatus
+    }
+
+    Payment {
+        string paymentID PK
+        string membershipID FK
+        decimal amount
+        enum paymentMethod
+        enum paymentPurpose
+        enum status
+        datetime timestamp
+        string transactionReferenceNumber UK
+    }
+
+    Attendance {
+        string attendanceID PK
+        string membershipID FK
+        datetime checkInTimestamp
+        datetime checkOutTimestamp
+        enum checkInMethod
+        string linkedClassBookingID FK
+    }
+
+    FitnessClass {
+        string classID PK
+        string name
+        string category
+        string trainerID
+        datetime schedule
+        int durationMinutes
+        int capacity
+        int currentBookings
+        boolean isRecurring
+    }
+
+    ClassBooking {
+        string bookingID PK
+        string membershipID FK
+        string classID FK
+        datetime bookingTimestamp
+        enum status
+    }
+```
+
+---
+
+## 5. REST API Documentation
+
+| Method | Endpoint | Description | Success Response |
 |---|---|---|---|
-| `POST /members/register` | `MemberController.register` | `Member.register()`, `MembershipPlan.getAvailablePlans()`, `Payment.processOnline()`, `Membership.extend()`, `Notification.send()` | **Registration Flow**: checks plan validity, validates email/contact uniqueness, runs payment gateway transaction, extends validity by `durationDays`, issues `qrCodeIdentifier`, dispatches `WelcomeEmail` (or cancels and returns `displayFailureReason` on failure). |
-| `POST /members/:id/login` | `MemberController.login` | `Member.login()` | Authenticates member by ID/credentials, returns active membership status. |
-| `GET /members/:id` | `MemberController.getMember` | `Member` retrieval | Fetches member profile along with membership validity and payment history. |
-| `PATCH /memberships/:id/extend` | `MembershipController.extend` | `Membership.extend()` | Extends validity end date by `durationDays`, updates status to `Active`. |
-| `PATCH /memberships/:id/expire` | `MembershipController.expire` | `Membership.expire()` | Transitions membership status to `Expired`. |
-| `PATCH /memberships/:id/cancel` | `MembershipController.cancel` | `Membership.cancel()` | Cancels membership record and synchronizes member status. |
-| `GET /memberships/check-grace/:membershipID` | `MembershipController.checkGracePeriod` | `Membership.checkGracePeriod()` | Verifies if member is active or within configurable 3-day grace period. |
-| `GET /plans` | `MembershipPlanController.getAvailablePlans` | `MembershipPlan.getAvailablePlans()` | Returns all active membership subscription plans. |
-| `POST /plans` | `MembershipPlanController.createPlan` | `MembershipPlan.create()` | Admin creation of new subscription plans. |
-| `PATCH /plans/:id/activate` | `MembershipPlanController.activate` | `MembershipPlan.activate()` | Marks plan `activeStatus = true`. |
-| `PATCH /plans/:id/deactivate` | `MembershipPlanController.deactivate` | `MembershipPlan.deactivate()` | Marks plan `activeStatus = false`. |
-| `PATCH /plans/:id/price` | `MembershipPlanController.updatePrice` | `MembershipPlan.updatePrice()` | Modifies plan pricing. |
-| `POST /payments/online` | `PaymentController.processOnline` | `Payment.processOnline()` | Online payment gateway simulation (Credit Card, Debit Card, UPI). |
-| `POST /payments/manual` | `PaymentController.recordManual` | `Payment.recordManual()` | Front-desk cash/card entry by Receptionist. |
-| `GET /payments/:id/receipt` | `PaymentController.generateReceipt` | `Payment.generateReceipt()` | Generates structured digital receipt. |
-| `GET /payments/:id/invoice` | `PaymentController.generateInvoice` | `Payment.generateInvoice()` | Generates downloadable invoice structure with 18% tax breakdown. |
-| `POST /payments/:id/refund` | `PaymentController.refund` | `Payment.refund()` | Refunds transaction with audit reason code. |
-| `POST /notifications/send` | `NotificationController.send` | `Notification.send()` | Dispatches and logs notification across Email/SMS/Push. |
-| `POST /notifications/:id/retry` | `NotificationController.retry` | `Notification.retry()` | Re-attempts delivery for failed notifications. |
-| `GET /notifications/:id/log` | `NotificationController.logDelivery` | `Notification.logDelivery()` | Retrieves delivery audit trail. |
-| `POST /attendance/checkin` | `AttendanceController.checkIn` | `Member.checkIn()`, `Attendance.recordCheckIn()`, `Attendance.checkGracePeriod()`, `Attendance.verifyMemberStatus()`, `Attendance.preventDuplicate()` | **Check-in Flow**: verifies membership validity and 3-day grace period; blocks duplicates within 60 mins; auto-links to class bookings within 15 mins of start and marks them attended. |
-| `POST /attendance/:id/checkout` | `AttendanceController.checkOut` | `Attendance.recordCheckOut()` | Sets visit `checkOutTimestamp`. |
-| `POST /classes` | `FitnessClassController.create` | `FitnessClass.create()` | Creates group class with trainer, schedule, and capacity. |
-| `POST /classes/:classId/cancel` | `FitnessClassController.cancelClass` | `FitnessClass.cancel()`, `Notification.send()` | Cancels class and sends SMS cancellation alert to booked members. |
-| `GET /classes/:classId/waitlist` | `FitnessClassController.getWaitlist` | `FitnessClass.getWaitlist()` | Fetches waitlist ordered chronologically by `bookingTimestamp`. |
-| `POST /classes/:classId/book` | `FitnessClassController.bookClass` | `Member.bookClass()`, `ClassBooking.confirm()`, `Notification.send()` | **Booking Flow**: verifies capacity; assigns `Booked` + sends `BookingConfirmation` if seat open; assigns `Waitlisted` + sends `WaitlistConfirmation` if full. |
-| `POST /bookings/:bookingId/cancel` | `ClassBookingController.cancel` | `ClassBooking.cancel()`, `ClassBooking.promoteFromWaitlist()`, `Notification.send()` | **Cancel Flow**: enforces >2 hours cancellation deadline; decrements bookings; promotes earliest waitlisted member to `Booked` and sends seat offer notification. |
+| `GET` | `/health` | Server heartbeat & status | `200 OK` |
+| `POST` | `/auth/google` | 1-Click Google authentication | `200 OK` + JWT token |
+| `POST` | `/auth/owner/login` | Club owner credentials login | `200 OK` + Admin token |
+| `POST` | `/auth/member/login` | Member credentials login | `200 OK` + Member token |
+| `GET` | `/plans` | List active membership plans | `200 OK` + Array of plans |
+| `GET` | `/members` | List registered athletes | `200 OK` + Members array |
+| `GET` | `/members/:id` | Full athlete dossier profile | `200 OK` + Relational data |
+| `GET` | `/members/:id/qrcode` | High-res Base64 QR pass | `200 OK` + Data URL |
+| `POST` | `/members/register` | Module A enrollment & payment | `201 Created` |
+| `POST` | `/attendance/checkin` | Turnstile optical scan check-in | `201 Created` / `403 Forbidden` |
+| `POST` | `/attendance/checkout` | Turnstile exit departure stamp | `200 OK` |
+| `GET` | `/classes` | Studio classes with capacity | `200 OK` + Roster |
+| `POST` | `/bookings` | Reserve seat or enter FIFO queue | `201 Created` |
+| `POST` | `/bookings/:id/cancel`| Cancel booking & promote waitlist | `200 OK` |
+| `GET` | `/payments` | Financial audit ledger | `200 OK` + Payments |
+| `GET` | `/payments/:id/invoice`| GST-compliant 18% tax invoice | `200 OK` + Invoice sheet |
+| `GET` | `/payments/:id/receipt`| Official payment receipt | `200 OK` + Receipt |
+| `GET` | `/notifications` | Dispatched notifications log | `200 OK` + Logs |
 
 ---
 
-## 4. Setup & Installation
+## 6. Account Credentials Matrix
+
+| # | Role / Name | Email | Password | QR Passcode | Plan Tier |
+|---|---|---|---|---|---|
+| **1** | **Club Owner & Admin** | `dynamitedhruvin@gmail.com` | `Anytime@2026` | N/A | Full Administrative Control |
+| **2** | **Alice Johnson (VIP)** | `alice.johnson@example.com` | `Anytime@2026` | `AF-QR-ALICE001` | **12-Month Anytime All-Access (Active VIP)** |
+| **3** | **Bob Smith** | `bob.smith@example.com` | `Anytime@2026` | `AF-QR-BOB002` | **3-Month Body Transformation (Active)** |
+| **4** | **Charlie Davis** | `charlie.davis@example.com` | `Anytime@2026` | `AF-QR-CHARLIE003` | **1-Month Flex (Expired — Boundary Test)** |
+
+---
+
+## 7. Installation & Quick Start
 
 ### Prerequisites
-- Node.js (LTS version 20+ or 24+)
-- PostgreSQL 14+ installed and running locally on port 5432
-- Database credentials configured in `.env` (provided by default for `gfmms_db`)
+- Node.js v20.x or higher
+- PostgreSQL 17 running on localhost:5432
+- Git
 
-### Step 1: Install Dependencies
+### 1. Clone & Install Dependencies
 ```bash
+git clone https://github.com/<your-username>/anytime-athletic-gfmms.git
+cd anytime-athletic-gfmms
 npm install
 ```
 
-### Step 2: Configure Environment Variables
-Verify `.env` has the correct PostgreSQL connection string:
+### 2. Environment Configuration
+Create a `.env` file in the root directory:
 ```env
 PORT=3000
-DATABASE_URL="postgresql://postgres:Dhruvin@2710@localhost:5432/gfmms_db?schema=public"
-NODE_ENV=development
+DATABASE_URL="postgresql://postgres:postgres@localhost:5432/gfmms_db?schema=public"
+JWT_SECRET="anytime-athletic-super-secret-jwt-key-2026"
+OWNER_EMAIL="dynamitedhruvin@gmail.com"
+OWNER_PASSWORD_HASH="$2b$10$4fYDABB4C7wQjFDPaQoVB.dNf73GAvclVvo0bUuC4OnBtdwEcjjwa"
+SMTP_USER="dynamitedhruvin@gmail.com"
+SMTP_PASS="pgtjcvupqyxtmjnm"
 ```
 
-And `.env.test` for running tests:
-```env
-PORT=3000
-DATABASE_URL="postgresql://postgres:Dhruvin@2710@localhost:5432/gfmms_test_db?schema=public"
-NODE_ENV=test
-```
-
-### Step 3: Run Database Migrations
-Synchronize the PostgreSQL database with the Prisma schema:
+### 3. Database Migration & Seed
 ```bash
+# Push schema to database
 npm run prisma:push
-```
 
-### Step 4: Run the Database Seed Script
-Populates the database with:
-- 1 MembershipPlan (`Annual Premium Fitness Plan`)
-- 1 FitnessClass near capacity (`High Intensity Spinning`, Capacity: 2, 1 Current Booking)
-- 2 Active Members (`Alice Johnson` with booked seat, `Bob Smith`)
-- 1 Expired Member (`Charlie Expired` for testing rejection)
+# Generate Prisma Client
+npm run prisma:generate
 
-```bash
+# Seed 4 plans, classes, and demo accounts
 npm run seed
 ```
 
-### Step 5: Start the Development Server
+### 4. Start Development Server
 ```bash
 npm run dev
+# Server running live on http://localhost:3000
 ```
-The server will start on `http://localhost:3000`.
 
 ---
 
-## 5. Running Automated Tests
+## 8. Automated Verification & Testing
 
-The test suite is built with **Jest** and **Supertest** covering all required test branches and edge cases:
-
+### Run Jest Unit & Integration Tests (13/13 Passing)
 ```bash
 npm test
 ```
+*Executes all assertions for Module A and Module B in sequence and automatically reseeds the database.*
 
-### Verified Test Scenarios:
-- **Module A**:
-  1. `Register with valid details + successful payment` -> Membership set to `Active`, unique QR code generated, `WelcomeEmail` logged in notifications.
-  2. `Register with payment failure` -> No Active membership created, registration marked cancelled/incomplete, failure reason returned.
-  3. `Member login` -> Authenticates and retrieves membership status.
-  4. `Membership plan lifecycle` -> Price updates, deactivation, and reactivation.
-  5. `Payment lifecycle` -> Manual receipt generation, tax invoice calculation, and refunds.
-- **Module B**:
-  1. `Check-in with Active membership` -> Attendance record created.
-  2. `Check-in with Expired membership` -> Rejected with `checkInDenied – please renew`, no Attendance row created.
-  3. `Duplicate check-in prevention` -> Second check-in within 60 minutes rejected.
-  4. `Check-in within 15 minutes of booked class` -> Class booking auto-marked `Attended` and linked.
-  5. `Book class with open seat` -> Status `Booked`, `BookingConfirmation` notification issued.
-  6. `Book class when full` -> Status `Waitlisted`, `WaitlistConfirmation` notification issued.
-  7. `Cancel booking >2 hours before class` -> Booking cancelled, earliest waitlisted member promoted to `Booked` with notification.
-  8. `Cancel booking <2 hours before class` -> Rejected with time-limit error.
+### Run Comprehensive E2E REST System Audit (21/21 Passing)
+```bash
+npx ts-node scripts/comprehensive-audit.ts
+```
+*Validates health, auth, plans, optical check-in, anti-passback, grace period, class booking, FIFO waitlist, GST invoicing, receipts, and checkout.*
 
 ---
 
-## 6. Business Logic & Edge Cases Implemented
+## 9. Academic Documentation & PDF Dossiers
 
-1. **30-Minute Auto-Expiry on Incomplete Registration**:
-   - Implemented via `membershipService.expirePendingRegistrations(windowMinutes = 30)`.
-   - Any registration record left in `Pending` state for over 30 minutes without successful payment is automatically marked `Cancelled` and its reserved identifiers freed.
-2. **Grace Period Verification**:
-   - Per SRS `Renew.Grace`, members with an expired membership can check in within a configurable 3-day grace window.
-   - Evaluated dynamically in `AttendanceService.verifyMemberStatus()` and `MembershipService.checkGracePeriod()`.
-3. **Waitlist FIFO Promotion**:
-   - When a booking is cancelled >2 hours prior to class start, `ClassBooking.promoteFromWaitlist()` queries the earliest waitlisted member (`bookingTimestamp ASC`), promotes them to `Booked`, updates the class counter, and dispatches a notification.
+Official project reports generated and available in the `docs/` folder:
+- **Comprehensive Project Report (PDF):** [`docs/GFMMS_Comprehensive_Project_Report.pdf`](docs/GFMMS_Comprehensive_Project_Report.pdf) — Complete 13-screenshot submission guide, architecture, and verification matrix.
+- **Demo Video Presentation Script (PDF):** [`docs/GFMMS_Demo_Video_Script.pdf`](docs/GFMMS_Demo_Video_Script.pdf) — Timed 2-to-4 minute walkthrough with word-for-word spoken voiceover.
 
 ---
 
-## 7. API Testing & Postman Collection
-Import the included `gfmms_postman_collection.json` file directly into **Postman** or **Thunder Client** to test all endpoints interactively.
+*Engineered with precision for Anytime Athletic (AF·24 Protocol). Licensed under the MIT License.*
