@@ -12,6 +12,9 @@ import { notificationService } from './notification.service';
 import { attendanceService } from './attendance.service';
 import { classBookingService } from './classBooking.service';
 import { v4 as uuidv4 } from 'uuid';
+import bcrypt from 'bcryptjs';
+import QRCode from 'qrcode';
+import { EmailService } from './email.service';
 
 export interface RegisterMemberDTO {
   fullName: string;
@@ -21,6 +24,7 @@ export interface RegisterMemberDTO {
   emergencyContact: string;
   planID: string;
   paymentMethod: string;
+  password?: string;
   profilePhoto?: string;
   failPayment?: boolean;
 }
@@ -76,6 +80,9 @@ export class MemberService {
       };
     }
 
+    // Hash password if provided
+    const passwordHash = dto.password ? bcrypt.hashSync(dto.password, 10) : null;
+
     // Create pending member record
     const member = await prisma.member.create({
       data: {
@@ -87,6 +94,7 @@ export class MemberService {
         profilePhoto: dto.profilePhoto || null,
         membershipStatus: MembershipStatus.Pending,
         joinDate: new Date(),
+        passwordHash,
       },
     });
 
@@ -121,8 +129,20 @@ export class MemberService {
         today
       );
 
-      // 3.d Generate membershipID's qrCodeIdentifier
+      // 3.d Generate membershipID's qrCodeIdentifier and real QR Code Data URL
       const qrCodeIdentifier = `GFMMS-QR-${member.membershipID}`;
+      let qrCodeDataURL = '';
+      try {
+        qrCodeDataURL = await QRCode.toDataURL(qrCodeIdentifier, {
+          errorCorrectionLevel: 'M',
+          margin: 2,
+          scale: 6,
+          color: { dark: '#000000', light: '#FFFFFF' },
+        });
+      } catch (err: any) {
+        console.warn('QR Code generation failed:', err.message);
+      }
+
       const activeMember = await prisma.member.update({
         where: { membershipID: member.membershipID },
         data: {
@@ -132,7 +152,7 @@ export class MemberService {
       });
 
       // 3.e Notification.send() a "WelcomeEmail" containing membershipID + QR code
-      const welcomeContent = `Welcome to GFMMS, ${activeMember.fullName}! Your Membership ID is ${activeMember.membershipID}. Your QR code identifier is ${qrCodeIdentifier}. Plan: ${plan.name} (${plan.durationDays} days).`;
+      const welcomeContent = `Welcome to Anytime Fitness, ${activeMember.fullName}! Your Membership ID is ${activeMember.membershipID}. Your QR code identifier is ${qrCodeIdentifier}. Plan: ${plan.name} (${plan.durationDays} days).`;
       await notificationService.send({
         recipientID: activeMember.membershipID,
         category: 'WelcomeEmail',
@@ -140,12 +160,37 @@ export class MemberService {
         content: welcomeContent,
       });
 
+      // Send real branded email with attached QR Code and Invoice asynchronously
+      EmailService.sendWelcomeEmail({
+        fullName: activeMember.fullName,
+        emailAddress: activeMember.emailAddress,
+        qrCodeIdentifier,
+        qrCodeDataURL,
+        planName: plan.name,
+        endDate: extendedMembership.endDate,
+        membershipID: activeMember.membershipID,
+      }).catch((e) => console.error('[EmailService] Welcome email failed:', e.message));
+
+      EmailService.sendInvoiceEmail({
+        emailAddress: activeMember.emailAddress,
+        fullName: activeMember.fullName,
+        invoiceNumber: `INV-${payment.paymentID.substring(0, 8).toUpperCase()}`,
+        amount: plan.price.toString(),
+        planName: plan.name,
+        paymentMethod: dto.paymentMethod,
+        transactionRef: payment.transactionReferenceNumber,
+        paymentDate: payment.timestamp,
+        periodStart: extendedMembership.startDate,
+        periodEnd: extendedMembership.endDate,
+      }).catch((e) => console.error('[EmailService] Invoice email failed:', e.message));
+
       return {
         success: true,
         member: activeMember,
         membership: extendedMembership,
         payment,
         qrCodeIdentifier,
+        qrCodeDataURL,
       };
     } else {
       // Payment Failed: Membership.cancel() / mark registration incomplete
@@ -252,6 +297,18 @@ export class MemberService {
         },
         payments: {
           orderBy: { timestamp: 'desc' },
+        },
+        attendances: {
+          orderBy: { checkInTimestamp: 'desc' },
+          include: {
+            linkedClassBooking: {
+              include: { fitnessClass: true },
+            },
+          },
+        },
+        classBookings: {
+          orderBy: { bookingTimestamp: 'desc' },
+          include: { fitnessClass: true },
         },
       },
     });
