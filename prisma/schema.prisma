@@ -62,6 +62,7 @@ model Member {
   membershipStatus MembershipStatus @default(Pending)
   joinDate         DateTime         @default(now()) @db.Date
   profilePhoto     String?
+  passwordHash     String?
 
   memberships   Membership[]
   payments      Payment[]
