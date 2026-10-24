@@ -1,6 +1,7 @@
 import prisma from '../config/db';
 import { BookingStatus, MembershipStatus, NotificationChannel } from '@prisma/client';
 import { notificationService } from './notification.service';
+import { EmailService } from './email.service';
 
 export interface BookClassDTO {
   membershipID: string;
@@ -79,6 +80,16 @@ export class ClassBookingService {
         content,
       });
 
+      // Send branded booking confirmation email
+      EmailService.sendBookingEmail({
+        emailAddress: member.emailAddress,
+        fullName: member.fullName,
+        className: fitnessClass.name,
+        schedule: fitnessClass.schedule,
+        bookingID: booking.bookingID,
+        status: 'Booked',
+      }).catch((e) => console.error('[EmailService] Booking email failed:', e.message));
+
       return {
         booking,
         status: BookingStatus.Booked,
@@ -103,6 +114,16 @@ export class ClassBookingService {
         channel: NotificationChannel.Email,
         content,
       });
+
+      // Send waitlist email
+      EmailService.sendBookingEmail({
+        emailAddress: member.emailAddress,
+        fullName: member.fullName,
+        className: fitnessClass.name,
+        schedule: fitnessClass.schedule,
+        bookingID: booking.bookingID,
+        status: 'Waitlisted',
+      }).catch((e) => console.error('[EmailService] Waitlist email failed:', e.message));
 
       return {
         booking,
