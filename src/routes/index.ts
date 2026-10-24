@@ -7,8 +7,12 @@ import notificationRoutes from './notification.routes';
 import attendanceRoutes from './attendance.routes';
 import fitnessClassRoutes from './fitnessClass.routes';
 import classBookingRoutes from './classBooking.routes';
+import authRoutes from './auth.routes';
 
 const router = Router();
+
+// Auth Routes
+router.use('/auth', authRoutes);
 
 // Module A Routes
 router.use('/members', memberRoutes);

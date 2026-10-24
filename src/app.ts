@@ -36,7 +36,8 @@ export function createApp(): Application {
       req.path.startsWith('/plans') ||
       req.path.startsWith('/payments') ||
       req.path.startsWith('/notifications') ||
-      req.path.startsWith('/bookings')
+      req.path.startsWith('/bookings') ||
+      req.path.startsWith('/auth')
     ) {
       return next();
     }
