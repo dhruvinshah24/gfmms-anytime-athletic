@@ -3118,7 +3118,47 @@
       }
     }
 
-    // ── DIGITAL ENTRANCE PASS & QR MODAL ─────────────────────────
+    // ── DIGITAL ENTRANCE PASS & QR CODE ENGINE ──────────────────
+    async function renderPassQRCode(containerId, qrId, memberId) {
+      const container = document.getElementById(containerId);
+      if (!container) return;
+      container.innerHTML = '';
+
+      // 1. First Priority: Instant Client-Side Vector QR via qrcode.min.js
+      try {
+        if (typeof QRCode !== 'undefined') {
+          new QRCode(container, {
+            text: qrId,
+            width: 210,
+            height: 210,
+            colorDark: '#050505',
+            colorLight: '#FFFFFF',
+            correctLevel: QRCode.CorrectLevel.H,
+          });
+          return;
+        }
+      } catch (err) {
+        console.warn('Client-side vector QRCode warning:', err);
+      }
+
+      // 2. Second Priority: Backend-Generated Base64 PNG
+      try {
+        if (memberId) {
+          const res = await fetch(`/members/${memberId}/qrcode`);
+          const json = await res.json();
+          if (json.status === 'success' && json.data.qrCodeDataURL) {
+            container.innerHTML = `<img src="${json.data.qrCodeDataURL}" alt="Entrance QR" class="w-48 h-48 object-contain rounded" />`;
+            return;
+          }
+        }
+      } catch (e) {
+        console.warn('Backend QR data URL fetch warning:', e);
+      }
+
+      // 3. Fallback: Online QR Service
+      container.innerHTML = `<img src="https://api.qrserver.com/v1/create-qr-code/?size=210x210&data=${encodeURIComponent(qrId)}" alt="Entrance QR" class="w-48 h-48 object-contain rounded" onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\\'p-4 bg-dark-950 font-mono text-electric-red text-xs font-bold\\'>${qrId}</div>';" />`;
+    }
+
     async function viewMemberPassModal(memberId) {
       let m = appState.members.find(x => x.membershipID === memberId);
       if (!m) {
@@ -3140,7 +3180,6 @@
       const planName = m.memberships?.[0]?.plan?.name || '12-Month Anytime All-Access (Best Value)';
       const endDate = m.memberships?.[0]?.endDate ? new Date(m.memberships[0].endDate).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) : '23 Oct 2027';
       const isActive = m.membershipStatus === 'Active';
-      const qrImgUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=280x280&margin=8&data=' + encodeURIComponent(qrId);
 
       openModal(`
         <div class="relative bg-gradient-to-b from-dark-900 via-dark-950 to-black p-6 sm:p-8 rounded-2xl border border-electric-red/40 shadow-glow-red overflow-hidden">
@@ -3164,9 +3203,11 @@
           <!-- Pass Body -->
           <div class="flex flex-col items-center">
             
-            <!-- Real High-Res Scannable QR -->
-            <div class="p-3 bg-white rounded-2xl shadow-2xl border-4 border-electric-red/40 relative group mb-4">
-              <img src="${qrImgUrl}" alt="VIP QR Entrance Pass" class="w-48 h-48 sm:w-56 sm:h-56 object-contain rounded" onerror="this.onerror=null; this.src='https://chart.googleapis.com/chart?cht=qr&chs=280x280&chl=' + encodeURIComponent('${qrId}')"/>
+            <!-- Real High-Res Scannable QR Container -->
+            <div class="p-3 bg-white rounded-2xl shadow-2xl border-4 border-electric-red/40 relative group mb-4 flex items-center justify-center min-w-[210px] min-h-[210px]">
+              <div id="modalQrContainer" class="flex items-center justify-center">
+                <div class="text-xs text-dark-900 font-mono font-bold animate-pulse">GENERATING PASS QR...</div>
+              </div>
             </div>
 
             <!-- Token & Status Tag -->
@@ -3212,6 +3253,10 @@
           </div>
         </div>
       `);
+
+      setTimeout(() => {
+        renderPassQRCode('modalQrContainer', qrId, m.membershipID);
+      }, 50);
     }
 
     function testKioskWithPass(qrId) {
