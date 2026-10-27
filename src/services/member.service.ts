@@ -45,7 +45,8 @@ export class MemberService {
    *    - ELSE: cancel membership, mark incomplete, return displayFailureReason (no Active membership)
    */
   async register(dto: RegisterMemberDTO) {
-    // 1. System checks availablePlans() - plan must exist and be active
+    try {
+      // 1. System checks availablePlans() - plan must exist and be active
     const plan = await membershipPlanService.getPlanById(dto.planID);
     if (!plan || !plan.activeStatus) {
       return {
@@ -64,39 +65,66 @@ export class MemberService {
       };
     }
 
-    // 2. Validate that email and contact are not already associated with an existing active Member
-    const existingActiveMember = await prisma.member.findFirst({
+    const normalizedEmail = dto.emailAddress.trim().toLowerCase();
+    const normalizedContact = dto.contactNumber.trim();
+
+    // 2. Validate member existence and handle re-enrollment vs active account
+    const existingMember = await prisma.member.findFirst({
       where: {
-        OR: [{ emailAddress: dto.emailAddress }, { contactNumber: dto.contactNumber }],
-        membershipStatus: MembershipStatus.Active,
+        OR: [
+          { emailAddress: { equals: normalizedEmail, mode: 'insensitive' } },
+          { contactNumber: normalizedContact },
+        ],
       },
     });
 
-    if (existingActiveMember) {
-      return {
-        success: false,
-        registrationIncomplete: true,
-        displayFailureReason: 'Email address or contact number is already associated with an active member account',
-      };
+    if (existingMember) {
+      if (existingMember.membershipStatus === MembershipStatus.Active) {
+        return {
+          success: false,
+          registrationIncomplete: true,
+          code: 'ACCOUNT_ALREADY_ACTIVE',
+          displayFailureReason: 'Email address or contact number is already associated with an active member account',
+          member: existingMember,
+        };
+      }
     }
 
     // Hash password if provided
     const passwordHash = dto.password ? bcrypt.hashSync(dto.password, 10) : null;
 
-    // Create pending member record
-    const member = await prisma.member.create({
-      data: {
-        fullName: dto.fullName,
-        dateOfBirth: new Date(dto.dateOfBirth),
-        contactNumber: dto.contactNumber,
-        emailAddress: dto.emailAddress,
-        emergencyContact: dto.emergencyContact,
-        profilePhoto: dto.profilePhoto || null,
-        membershipStatus: MembershipStatus.Pending,
-        joinDate: new Date(),
-        passwordHash,
-      },
-    });
+    let member: any;
+    if (existingMember) {
+      // Re-use and update existing pending, cancelled, or expired athlete record
+      member = await prisma.member.update({
+        where: { membershipID: existingMember.membershipID },
+        data: {
+          fullName: dto.fullName.trim(),
+          dateOfBirth: new Date(dto.dateOfBirth),
+          contactNumber: normalizedContact,
+          emailAddress: normalizedEmail,
+          emergencyContact: dto.emergencyContact.trim(),
+          profilePhoto: dto.profilePhoto || existingMember.profilePhoto,
+          membershipStatus: MembershipStatus.Pending,
+          ...(passwordHash ? { passwordHash } : {}),
+        },
+      });
+    } else {
+      // Create new member record
+      member = await prisma.member.create({
+        data: {
+          fullName: dto.fullName.trim(),
+          dateOfBirth: new Date(dto.dateOfBirth),
+          contactNumber: normalizedContact,
+          emailAddress: normalizedEmail,
+          emergencyContact: dto.emergencyContact.trim(),
+          profilePhoto: dto.profilePhoto || null,
+          membershipStatus: MembershipStatus.Pending,
+          joinDate: new Date(),
+          passwordHash,
+        },
+      });
+    }
 
     // Create initial pending Membership record
     const today = new Date();
@@ -130,7 +158,7 @@ export class MemberService {
       );
 
       // 3.d Generate membershipID's qrCodeIdentifier and real QR Code Data URL
-      const qrCodeIdentifier = `GFMMS-QR-${member.membershipID}`;
+      const qrCodeIdentifier = member.qrCodeIdentifier || `GFMMS-QR-${member.membershipID}`;
       let qrCodeDataURL = '';
       try {
         qrCodeDataURL = await QRCode.toDataURL(qrCodeIdentifier, {
@@ -209,7 +237,19 @@ export class MemberService {
         payment,
       };
     }
+  } catch (err: any) {
+    if (err.code === 'P2002') {
+      return {
+        success: false,
+        registrationIncomplete: true,
+        code: 'DUPLICATE_ENTRY',
+        displayFailureReason:
+          'An athlete account with this email address or contact number is already registered. Please sign in or use a different email address.',
+      };
+    }
+    throw err;
   }
+}
 
   /**
    * Member.login()

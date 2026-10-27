@@ -8,6 +8,7 @@ export class MemberController {
       if (!result.success) {
         return res.status(400).json({
           status: 'error',
+          code: (result as any).code || 'REGISTRATION_FAILED',
           registrationIncomplete: result.registrationIncomplete,
           failureReason: result.displayFailureReason,
           details: result,
@@ -19,6 +20,15 @@ export class MemberController {
         data: result,
       });
     } catch (error: any) {
+      if (error.code === 'P2002') {
+        return res.status(400).json({
+          status: 'error',
+          code: 'DUPLICATE_ENTRY',
+          registrationIncomplete: true,
+          failureReason:
+            'An athlete account with this email address or contact number is already registered. Please sign in to access your pass.',
+        });
+      }
       return res.status(500).json({
         status: 'error',
         message: error.message || 'Internal server error during registration',
