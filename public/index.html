@@ -1527,8 +1527,157 @@
   </main>
 
 
+  
   <!-- ══════════════════════════════════════════════════════════════════
-       VIEW 5: ACTIVE MEMBERS DIRECTORY
+       VIEW: DEDICATED ATHLETE MEMBER PORTAL (PRIVATE MEMBER DASHBOARD)
+       ══════════════════════════════════════════════════════════════════ -->
+  <main id="view-member-portal" class="view-section flex-1 pt-28 pb-20">
+    <div class="max-w-7xl mx-auto px-6 sm:px-8">
+      
+      <!-- Athlete Welcome Banner -->
+      <div id="memberPortalHeader" class="p-6 md:p-8 rounded-3xl bg-gradient-to-r from-dark-900 via-dark-850 to-dark-900 border border-white/10 shadow-2xl mb-8 relative overflow-hidden">
+        <div class="absolute -right-16 -top-16 w-64 h-64 bg-electric-red/15 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10">
+          <div class="flex items-center gap-4">
+            <div id="portalAvatar" class="w-16 h-16 rounded-2xl bg-gradient-to-br from-electric-red to-fire-orange flex items-center justify-center font-bebas text-3xl text-white shadow-glow-red border border-white/20 shrink-0">
+              AJ
+            </div>
+            <div>
+              <div class="flex items-center gap-3">
+                <h1 id="portalAthleteName" class="font-bebas text-4xl lg:text-5xl text-white tracking-wide leading-none">ALICE JOHNSON</h1>
+                <span id="portalStatusBadge" class="px-2.5 py-1 rounded-full text-xs font-rajdhani font-bold bg-neon-green/20 text-neon-green border border-neon-green/40 uppercase tracking-wider">
+                  ● ACTIVE VIP
+                </span>
+              </div>
+              <p id="portalPlanSubtitle" class="text-xs text-silver-300 font-inter mt-1.5 flex items-center gap-2">
+                <i class="fa-solid fa-crown text-yellow-400"></i>
+                <span id="portalPlanName">12-Month Anytime All-Access</span> • Valid until <span id="portalExpiryDate" class="text-neon-green font-semibold">27 Oct 2027</span>
+              </p>
+            </div>
+          </div>
+          <div class="flex items-center gap-3">
+            <button onclick="refreshMemberData()" class="px-3.5 py-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/15 text-xs font-rajdhani font-bold tracking-wider text-white flex items-center gap-2 transition-all cursor-pointer">
+              <i class="fa-solid fa-rotate text-electric-red"></i> REFRESH DATA
+            </button>
+            <button onclick="logoutSession()" class="px-3.5 py-2 rounded-xl bg-electric-red/10 hover:bg-electric-red/20 border border-electric-red/30 text-xs font-rajdhani font-bold tracking-wider text-electric-red flex items-center gap-2 transition-all cursor-pointer">
+              <i class="fa-solid fa-right-from-bracket"></i> LOGOUT
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Portal Grid: QR Pass + Athlete Journey -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        
+        <!-- Left Column: The 24/7 Digital Entrance Key (Col 1-5) -->
+        <div class="lg:col-span-5">
+          <div class="p-6 md:p-8 rounded-3xl bg-dark-900/90 border border-electric-red/40 shadow-glow-red relative overflow-hidden sticky top-28">
+            <div class="flex items-center justify-between pb-4 border-b border-white/10 mb-6">
+              <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-lg bg-electric-red flex items-center justify-center font-bebas text-lg text-white shadow-glow-red">
+                  AF
+                </div>
+                <div>
+                  <h3 class="font-bebas text-xl text-white tracking-widest leading-none">24/7 DIGITAL ENTRANCE KEY</h3>
+                  <span class="text-[10px] font-rajdhani font-bold tracking-widest text-silver-400 uppercase">Worldwide Turnstile Pass</span>
+                </div>
+              </div>
+              <span class="w-3 h-3 rounded-full bg-neon-green shadow-glow-neon animate-pulse"></span>
+            </div>
+
+            <!-- Scannable Vector QR Code -->
+            <div class="flex flex-col items-center">
+              <div class="p-4 bg-white rounded-2xl shadow-2xl border-4 border-electric-red/50 mb-4 flex items-center justify-center min-w-[210px] min-h-[210px]">
+                <div id="portalMemberQR" class="flex items-center justify-center">
+                  <div class="text-xs text-dark-900 font-mono font-bold animate-pulse">GENERATING PASS...</div>
+                </div>
+              </div>
+
+              <!-- Token String -->
+              <div class="flex items-center gap-2 mb-4">
+                <span id="portalQrCodeId" class="font-mono text-sm font-bold text-electric-red bg-dark-950 border border-electric-red/30 px-3 py-1 rounded-full">
+                  AF-QR-ALICE001
+                </span>
+                <button onclick="copyQrToken()" class="text-xs text-silver-400 hover:text-white px-2 py-1 bg-white/5 rounded cursor-pointer" title="Copy Token">
+                  <i class="fa-solid fa-copy"></i>
+                </button>
+              </div>
+
+              <div class="w-full bg-dark-950 p-3.5 rounded-xl border border-white/10 text-xs text-silver-300 font-inter text-center mb-6">
+                <i class="fa-solid fa-shield-halved text-neon-green mr-1.5"></i>
+                Turnstile scanner reads this code for instant contactless entry at all 5,000+ clubs worldwide.
+              </div>
+
+              <!-- Action Buttons -->
+              <div class="w-full space-y-3">
+                <button onclick="simulatePortalCheckIn()" class="btn-fire-primary w-full py-3.5 rounded-xl text-sm font-bold tracking-widest uppercase cursor-pointer flex items-center justify-center gap-2.5 shadow-glow-red hover:shadow-glow-red-lg transition-all">
+                  <i class="fa-solid fa-door-open text-base"></i> SIMULATE TURNSTILE ENTRY
+                </button>
+                <button onclick="switchPage('kiosk')" class="w-full py-2.5 rounded-xl text-xs font-rajdhani font-bold uppercase tracking-wider text-silver-300 bg-white/5 hover:bg-white/10 border border-white/10 transition-all flex items-center justify-center gap-2 cursor-pointer">
+                  <i class="fa-solid fa-camera text-yellow-400"></i> OPEN LIVE KIOSK CAMERA SCANNER
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Column: Personal Activity & Bookings (Col 6-12) -->
+        <div class="lg:col-span-7 space-y-6">
+          
+          <!-- Attendance Check-In History Card -->
+          <div class="p-6 md:p-8 rounded-3xl bg-dark-900/90 border border-white/10 shadow-xl">
+            <div class="flex items-center justify-between mb-4 pb-3 border-b border-white/10">
+              <h3 class="font-bebas text-2xl text-white tracking-wider flex items-center gap-2.5">
+                <i class="fa-solid fa-clock-rotate-left text-electric-red"></i> MY RECENT CHECK-INS &amp; SESSIONS
+              </h3>
+              <span id="portalAttendanceCount" class="text-xs font-rajdhani font-bold px-2 py-0.5 rounded bg-white/10 text-silver-300">
+                0 SESSIONS
+              </span>
+            </div>
+            <div id="portalAttendanceList" class="space-y-2.5">
+              <!-- Dynamically populated -->
+            </div>
+          </div>
+
+          <!-- My Booked Classes Card -->
+          <div class="p-6 md:p-8 rounded-3xl bg-dark-900/90 border border-white/10 shadow-xl">
+            <div class="flex items-center justify-between mb-4 pb-3 border-b border-white/10">
+              <h3 class="font-bebas text-2xl text-white tracking-wider flex items-center gap-2.5">
+                <i class="fa-solid fa-calendar-check text-neon-green"></i> MY STUDIO CLASS BOOKINGS
+              </h3>
+              <button onclick="switchPage('classes')" class="text-xs font-rajdhani font-bold uppercase text-electric-red hover:text-white transition-colors cursor-pointer">
+                BOOK NEW CLASS →
+              </button>
+            </div>
+            <div id="portalBookingsList" class="space-y-2.5">
+              <!-- Dynamically populated -->
+            </div>
+          </div>
+
+          <!-- My Invoices & Payment Ledger -->
+          <div class="p-6 md:p-8 rounded-3xl bg-dark-900/90 border border-white/10 shadow-xl">
+            <div class="flex items-center justify-between mb-4 pb-3 border-b border-white/10">
+              <h3 class="font-bebas text-2xl text-white tracking-wider flex items-center gap-2.5">
+                <i class="fa-solid fa-receipt text-fire-orange"></i> MY MEMBERSHIP INVOICES &amp; RECEIPTS
+              </h3>
+              <span id="portalPaymentsCount" class="text-xs font-rajdhani font-bold px-2 py-0.5 rounded bg-white/10 text-silver-300">
+                SETTLED TRANSACTIONS
+              </span>
+            </div>
+            <div id="portalPaymentsList" class="space-y-2.5">
+              <!-- Dynamically populated -->
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+  </main>
+
+  <!-- ══════════════════════════════════════════════════════════════════
+       VIEW 5: ACTIVE MEMBERS DIRECTORY (OWNER COMMAND CENTER)
        ══════════════════════════════════════════════════════════════════ -->
   <main id="view-members" class="view-section flex-1 pt-28 pb-20">
     <div class="max-w-7xl mx-auto px-6 sm:px-8">
@@ -1751,6 +1900,9 @@
       const targetView = document.getElementById(`view-${pageName}`);
       if (targetView) {
         targetView.classList.add('active-view');
+        if (pageName === 'member-portal' && typeof renderMemberPortal === 'function') {
+          renderMemberPortal();
+        }
       }
 
       // Update Nav Indicators
@@ -3869,6 +4021,237 @@
       initParallaxEngine();
       renderAuthNav();
     });
+
+    // ══════════════════════════════════════════════════════════════════
+    // DEDICATED ATHLETE MEMBER PORTAL CONTROLLER
+    // ══════════════════════════════════════════════════════════════════
+    async function renderMemberPortal() {
+      const user = getStoredUser();
+      if (!user || user.role !== 'member') {
+        const portal = document.getElementById('view-member-portal');
+        if (portal) {
+          portal.innerHTML = `
+            <div class="max-w-xl mx-auto text-center py-24 px-6">
+              <div class="w-16 h-16 rounded-2xl bg-electric-red/10 text-electric-red flex items-center justify-center text-3xl mx-auto mb-4 border border-electric-red/30">
+                <i class="fa-solid fa-lock"></i>
+              </div>
+              <h2 class="font-bebas text-3xl text-white tracking-wider mb-2">ATHLETE SIGN-IN REQUIRED</h2>
+              <p class="text-xs text-silver-400 font-inter mb-6">Please authenticate with your Anytime Fitness athlete account to view your 24/7 Digital Entrance Key, check-in history, and bookings.</p>
+              <button onclick="openGoogleModal()" class="btn-fire-primary text-xs px-6 py-3 rounded-xl font-bold tracking-wider uppercase cursor-pointer shadow-glow-red">
+                SIGN IN AS ATHLETE
+              </button>
+            </div>
+          `;
+        }
+        return;
+      }
+
+      const m = user.member;
+      const memberId = m?.membershipID;
+      if (!memberId) return;
+
+      // Update Header Info
+      const nameEl = document.getElementById('portalAthleteName');
+      if (nameEl) nameEl.textContent = m.fullName || 'Athlete';
+
+      const avatarEl = document.getElementById('portalAvatar');
+      if (avatarEl) {
+        const initials = (m.fullName || 'AF').split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+        avatarEl.textContent = initials;
+      }
+
+      const planNameEl = document.getElementById('portalPlanName');
+      const planName = m.activeMembership?.plan?.name || '12-Month Anytime All-Access';
+      if (planNameEl) planNameEl.textContent = planName;
+
+      const expiryEl = document.getElementById('portalExpiryDate');
+      const endDate = m.activeMembership?.endDate 
+        ? new Date(m.activeMembership.endDate).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) 
+        : '27 Oct 2027';
+      if (expiryEl) expiryEl.textContent = endDate;
+
+      const badgeEl = document.getElementById('portalStatusBadge');
+      if (badgeEl) {
+        const isActive = m.membershipStatus === 'Active';
+        badgeEl.className = `px-2.5 py-1 rounded-full text-xs font-rajdhani font-bold ${isActive ? 'bg-neon-green/20 text-neon-green border border-neon-green/40' : 'bg-electric-red/20 text-electric-red border border-electric-red/40'} uppercase tracking-wider`;
+        badgeEl.textContent = `● ${m.membershipStatus} VIP`;
+      }
+
+      // Render 24/7 Digital Pass Vector QR
+      const qrId = (m.qrCodeIdentifier || 'AF-QR-' + memberId.substring(0, 8)).trim();
+      const qrIdEl = document.getElementById('portalQrCodeId');
+      if (qrIdEl) qrIdEl.textContent = qrId;
+
+      renderPassQRCode('portalMemberQR', qrId, memberId);
+
+      // Render Attendance History
+      const attList = document.getElementById('portalAttendanceList');
+      const attCount = document.getElementById('portalAttendanceCount');
+      const attendances = m.recentAttendances || [];
+
+      if (attCount) attCount.textContent = `${attendances.length} SESSIONS RECORDED`;
+      if (attList) {
+        if (!attendances.length) {
+          attList.innerHTML = `
+            <div class="p-6 bg-dark-950 rounded-2xl border border-white/5 text-center text-xs text-silver-400 font-inter">
+              <i class="fa-solid fa-door-closed text-silver-600 text-2xl mb-2"></i>
+              <p>No turnstile entries recorded yet.</p>
+              <p class="text-[11px] text-silver-500 mt-1">Scan your 24/7 QR pass at the entrance turnstile to log your first workout!</p>
+            </div>
+          `;
+        } else {
+          attList.innerHTML = attendances.map(a => `
+            <div class="p-3.5 bg-dark-950 rounded-xl border border-white/5 flex items-center justify-between text-xs font-inter hover:border-white/15 transition-all">
+              <div class="flex items-center gap-3">
+                <span class="w-2.5 h-2.5 rounded-full bg-neon-green shadow-glow-neon"></span>
+                <div>
+                  <div class="text-white font-semibold">${new Date(a.checkInTimestamp).toLocaleString('en-GB', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })}</div>
+                  <div class="text-[11px] text-silver-400">Anytime Fitness 24/7 Turnstile Gate 1</div>
+                </div>
+              </div>
+              <span class="px-2.5 py-0.5 rounded text-[10px] font-rajdhani font-bold uppercase bg-white/10 text-silver-300">${a.checkInMethod || 'QR'} SCAN</span>
+            </div>
+          `).join('');
+        }
+      }
+
+      // Render Class Bookings
+      const bookList = document.getElementById('portalBookingsList');
+      const bookings = m.recentBookings || [];
+      if (bookList) {
+        if (!bookings.length) {
+          bookList.innerHTML = `
+            <div class="p-6 bg-dark-950 rounded-2xl border border-white/5 text-center text-xs text-silver-400 font-inter">
+              <i class="fa-solid fa-dumbbell text-silver-600 text-2xl mb-2"></i>
+              <p>No studio classes currently booked.</p>
+              <button onclick="switchPage('classes')" class="mt-2 text-electric-red font-bold text-xs hover:underline">Browse Studio Schedule →</button>
+            </div>
+          `;
+        } else {
+          bookList.innerHTML = bookings.map(b => `
+            <div class="p-3.5 bg-dark-950 rounded-xl border border-white/5 flex items-center justify-between text-xs font-inter hover:border-neon-green/30 transition-all">
+              <div>
+                <div class="text-white font-bold flex items-center gap-2">
+                  ${b.fitnessClass?.name || 'Studio Session'}
+                  <span class="px-2 py-0.5 rounded text-[9px] font-rajdhani font-bold uppercase ${b.status === 'Booked' ? 'bg-neon-green/20 text-neon-green' : 'bg-yellow-500/20 text-yellow-400'}">● ${b.status}</span>
+                </div>
+                <div class="text-[11px] text-silver-400 mt-0.5">
+                  ${b.fitnessClass?.schedule ? new Date(b.fitnessClass.schedule).toLocaleString('en-GB') : 'Upcoming Session'} • Trainer: ${b.fitnessClass?.trainerID || 'Anytime Coach'}
+                </div>
+              </div>
+              ${b.status === 'Booked' || b.status === 'Waitlisted' ? `
+                <button onclick="cancelBookingFromPortal('${b.bookingID}')" class="px-2.5 py-1 rounded bg-electric-red/10 hover:bg-electric-red text-electric-red hover:text-white font-rajdhani font-bold text-[10px] tracking-wider uppercase transition-all cursor-pointer">
+                  CANCEL
+                </button>
+              ` : ''}
+            </div>
+          `).join('');
+        }
+      }
+
+      // Render Payments List
+      const payList = document.getElementById('portalPaymentsList');
+      const payments = m.recentPayments || [];
+      if (payList) {
+        if (!payments.length) {
+          payList.innerHTML = `
+            <div class="p-6 bg-dark-950 rounded-2xl border border-white/5 text-center text-xs text-silver-400 font-inter">
+              <p>No transaction receipts on file.</p>
+            </div>
+          `;
+        } else {
+          payList.innerHTML = payments.map(p => `
+            <div class="p-3.5 bg-dark-950 rounded-xl border border-white/5 flex items-center justify-between text-xs font-inter hover:border-white/15 transition-all">
+              <div>
+                <div class="font-mono text-silver-200 font-bold">${p.transactionReferenceNumber}</div>
+                <div class="text-[11px] text-silver-400">${new Date(p.timestamp).toLocaleDateString('en-GB')} • ${p.paymentMethod}</div>
+              </div>
+              <div class="flex items-center gap-3">
+                <span class="font-bebas text-lg text-neon-green">₹${Number(p.amount).toLocaleString('en-IN')}</span>
+                <button onclick="viewInvoice('${p.paymentID}')" class="px-2.5 py-1 bg-white/10 hover:bg-electric-red hover:text-white rounded text-[10px] font-rajdhani font-bold uppercase transition-all cursor-pointer">
+                  RECEIPT
+                </button>
+              </div>
+            </div>
+          `).join('');
+        }
+      }
+    }
+
+    async function simulatePortalCheckIn() {
+      const user = getStoredUser();
+      const qrId = document.getElementById('portalQrCodeId')?.textContent?.trim() || user?.member?.qrCodeIdentifier;
+      if (!qrId) return;
+
+      try {
+        playScannerBeep();
+        const res = await fetch('/attendance/check-in', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ identifier: qrId, checkInMethod: 'QR' }),
+        });
+        const json = await res.json();
+        if (res.ok && json.status === 'success') {
+          showToast(`⚡ TURNSTILE UNLOCKED! Welcome ${json.data?.member?.fullName || 'Athlete'}. Enjoy your workout!`, 'success');
+          await refreshMemberData();
+        } else {
+          showToast(json.message || 'Turnstile Locked: Check-in rejected.', 'error');
+        }
+      } catch (e) {
+        showToast('Network error communicating with turnstile gate.', 'error');
+      }
+    }
+
+    async function cancelBookingFromPortal(bookingId) {
+      if (!confirm('Are you sure you want to cancel this class booking?')) return;
+      try {
+        const res = await fetch(`/bookings/${bookingId}/cancel`, { method: 'POST' });
+        const json = await res.json();
+        if (res.ok && json.status === 'success') {
+          showToast('Class booking cancelled. Spot released.', 'info');
+          await refreshMemberData();
+        } else {
+          showToast(json.message || 'Cannot cancel booking (must be >2 hours prior to class).', 'error');
+        }
+      } catch (e) {
+        showToast('Error cancelling booking.', 'error');
+      }
+    }
+
+    async function refreshMemberData() {
+      const user = getStoredUser();
+      if (!user || user.role !== 'member') return;
+      const memberId = user.member?.membershipID;
+      if (!memberId) return;
+
+      try {
+        const res = await fetch(`/members/${memberId}`);
+        const json = await res.json();
+        if (res.ok && json.status === 'success') {
+          user.member = {
+            ...user.member,
+            ...json.data,
+            activeMembership: json.data.memberships?.[0] || user.member.activeMembership,
+            recentAttendances: json.data.attendances || [],
+            recentPayments: json.data.payments || [],
+            recentBookings: json.data.classBookings || [],
+          };
+          setStoredUser(user);
+          renderMemberPortal();
+          showToast('Athlete data refreshed.', 'info');
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
+    function copyQrToken() {
+      const token = document.getElementById('portalQrCodeId')?.textContent?.trim();
+      if (!token) return;
+      navigator.clipboard.writeText(token);
+      showToast(`Copied ${token} to clipboard!`, 'success');
+    }
+
   </script>
 
 </body>
