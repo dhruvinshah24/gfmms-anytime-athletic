@@ -1,4 +1,4 @@
-import { PrismaClient, MembershipStatus, PaymentPurpose, PaymentStatus, BookingStatus } from '@prisma/client';
+import { PrismaClient, MembershipStatus, PaymentPurpose, PaymentStatus, BookingStatus, CheckInMethod } from '@prisma/client';
 import bcrypt from 'bcryptjs';
 
 const prisma = new PrismaClient();
@@ -93,17 +93,16 @@ async function main() {
   - ${plan6Month.name} (₹${plan6Month.price})
   - ${premiumPlan.name} (₹${premiumPlan.price})`);
 
-  console.log('--- Seeding Group Fitness Classes ---');
+  console.log('--- Seeding 8 Group Fitness Classes ---');
   const now = Date.now();
 
-  // Spinning Class (Capacity: 2, 1 Current Booking for exact spec test compatibility)
-  const classSchedule = new Date(now + 4 * 60 * 60 * 1000);
+  // 1. Spinning Class (Capacity: 2, 1 Current Booking for exact spec test compatibility)
   const spinningClass = await prisma.fitnessClass.create({
     data: {
       name: 'High Intensity Spinning',
       category: 'Cardio',
       trainerID: 'TR-101-ELENA-ROSTOVA',
-      schedule: classSchedule,
+      schedule: new Date(now + 4 * 60 * 60 * 1000),
       durationMinutes: 45,
       capacity: 2,
       currentBookings: 1,
@@ -112,7 +111,7 @@ async function main() {
     },
   });
 
-  // HIIT Ignition
+  // 2. HIIT Ignition & Metabolic Burn
   const hiitClass = await prisma.fitnessClass.create({
     data: {
       name: 'HIIT Ignition & Metabolic Burn',
@@ -127,7 +126,7 @@ async function main() {
     },
   });
 
-  // Anytime Vinyasa Yoga
+  // 3. Anytime Power Vinyasa Yoga
   const yogaClass = await prisma.fitnessClass.create({
     data: {
       name: 'Anytime Power Vinyasa Yoga',
@@ -142,7 +141,7 @@ async function main() {
     },
   });
 
-  // Heavy Bag Boxing & Conditioning
+  // 4. Heavy Bag Boxing & Conditioning
   const boxingClass = await prisma.fitnessClass.create({
     data: {
       name: 'Anytime Boxing & Strike Conditioning',
@@ -157,16 +156,75 @@ async function main() {
     },
   });
 
-  console.log(`Created 4 Classes:
-  - ${spinningClass.name} (Capacity: 2, Booked: 1)
-  - ${hiitClass.name} (Capacity: 15, Booked: 8)
-  - ${yogaClass.name} (Capacity: 20, Booked: 14)
-  - ${boxingClass.name} (Capacity: 12, Booked: 5)`);
+  // 5. CrossFit WOD: Iron Titan
+  const crossfitClass = await prisma.fitnessClass.create({
+    data: {
+      name: 'CrossFit WOD: Iron Titan',
+      category: 'Strength',
+      trainerID: 'TR-105-DARIUS-STONE',
+      schedule: new Date(now + 12 * 60 * 60 * 1000),
+      durationMinutes: 60,
+      capacity: 16,
+      currentBookings: 10,
+      isRecurring: true,
+      weeklyPattern: 'Mon, Wed, Fri 18:00',
+    },
+  });
 
-  console.log('--- Seeding Members ---');
+  // 6. Olympic Weightlifting & Barbell Masterclass
+  const olyClass = await prisma.fitnessClass.create({
+    data: {
+      name: 'Olympic Weightlifting & Barbell Technique',
+      category: 'Strength',
+      trainerID: 'TR-106-DMITRI-VOLKOV',
+      schedule: new Date(now + 16 * 60 * 60 * 1000),
+      durationMinutes: 75,
+      capacity: 10,
+      currentBookings: 6,
+      isRecurring: true,
+      weeklyPattern: 'Tue, Thu 17:30',
+    },
+  });
+
+  // 7. Clinical Pilates Reformer & Core Rehab
+  const pilatesClass = await prisma.fitnessClass.create({
+    data: {
+      name: 'Pilates Reformer & Core Alignment',
+      category: 'Mind & Body',
+      trainerID: 'TR-107-SARAH-JENKINS',
+      schedule: new Date(now + 20 * 60 * 60 * 1000),
+      durationMinutes: 50,
+      capacity: 8,
+      currentBookings: 4,
+      isRecurring: true,
+      weeklyPattern: 'Wed, Sat 10:00',
+    },
+  });
+
+  // 8. Hyrox Athletic Endurance & Conditioning
+  const hyroxClass = await prisma.fitnessClass.create({
+    data: {
+      name: 'HYROX Athletic Race Conditioning',
+      category: 'HIIT',
+      trainerID: 'TR-108-CHRIS-PORTER',
+      schedule: new Date(now + 24 * 60 * 60 * 1000),
+      durationMinutes: 60,
+      capacity: 20,
+      currentBookings: 12,
+      isRecurring: true,
+      weeklyPattern: 'Sat, Sun 09:00',
+    },
+  });
+
+  console.log('Created 8 Classes across Cardio, Strength, HIIT, Mind & Body.');
+
+  console.log('--- Seeding Members & Realistic Ledgers ---');
   const defaultPasswordHash = bcrypt.hashSync('Anytime@2026', 10);
+  const ironPeakPasswordHash = bcrypt.hashSync('IronPeak@2026', 10);
 
-  // Member 1: Alice Johnson (Active, booked in Spinning)
+  // ─────────────────────────────────────────────────────────────
+  // MEMBER 1: Alice Johnson (Annual All-Access, VIP, Active)
+  // ─────────────────────────────────────────────────────────────
   const member1 = await prisma.member.create({
     data: {
       fullName: 'Alice Johnson',
@@ -207,7 +265,7 @@ async function main() {
     },
   });
 
-  // Booking for Alice (occupying seat 1 of 2 in spinning)
+  // Seat booked in spinning
   await prisma.classBooking.create({
     data: {
       membershipID: member1.membershipID,
@@ -217,7 +275,22 @@ async function main() {
     },
   });
 
-  // Member 2: Bob Smith (Active on 3-Month Plan)
+  // Attendance history for Alice (yesterday session)
+  const yesterday = new Date();
+  yesterday.setDate(yesterday.getDate() - 1);
+  yesterday.setHours(7, 30, 0, 0);
+
+  await prisma.attendance.create({
+    data: {
+      membershipID: member1.membershipID,
+      checkInTimestamp: yesterday,
+      checkInMethod: CheckInMethod.QR,
+    },
+  });
+
+  // ─────────────────────────────────────────────────────────────
+  // MEMBER 2: Bob Smith (3-Month Transformation, Active)
+  // ─────────────────────────────────────────────────────────────
   const member2 = await prisma.member.create({
     data: {
       fullName: 'Bob Smith',
@@ -257,7 +330,30 @@ async function main() {
     },
   });
 
-  // Member 3: Charlie Expired
+  await prisma.classBooking.create({
+    data: {
+      membershipID: member2.membershipID,
+      classID: hiitClass.classID,
+      status: BookingStatus.Booked,
+      bookingTimestamp: new Date(),
+    },
+  });
+
+  const twoDaysAgo = new Date();
+  twoDaysAgo.setDate(twoDaysAgo.getDate() - 2);
+  twoDaysAgo.setHours(8, 45, 0, 0);
+
+  await prisma.attendance.create({
+    data: {
+      membershipID: member2.membershipID,
+      checkInTimestamp: twoDaysAgo,
+      checkInMethod: CheckInMethod.QR,
+    },
+  });
+
+  // ─────────────────────────────────────────────────────────────
+  // MEMBER 3: Charlie Davis (Expired Flex Pass)
+  // ─────────────────────────────────────────────────────────────
   const expiredPast = new Date();
   expiredPast.setDate(expiredPast.getDate() - 60);
 
@@ -286,10 +382,129 @@ async function main() {
     },
   });
 
-  console.log(`Created 3 Members:
-  - Alice Johnson (${member1.membershipID}) -> Active (Annual)
-  - Bob Smith (${member2.membershipID}) -> Active (3-Month)
-  - Charlie Davis (${member3.membershipID}) -> Expired (1-Month)`);
+  // ─────────────────────────────────────────────────────────────
+  // MEMBER 4: Diana Prince (6-Month Performance Elite, Active)
+  // ─────────────────────────────────────────────────────────────
+  const member4 = await prisma.member.create({
+    data: {
+      fullName: 'Diana Prince',
+      dateOfBirth: new Date('1994-06-18'),
+      contactNumber: '+919876543240',
+      emailAddress: 'diana.prince@example.com',
+      emergencyContact: '+919876543241',
+      qrCodeIdentifier: 'AF-QR-DIANA004',
+      membershipStatus: MembershipStatus.Active,
+      joinDate: new Date('2026-03-01'),
+      passwordHash: defaultPasswordHash,
+    },
+  });
+
+  const member4End = new Date();
+  member4End.setDate(member4End.getDate() + 180);
+
+  await prisma.membership.create({
+    data: {
+      membershipID: member4.membershipID,
+      planID: plan6Month.planID,
+      startDate: member1Start,
+      endDate: member4End,
+      status: MembershipStatus.Active,
+      autoRenewFlag: true,
+    },
+  });
+
+  await prisma.payment.create({
+    data: {
+      membershipID: member4.membershipID,
+      amount: plan6Month.price,
+      paymentMethod: 'CreditCard',
+      paymentPurpose: PaymentPurpose.Registration,
+      status: PaymentStatus.Success,
+      transactionReferenceNumber: 'TXN-AF-DIANA-03',
+    },
+  });
+
+  await prisma.classBooking.create({
+    data: {
+      membershipID: member4.membershipID,
+      classID: yogaClass.classID,
+      status: BookingStatus.Booked,
+      bookingTimestamp: new Date(),
+    },
+  });
+
+  // ─────────────────────────────────────────────────────────────
+  // MEMBER 5: Evan Wright (12-Month All-Access, Active)
+  // ─────────────────────────────────────────────────────────────
+  const member5 = await prisma.member.create({
+    data: {
+      fullName: 'Evan Wright',
+      dateOfBirth: new Date('1990-12-03'),
+      contactNumber: '+919876543250',
+      emailAddress: 'evan.wright@example.com',
+      emergencyContact: '+919876543251',
+      qrCodeIdentifier: 'AF-QR-EVAN005',
+      membershipStatus: MembershipStatus.Active,
+      joinDate: new Date('2026-02-01'),
+      passwordHash: defaultPasswordHash,
+    },
+  });
+
+  await prisma.membership.create({
+    data: {
+      membershipID: member5.membershipID,
+      planID: premiumPlan.planID,
+      startDate: member1Start,
+      endDate: member1End,
+      status: MembershipStatus.Active,
+      autoRenewFlag: true,
+    },
+  });
+
+  await prisma.payment.create({
+    data: {
+      membershipID: member5.membershipID,
+      amount: premiumPlan.price,
+      paymentMethod: 'NetBanking',
+      paymentPurpose: PaymentPurpose.Registration,
+      status: PaymentStatus.Success,
+      transactionReferenceNumber: 'TXN-AF-EVAN-04',
+    },
+  });
+
+  await prisma.classBooking.create({
+    data: {
+      membershipID: member5.membershipID,
+      classID: crossfitClass.classID,
+      status: BookingStatus.Booked,
+      bookingTimestamp: new Date(),
+    },
+  });
+
+  // ─────────────────────────────────────────────────────────────
+  // MEMBER 6: Fiona Gallagher (Pending Applicant)
+  // ─────────────────────────────────────────────────────────────
+  const member6 = await prisma.member.create({
+    data: {
+      fullName: 'Fiona Gallagher',
+      dateOfBirth: new Date('1997-09-14'),
+      contactNumber: '+919876543260',
+      emailAddress: 'fiona.g@example.com',
+      emergencyContact: '+919876543261',
+      qrCodeIdentifier: 'AF-QR-FIONA006',
+      membershipStatus: MembershipStatus.Pending,
+      joinDate: new Date(),
+      passwordHash: defaultPasswordHash,
+    },
+  });
+
+  console.log(`Created 6 Diverse Members:
+  - Alice Johnson (${member1.membershipID}) -> Active (Annual) | QR: AF-QR-ALICE001
+  - Bob Smith (${member2.membershipID}) -> Active (3-Month) | QR: AF-QR-BOB002
+  - Charlie Davis (${member3.membershipID}) -> Expired (1-Month) | QR: AF-QR-CHARLIE003
+  - Diana Prince (${member4.membershipID}) -> Active (6-Month) | QR: AF-QR-DIANA004
+  - Evan Wright (${member5.membershipID}) -> Active (Annual) | QR: AF-QR-EVAN005
+  - Fiona Gallagher (${member6.membershipID}) -> Pending Applicant | QR: AF-QR-FIONA006`);
 
   console.log('--- Anytime Fitness Seed Completed Successfully! ---');
 }
