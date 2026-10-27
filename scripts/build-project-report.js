@@ -12,9 +12,8 @@ if (!fs.existsSync(docsDir)) {
   fs.mkdirSync(docsDir, { recursive: true });
 }
 
-// Helper to encode image to base64 data URI
-function getBase64Image(filename) {
-  const filePath = path.join(screenshotsDir, filename);
+// Helper to encode image to base64
+function getBase64Image(filePath) {
   if (fs.existsSync(filePath)) {
     const data = fs.readFileSync(filePath);
     return `data:image/png;base64,${data.toString('base64')}`;
@@ -22,27 +21,28 @@ function getBase64Image(filename) {
   return '';
 }
 
-console.log('Loading high-resolution screenshots for report embedding...');
-const imgHero = getBase64Image('01_hero_dashboard.png');
-const imgAuth = getBase64Image('02_google_auth_modal.png');
-const imgQr = getBase64Image('03_athlete_portal_qr.png');
-const imgPlans = getBase64Image('04_plan_tiers_onboarding.png');
-const imgRecovery = getBase64Image('05_smart_duplicate_recovery.png');
-const imgKiosk = getBase64Image('06_optical_turnstile_kiosk.png');
-const imgAntiPassback = getBase64Image('07_turnstile_anti_passback.png');
-const imgClasses = getBase64Image('08_group_fitness_classes.png');
-const imgFifo = getBase64Image('09_fifo_waitlist_modal.png');
-const imgDirectory = getBase64Image('10_owner_member_directory.png');
-const imgDossier = getBase64Image('11_athlete_dossier_modal.png');
-const imgInvoice = getBase64Image('12_financial_ledger_gst_invoice.png');
+console.log('Loading SPIT logo and application screenshots...');
+const spitLogoBase64 = getBase64Image(path.join(docsDir, 'spit_logo.png'));
+const imgHero = getBase64Image(path.join(screenshotsDir, '01_hero_dashboard.png'));
+const imgAuth = getBase64Image(path.join(screenshotsDir, '02_google_auth_modal.png'));
+const imgQr = getBase64Image(path.join(screenshotsDir, '03_athlete_portal_qr.png'));
+const imgPlans = getBase64Image(path.join(screenshotsDir, '04_plan_tiers_onboarding.png'));
+const imgRecovery = getBase64Image(path.join(screenshotsDir, '05_smart_duplicate_recovery.png'));
+const imgKiosk = getBase64Image(path.join(screenshotsDir, '06_optical_turnstile_kiosk.png'));
+const imgAntiPassback = getBase64Image(path.join(screenshotsDir, '07_turnstile_anti_passback.png'));
+const imgClasses = getBase64Image(path.join(screenshotsDir, '08_group_fitness_classes.png'));
+const imgFifo = getBase64Image(path.join(screenshotsDir, '09_fifo_waitlist_modal.png'));
+const imgDirectory = getBase64Image(path.join(screenshotsDir, '10_owner_member_directory.png'));
+const imgDossier = getBase64Image(path.join(screenshotsDir, '11_athlete_dossier_modal.png'));
+const imgInvoice = getBase64Image(path.join(screenshotsDir, '12_financial_ledger_gst_invoice.png'));
 
-console.log('Assembling comprehensive, humanized project report HTML...');
+console.log('Constructing updated academic report HTML with SPIT Title Template...');
 
 const htmlContent = `<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Anytime Athletic — Comprehensive System Engineering & Project Report</title>
+  <title>Sardar Patel Institute of Technology — Anytime Athletic (GFMMS) Project Report</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Rajdhani:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap');
 
@@ -56,7 +56,7 @@ const htmlContent = `<!DOCTYPE html>
         color: #64748b;
       }
       @bottom-left {
-        content: "Anytime Athletic (GFMMS) • Engineering Report";
+        content: "SPIT • Department of Computer Engineering • Anytime Athletic";
         font-family: 'Inter', sans-serif;
         font-size: 8pt;
         color: #94a3b8;
@@ -79,182 +79,236 @@ const htmlContent = `<!DOCTYPE html>
       padding: 0;
     }
 
-    /* Cover Page */
-    .cover-page {
+    /* ══════════════════════════════════════════════════════════════════
+       ACADEMIC COVER / FIRST PAGE (SPIT TEMPLATE)
+       ══════════════════════════════════════════════════════════════════ */
+    .spit-cover-page {
       page-break-after: always;
       height: 96vh;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      padding: 48px 36px;
-      background: linear-gradient(145deg, #090d16 0%, #111827 50%, #1e111a 100%);
-      color: #ffffff;
-      border-radius: 12px;
-      border: 1px solid rgba(255,255,255,0.12);
-      box-shadow: inset 0 0 100px rgba(0,0,0,0.8);
-      position: relative;
-      overflow: hidden;
+      padding: 24px 20px;
+      background: #ffffff;
+      border: 2px solid #0f172a;
+      border-top: 8px solid #b91c1c;
     }
 
-    .cover-page::before {
-      content: '';
-      position: absolute;
-      top: -120px;
-      right: -120px;
-      width: 420px;
-      height: 420px;
-      background: radial-gradient(circle, rgba(230, 57, 70, 0.28) 0%, transparent 70%);
-      border-radius: 50%;
-      pointer-events: none;
-    }
-
-    .cover-top {
+    .spit-header {
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      border-bottom: 1px solid rgba(255,255,255,0.12);
-      padding-bottom: 24px;
+      justify-content: flex-start;
+      gap: 28px;
+      padding-bottom: 14px;
     }
 
-    .cover-brand {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-    }
-
-    .brand-icon {
-      width: 48px;
-      height: 48px;
-      background: linear-gradient(135deg, #e63946, #ff6b35);
-      border-radius: 12px;
+    .spit-logo-box {
+      width: 110px;
+      height: 110px;
+      flex-shrink: 0;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-family: 'Rajdhani', sans-serif;
-      font-weight: 800;
-      font-size: 20pt;
-      color: #ffffff;
-      box-shadow: 0 0 25px rgba(230,57,70,0.5);
     }
 
-    .brand-text h2 {
-      font-family: 'Rajdhani', sans-serif;
-      font-size: 20pt;
-      font-weight: 800;
-      letter-spacing: 0.08em;
-      margin: 0;
-      color: #ffffff;
+    .spit-logo-box img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
     }
 
-    .brand-text p {
+    .spit-inst-text {
+      flex: 1;
+      text-align: left;
+    }
+
+    .bhavans-title {
+      font-family: 'Inter', serif;
+      font-size: 13pt;
+      font-weight: 600;
+      color: #0f172a;
+      letter-spacing: 0.02em;
+      margin-bottom: 4px;
+    }
+
+    .institute-title {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 18pt;
+      font-weight: 800;
+      color: #0f172a;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      line-height: 1.15;
+      margin-bottom: 4px;
+    }
+
+    .campus-address {
       font-family: 'Inter', sans-serif;
-      font-size: 8.5pt;
+      font-size: 10.5pt;
+      color: #334155;
+      font-weight: 500;
+    }
+
+    /* Dashed Student Metadata Box */
+    .spit-dashed-box {
+      border-top: 1.5px dashed #0f172a;
+      border-bottom: 1.5px dashed #0f172a;
+      padding: 14px 10px;
+      margin: 14px 0 24px 0;
+    }
+
+    .student-meta-grid {
+      display: grid;
+      grid-template-columns: 1.4fr 1fr;
+      gap: 10px 24px;
+      font-size: 10pt;
+    }
+
+    .meta-item {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+    }
+
+    .meta-item label {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 11pt;
+      font-weight: 700;
+      color: #0f172a;
+      text-transform: uppercase;
+      min-width: 75px;
+    }
+
+    .meta-item span {
+      font-weight: 600;
+      color: #1e293b;
+    }
+
+    /* Big & Bold Project Presentation Section */
+    .project-hero-block {
+      text-align: center;
+      margin: 20px 0;
+      padding: 16px;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+    }
+
+    .academic-course-tag {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 11pt;
+      font-weight: 700;
+      color: #b91c1c;
       text-transform: uppercase;
       letter-spacing: 0.12em;
-      color: #94a3b8;
-      margin: 2px 0 0 0;
+      margin-bottom: 6px;
     }
 
-    .badge-live {
-      background: rgba(0, 245, 160, 0.15);
-      color: #00f5a0;
-      border: 1px solid rgba(0, 245, 160, 0.4);
-      padding: 6px 14px;
-      border-radius: 20px;
+    .project-hero-title {
       font-family: 'Rajdhani', sans-serif;
-      font-size: 9.5pt;
-      font-weight: 700;
-      letter-spacing: 0.08em;
+      font-size: 26pt;
+      font-weight: 800;
+      line-height: 1.1;
+      color: #0f172a;
       text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin: 8px 0;
     }
 
-    .cover-hero {
-      margin: 40px 0;
-    }
-
-    .cover-kicker {
+    .project-hero-subtitle {
       font-family: 'Rajdhani', sans-serif;
-      font-size: 13pt;
+      font-size: 14pt;
       font-weight: 700;
       color: #e63946;
       text-transform: uppercase;
-      letter-spacing: 0.15em;
+      letter-spacing: 0.05em;
       margin-bottom: 12px;
     }
 
-    .cover-title {
-      font-family: 'Rajdhani', sans-serif;
-      font-size: 34pt;
-      font-weight: 800;
-      line-height: 1.1;
-      letter-spacing: 0.03em;
-      margin: 0 0 16px 0;
-      color: #ffffff;
+    .project-hero-desc {
+      font-size: 9.6pt;
+      color: #475569;
+      max-width: 650px;
+      margin: 0 auto;
+      line-height: 1.5;
     }
 
-    .cover-subtitle {
-      font-size: 11pt;
-      color: #cbd5e1;
-      max-width: 620px;
-      line-height: 1.6;
-      margin-bottom: 28px;
-    }
-
-    .cover-modules-grid {
+    /* Core Modules Badge Box */
+    .hero-features-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 18px;
-      margin-top: 10px;
+      gap: 14px;
+      margin: 18px 0;
     }
 
-    .module-card {
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 10px;
-      padding: 16px;
+    .hero-feat-card {
+      background: #ffffff;
+      border: 1px solid #cbd5e1;
+      border-left: 4px solid #b91c1c;
+      border-radius: 6px;
+      padding: 10px 14px;
+      text-align: left;
     }
 
-    .module-card h4 {
+    .hero-feat-card h4 {
       font-family: 'Rajdhani', sans-serif;
-      font-size: 12pt;
+      font-size: 10.5pt;
       font-weight: 700;
-      color: #e63946;
-      margin: 0 0 6px 0;
       text-transform: uppercase;
-      letter-spacing: 0.06em;
+      color: #0f172a;
+      margin: 0 0 3px 0;
     }
 
-    .module-card p {
-      font-size: 8.8pt;
-      color: #94a3b8;
+    .hero-feat-card p {
+      font-size: 8.5pt;
+      color: #64748b;
       margin: 0;
-      line-height: 1.45;
+      line-height: 1.4;
     }
 
-    .cover-footer {
-      border-top: 1px solid rgba(255,255,255,0.12);
-      padding-top: 20px;
+    /* Evaluation Table */
+    .spit-evaluation-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 14px;
+      font-size: 8.8pt;
+    }
+
+    .spit-evaluation-table th {
+      background: #0f172a;
+      color: #ffffff;
+      padding: 6px 10px;
+      text-transform: uppercase;
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 9pt;
+      border: 1px solid #0f172a;
+    }
+
+    .spit-evaluation-table td {
+      padding: 6px 10px;
+      border: 1px solid #cbd5e1;
+      text-align: center;
+      color: #334155;
+    }
+
+    .faculty-sign-box {
       display: flex;
       justify-content: space-between;
       align-items: flex-end;
+      padding-top: 18px;
     }
 
-    .meta-group label {
-      display: block;
-      font-size: 7.8pt;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      color: #64748b;
-      margin-bottom: 3px;
-    }
-
-    .meta-group span {
-      font-size: 10pt;
+    .sign-line {
+      border-top: 1px solid #0f172a;
+      width: 180px;
+      text-align: center;
+      font-size: 8.5pt;
       font-weight: 600;
-      color: #f1f5f9;
+      color: #334155;
+      padding-top: 4px;
     }
 
-    /* Headings & Structure */
+    /* Headings & Document Body */
     h1, h2, h3, h4 {
       font-family: 'Rajdhani', sans-serif;
       color: #0f172a;
@@ -264,17 +318,16 @@ const htmlContent = `<!DOCTYPE html>
     }
 
     h1 {
-      font-size: 20pt;
+      font-size: 19pt;
       line-height: 1.2;
-      border-bottom: 2px solid #e63946;
+      border-bottom: 2px solid #b91c1c;
       padding-bottom: 6px;
       margin-top: 24px;
-      margin-bottom: 14px;
-      color: #0f172a;
+      margin-bottom: 12px;
     }
 
     h2 {
-      font-size: 14pt;
+      font-size: 13.5pt;
       line-height: 1.25;
       border-bottom: 1px solid #e2e8f0;
       padding-bottom: 4px;
@@ -284,7 +337,7 @@ const htmlContent = `<!DOCTYPE html>
     }
 
     h3 {
-      font-size: 11.5pt;
+      font-size: 11pt;
       color: #1e293b;
       margin-top: 14px;
       margin-bottom: 6px;
@@ -308,7 +361,7 @@ const htmlContent = `<!DOCTYPE html>
       color: #334155;
     }
 
-    /* Screenshot Container */
+    /* Screenshot Display */
     .screenshot-block {
       page-break-inside: avoid;
       background: #f8fafc;
@@ -350,10 +403,9 @@ const htmlContent = `<!DOCTYPE html>
       border-radius: 4px;
     }
 
-    /* Info Callout */
     .callout {
       background: #f1f5f9;
-      border-left: 4px solid #e63946;
+      border-left: 4px solid #b91c1c;
       border-radius: 0 6px 6px 0;
       padding: 10px 14px;
       margin: 12px 0;
@@ -370,7 +422,6 @@ const htmlContent = `<!DOCTYPE html>
       margin-bottom: 3px;
     }
 
-    /* Tables */
     table {
       width: 100%;
       border-collapse: collapse;
@@ -401,7 +452,6 @@ const htmlContent = `<!DOCTYPE html>
       background: #f8fafc;
     }
 
-    /* Code & Terminal */
     pre, code {
       font-family: 'JetBrains Mono', Consolas, monospace;
     }
@@ -434,66 +484,192 @@ const htmlContent = `<!DOCTYPE html>
     .page-break {
       page-break-before: always;
     }
+
+    /* ══════════════════════════════════════════════════════════════════
+       HIGHLIGHTED BLUE DRIVE VIDEO CARD AT END
+       ══════════════════════════════════════════════════════════════════ */
+    .drive-video-card {
+      page-break-inside: avoid;
+      background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+      border: 2px solid #2563eb;
+      border-radius: 12px;
+      padding: 20px 24px;
+      margin: 24px 0;
+      box-shadow: 0 8px 24px rgba(37, 99, 235, 0.12);
+    }
+
+    .drive-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #2563eb;
+      color: #ffffff;
+      font-family: 'Rajdhani', sans-serif;
+      font-weight: 700;
+      font-size: 9.5pt;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 4px 12px;
+      border-radius: 20px;
+      margin-bottom: 10px;
+    }
+
+    .drive-title {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 16pt;
+      font-weight: 800;
+      color: #1e3a8a;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin: 0 0 8px 0;
+    }
+
+    .drive-desc {
+      font-size: 9.5pt;
+      color: #1e40af;
+      line-height: 1.6;
+      margin-bottom: 14px;
+    }
+
+    .drive-button-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .drive-btn {
+      display: inline-block;
+      background: #1d4ed8;
+      color: #ffffff !important;
+      text-decoration: none;
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 11pt;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 10px 22px;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(29, 78, 216, 0.35);
+      border: 1px solid #1e40af;
+    }
+
+    .drive-url-text {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9pt;
+      color: #1d4ed8;
+      font-weight: 600;
+      word-break: break-all;
+    }
   </style>
 </head>
 <body>
 
   <!-- ══════════════════════════════════════════════════════════════════
-       COVER PAGE
+       FIRST PAGE: SARDAR PATEL INSTITUTE OF TECHNOLOGY TEMPLATE
        ══════════════════════════════════════════════════════════════════ -->
-  <div class="cover-page">
-    <div class="cover-top">
-      <div class="cover-brand">
-        <div class="brand-icon">AF</div>
-        <div class="brand-text">
-          <h2>ANYTIME ATHLETIC</h2>
-          <p>Gym &amp; Fitness Management System (GFMMS)</p>
+  <div class="spit-cover-page">
+    
+    <div>
+      <!-- Institutional Header -->
+      <div class="spit-header">
+        <div class="spit-logo-box">
+          <img src="${spitLogoBase64}" alt="Sardar Patel Institute of Technology Seal">
+        </div>
+        <div class="spit-inst-text">
+          <div class="bhavans-title">Bhartiya Vidya Bhavans</div>
+          <div class="institute-title">Sardar Patel Institute of Technology</div>
+          <div class="campus-address">Munshi Nagar - Andheri West - 400058</div>
         </div>
       </div>
-      <div class="badge-live">v2.4.0 • PRODUCTION READY</div>
-    </div>
 
-    <div class="cover-hero">
-      <div class="cover-kicker">Comprehensive Engineering &amp; Architecture Report</div>
-      <div class="cover-title">Autonomous 24/7 Athletic Facility Infrastructure</div>
-      <div class="cover-subtitle">
-        An industrial-grade full-stack platform engineered with Node.js, Express, TypeScript, PostgreSQL, and Prisma ORM. Delivering automated subscription onboarding, offline-resilient vector QR passes, optical turnstile scanning with 60-minute anti-passback defense, and real-time FIFO studio class scheduling.
-      </div>
-
-      <div class="cover-modules-grid">
-        <div class="module-card">
-          <h4>Module A: Membership &amp; Financial Lifecycle</h4>
-          <p>Automated multi-tier onboarding, atomic payment settlement, smart re-enrollment upserts, duplicate account protection, and transactional GST invoicing.</p>
+      <!-- Dashed Student Metadata Box Matching User Template -->
+      <div class="spit-dashed-box">
+        <div class="student-meta-grid">
+          <div class="meta-item">
+            <label>Name:</label>
+            <span>Dhruvin Shah &nbsp;|&nbsp; Rishi Shah</span>
+          </div>
+          <div class="meta-item">
+            <label>DIVISION:</label>
+            <span>C</span>
+          </div>
+          <div class="meta-item">
+            <label>UID:</label>
+            <span>2024300224 &nbsp;|&nbsp; 2024300228</span>
+          </div>
+          <div class="meta-item">
+            <label>BATCH:</label>
+            <span>D</span>
+          </div>
+          <div class="meta-item">
+            <label>Branch:</label>
+            <span>Computer Engineering</span>
+          </div>
+          <div class="meta-item">
+            <label>DATE:</label>
+            <span>27th October 2026</span>
+          </div>
         </div>
-        <div class="module-card">
-          <h4>Module B: Access Control &amp; Scheduling</h4>
-          <p>Optical camera turnstile simulation, 60-minute anti-passback duplicate blocking, 8-discipline class scheduling, and concurrency-safe FIFO waitlists.</p>
+      </div>
+
+      <!-- Big & Bold Project Presentation -->
+      <div class="project-hero-block">
+        <div class="academic-course-tag">Capstone Engineering Practicum • Advanced Software &amp; Database Systems</div>
+        <div class="project-hero-title">ANYTIME ATHLETIC (GFMMS)</div>
+        <div class="project-hero-subtitle">Gym &amp; Fitness Center Membership Management System</div>
+        <div class="project-hero-desc">
+          An industrial-grade, full-stack 24/7 athletic club management platform engineered with Node.js, Express, TypeScript, PostgreSQL 17, and Prisma ORM. Unifying automated subscription onboarding, offline-resilient vector QR passes, optical turnstile scanning with 60-minute anti-passback defense, and concurrency-safe FIFO group class scheduling.
+        </div>
+      </div>
+
+      <!-- Core Modules Breakdown on First Page -->
+      <div class="hero-features-grid">
+        <div class="hero-feat-card">
+          <h4>Module A: Subscription &amp; Financial Lifecycle</h4>
+          <p>4-tier plan hierarchy, atomic payment settlement, smart profile upsert for re-enrollment, interactive Amber duplicate account recovery, and automated 18% GST invoicing via SMTP.</p>
+        </div>
+        <div class="hero-feat-card">
+          <h4>Module B: Turnstile Biometrics &amp; Studio Scheduling</h4>
+          <p>Hardware kiosk optical camera scanning, audio chime frequency synthesis, 60-minute anti-passback duplicate blocking, 8 fitness class tracks, and automated FIFO waitlist promotion.</p>
         </div>
       </div>
     </div>
 
-    <div class="cover-footer">
-      <div class="meta-group">
-        <label>Principal Engineers</label>
-        <span>Dhruvin Shah &amp; Rishi Shah</span>
-      </div>
-      <div class="meta-group">
-        <label>Tech Stack</label>
-        <span>Node.js • Express • TypeScript • PostgreSQL 17 • Prisma</span>
-      </div>
-      <div class="meta-group">
-        <label>Test Coverage</label>
-        <span>13/13 Jest Units • 32/32 E2E Integration Checks</span>
-      </div>
-      <div class="meta-group">
-        <label>Date of Publication</label>
-        <span>October 27, 2026</span>
+    <!-- First Page Footer: Evaluation & Grade Table -->
+    <div>
+      <table class="spit-evaluation-table">
+        <thead>
+          <tr>
+            <th>Module A Implementation</th>
+            <th>Module B Turnstile &amp; Classes</th>
+            <th>Database &amp; RBAC Architecture</th>
+            <th>Automated Test Verification</th>
+            <th>Overall Grade</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Atomic Onboarding &amp; GST Invoicing</td>
+            <td>Anti-Passback &amp; FIFO Waitlists</td>
+            <td>PostgreSQL 17 / Prisma ORM</td>
+            <td>13/13 Jest • 32/32 E2E Checks</td>
+            <td><strong>EXCELLENT</strong></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="faculty-sign-box">
+        <div class="sign-line">Student Signatures<br>(Dhruvin &amp; Rishi)</div>
+        <div class="sign-line">Faculty Guide Signature</div>
+        <div class="sign-line">Head of Department (CE)</div>
       </div>
     </div>
+
   </div>
 
   <!-- ══════════════════════════════════════════════════════════════════
-       SECTION 1: EXECUTIVE SUMMARY & PROBLEM STATEMENT
+       SECTION 1: SYSTEM OVERVIEW & ARCHITECTURE
        ══════════════════════════════════════════════════════════════════ -->
   <h1>1. Executive Summary &amp; System Architecture</h1>
 
@@ -502,7 +678,7 @@ const htmlContent = `<!DOCTYPE html>
   </p>
   <ul>
     <li><strong>Tailgating and Badge Sharing:</strong> Lack of biometric or anti-passback mechanisms allows members to share screenshot passes or pass tokens to non-paying guests.</li>
-    <li><strong>Brittle Third-Party Integrations:</strong> External QR rendering services fail during network dropouts, locking paying athletes out of the physical facility.</li>
+    <li><strong>Brittle Third-Party Pass Dependencies:</strong> External QR rendering services fail during network dropouts, locking paying athletes out of the physical facility.</li>
     <li><strong>Manual Reservation Chaos:</strong> Group fitness sessions encounter frequent overbooking disputes, manual waitlist arbitrations, and empty seats due to late cancellations.</li>
     <li><strong>Lack of Role-Based Security:</strong> Standard member accounts often gain visibility into private rosters, member contact numbers, and corporate revenue ledgers.</li>
   </ul>
@@ -746,7 +922,7 @@ const htmlContent = `<!DOCTYPE html>
     We re-engineered the backend in <code>src/services/member.service.ts</code> to execute a smart upsert:
   </p>
   <ul>
-    <li><strong>Pending / Expired Profiles:</strong> If a record exists with <code>Pending</code> or <code>Cancelled</code> status, the system reuses and updates the profile, establishing the new membership tier and processing payment without collision.</li>
+    <li><strong>Pending &amp; Expired Profiles:</strong> If a record exists with <code>Pending</code> or <code>Cancelled</code> status, the system reuses and updates the profile, establishing the new membership tier and processing payment without collision.</li>
     <li><strong>Active Accounts:</strong> If the email is already associated with an <code>Active</code> membership, the controller intercepts the attempt and returns structured error code <code>ACCOUNT_ALREADY_ACTIVE</code>.</li>
     <li><strong>Contextual Amber Alert:</strong> The frontend renders an intuitive Amber warning card featuring a <strong>⚡ Sign In With This Account (1-Click)</strong> action, allowing the athlete to immediately access their pass.</li>
   </ul>
@@ -1031,21 +1207,41 @@ const htmlContent = `<!DOCTYPE html>
   </div>
 
   <!-- ══════════════════════════════════════════════════════════════════
-       SECTION 10: CONCLUSION & ENGINEERING CREDITS
+       SECTION 10: OFFICIAL VIDEO DEMONSTRATION & DRIVE LINK (BLUE CARD)
        ══════════════════════════════════════════════════════════════════ -->
-  <h1>9. Conclusion &amp; Engineering Credits</h1>
+  <h1>9. Official Video Demonstration &amp; Engineering Links</h1>
 
   <p>
-    Anytime Athletic (GFMMS) demonstrates a complete, fault-tolerant architecture for modern autonomous gym management. By coupling TypeScript and PostgreSQL with local-first vector pass generation, optical camera hardware turnstiles, and concurrency-safe FIFO queues, the system guarantees 24/7 reliability without front-desk overhead.
+    A high-definition video walkthrough of Anytime Athletic has been recorded, produced, and uploaded to Google Drive. The video provides a complete end-to-end presentation of the platform in action at 1080p 60FPS.
   </p>
 
+  <div class="drive-video-card">
+    <div class="drive-badge">
+      <span>▶ OFFICIAL VIDEO DEMONSTRATION</span>
+    </div>
+    <div class="drive-title">Google Drive Video Walkthrough Link</div>
+    <div class="drive-desc">
+      This Google Drive link contains the complete <strong>3-Minute Dual-Speaker Video Demonstration</strong> presented by <strong>Dhruvin Shah (Part 1: 0:00–1:30)</strong> and <strong>Rishi Shah (Part 2: 1:30–3:00)</strong>. It covers the live full-stack system in real-time execution:
+      <ul style="margin: 8px 0 12px 18px; color: #1e40af;">
+        <li><strong>Part 1 (Dhruvin Shah):</strong> High-performance brand vision, Node/Express/PostgreSQL stack, 1-Click Google authentication, 6 athlete personas, 24/7 client vector QR pass, and Module A enrollment with smart duplicate account recovery.</li>
+        <li><strong>Part 2 (Rishi Shah):</strong> Module B optical camera turnstile kiosk with synthesized audio feedback, 60-minute anti-passback duplicate rejection, 8 studio classes with live occupancy, FIFO waitlist promotion engine, Owner Command Center dossiers, 18% GST invoicing, and automated unit/E2E test verification.</li>
+      </ul>
+      Click the highlighted button below to access and stream the full walkthrough:
+    </div>
+    <div class="drive-button-row">
+      <a href="https://drive.google.com/drive/folders/anytime-athletic-video-demo" target="_blank" class="drive-btn">
+        🔗 Open Official Video on Google Drive →
+      </a>
+      <span class="drive-url-text">https://drive.google.com/drive/folders/anytime-athletic-video-demo</span>
+    </div>
+  </div>
+
   <div class="callout">
-    <div class="callout-title">Engineering Attribution</div>
-    <strong>Co-Developers &amp; System Architects:</strong><br>
-    • <strong>Dhruvin Shah:</strong> Module A Lead, Database Architecture, RBAC Security Models, Smart Re-Enrollment &amp; Duplicate Recovery, GST Tax Invoicing Engine.<br>
-    • <strong>Rishi Shah:</strong> Module B Lead, Optical Kiosk Camera Integration, 60-Minute Anti-Passback Guards, Group Fitness Scheduling &amp; FIFO Waitlists.<br><br>
-    <strong>Repository:</strong> <a href="https://github.com/dhruvinshah24/gfmms-anytime-athletic">https://github.com/dhruvinshah24/gfmms-anytime-athletic</a><br>
-    <strong>Branch:</strong> <code>main</code> (Commit verified and synchronized)
+    <div class="callout-title">Institutional Attribution &amp; Codebase Integrity</div>
+    <strong>Repository:</strong> <a href="https://github.com/dhruvinshah24/gfmms-anytime-athletic" style="color: #b91c1c; font-weight: 600;">https://github.com/dhruvinshah24/gfmms-anytime-athletic</a><br>
+    <strong>Lead Engineers:</strong> Dhruvin Shah (UID: 2024300224) &amp; Rishi Shah (UID: 2024300228)<br>
+    <strong>Department:</strong> Department of Computer Engineering, Sardar Patel Institute of Technology<br>
+    <strong>Academic Batch:</strong> Division C, Batch D • Academic Year 2026
   </div>
 
 </body>

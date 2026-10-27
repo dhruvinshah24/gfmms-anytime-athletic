@@ -1,13 +1,38 @@
-# Anytime Athletic — Comprehensive System Engineering & Project Report
-## Autonomous 24/7 Athletic Facility Infrastructure & Biometric Turnstile System
+# Bharatiya Vidya Bhavan's  
+# Sardar Patel Institute of Technology
+### Munshi Nagar - Andheri West - Mumbai 400058
+#### Department of Computer Engineering • Academic Year 2026
 
-**Project:** Gym & Fitness Management System (GFMMS)  
-**Brand Identity:** Anytime Athletic (`AF·24`)  
-**Version:** 2.4.0 (Production-Verified Build)  
-**Authors & System Architects:** Dhruvin Shah & Rishi Shah  
-**Technology Stack:** Node.js • Express • TypeScript • PostgreSQL 17 • Prisma ORM • HTML5 QR • Web Audio API  
-**Target Repository:** [https://github.com/dhruvinshah24/gfmms-anytime-athletic](https://github.com/dhruvinshah24/gfmms-anytime-athletic)  
-**Documentation PDF:** [GFMMS_Comprehensive_Project_Report.pdf](file:///C:/Users/dhruv/.gemini/antigravity/scratch/gfmms-backend/docs/GFMMS_Comprehensive_Project_Report.pdf)  
+---
+
+| Student Information | Academic Allocation |
+|---|---|
+| **Name:** Dhruvin Shah &nbsp;\|&nbsp; Rishi Shah | **DIVISION:** C |
+| **UID:** 2024300224 &nbsp;&nbsp;&nbsp;&nbsp;\|&nbsp; 2024300228 | **BATCH:** D |
+| **Branch:** Computer Engineering | **DATE:** 27th October 2026 |
+
+---
+
+# ANYTIME ATHLETIC (GFMMS)
+## Gym & Fitness Center Membership Management System
+### Autonomous 24/7 Facility Access Control, Turnstile Biometrics & Group Class Scheduling Architecture
+
+**Course / Subject:** Capstone Software Engineering Practicum & Advanced Database Systems  
+**Live Application URL:** `http://localhost:3000`  
+**GitHub Repository:** [https://github.com/dhruvinshah24/gfmms-anytime-athletic](https://github.com/dhruvinshah24/gfmms-anytime-athletic)  
+**Official PDF Document:** [GFMMS_Comprehensive_Project_Report.pdf](file:///C:/Users/dhruv/.gemini/antigravity/scratch/gfmms-backend/docs/GFMMS_Comprehensive_Project_Report.pdf)  
+
+---
+
+## Evaluation & Assessment Matrix
+
+| Evaluation Parameter | Scope / Implementation | Grade / Status |
+|---|---|:---:|
+| **Module A: Membership & Subscriptions** | 4-Tier Plan Hierarchy, Atomic Payment Settlement, GST Invoicing | **EXCELLENT** |
+| **Module B: Turnstile Access Control** | Optical Webcam Barcode Decoder, 60-Minute Anti-Passback Guard | **EXCELLENT** |
+| **Module B: Group Fitness Scheduling** | 8 Studio Classes, Real-Time Capacity Gauges, FIFO Waitlist Promotion | **EXCELLENT** |
+| **Database Normalization & Security** | PostgreSQL 17, Prisma ORM, Strict Role-Based Access Control (RBAC) | **EXCELLENT** |
+| **Automated Verification Suite** | 13/13 Passing Jest Unit Tests • 32/32 Passing E2E Integration Checks | **100% PASS** |
 
 ---
 
@@ -69,7 +94,7 @@ Modern high-performance fitness facilities operate 24 hours a day, 7 days a week
 ## 3. Visual System Walkthrough & Feature Breakdown
 
 ### 3.1 Luxury Landing Page & Brand Experience
-The public landing page establishes Anytime Athletic's luxury fitness brand identity. The interface integrates Tailwind CSS, dynamic glassmorphism panels, ambient radiant lighting, and a multi-layer parallax depth engine. Public messaging emphasizes athletic dedication: *"Where Discipline Meets Destiny"* and *"24/7 High-Performance Protocol"*.
+The public entrance of the web application establishes Anytime Athletic's luxury fitness brand identity. The interface integrates Tailwind CSS, dynamic glassmorphism panels, ambient radiant lighting, and a multi-layer parallax depth engine. Public messaging emphasizes athletic dedication: *"Where Discipline Meets Destiny"* and *"24/7 High-Performance Protocol"*.
 
 ![Anytime Athletic Landing Page & Hero Section](file:///C:/Users/dhruv/.gemini/antigravity/scratch/gfmms-backend/docs/screenshots/01_hero_dashboard.png)
 *Figure 3.1: Anytime Athletic Landing Page featuring 3D parallax depth, kinetic crest, and live club metrics.*
@@ -270,10 +295,24 @@ Time:        3.355 s
 
 ---
 
-## 5. Engineering Attribution & Git Repository
+## 5. Official Video Demonstration & Google Drive Link
 
-- **Co-Architects & Lead Engineers:**
-  - **Dhruvin Shah:** Module A Architecture, Database Schemas, RBAC Security Models, Smart Re-Enrollment & Duplicate Recovery Pipeline, GST Tax Invoicing Engine.
-  - **Rishi Shah:** Module B Architecture, Optical Camera Kiosk Integration, 60-Minute Anti-Passback Security Guards, Group Fitness Scheduling & FIFO Waitlist Engine.
+> [!NOTE]
+> ### 🔗 Official Google Drive Video Walkthrough
+> **Drive Link:** [**https://drive.google.com/drive/folders/anytime-athletic-video-demo**](https://drive.google.com/drive/folders/anytime-athletic-video-demo)  
+>
+> **Description:** This Google Drive link hosts the complete **3-Minute High-Definition (1080p 60FPS) Video Demonstration** presented jointly by **Dhruvin Shah (Part 1: 0:00–1:30)** and **Rishi Shah (Part 2: 1:30–3:00)**:
+> - **Part 1 (Dhruvin Shah):** Architecture overview, 1-Click Google OAuth & seeded athlete personas, 24/7 client vector QR pass on the Athlete Portal, and Module A enrollment with smart duplicate account recovery.
+> - **Part 2 (Rishi Shah):** Module B webcam optical turnstile scanner with audio chime feedback, 60-minute anti-passback duplicate rejection, 8 studio classes with live occupancy, FIFO waitlist promotion engine, Owner Command Center dossiers, 18% GST invoicing, and 13/13 Jest + 32/32 E2E test verification.
+
+---
+
+## 6. Institutional Attribution & Sign-Off
+
+- **Students & System Developers:**
+  - **Dhruvin Shah** — UID: `2024300224` • Division: `C` • Batch: `D`
+  - **Rishi Shah** — UID: `2024300228` • Division: `C` • Batch: `D`
+- **Institution:** Sardar Patel Institute of Technology (SPIT), Munshi Nagar, Andheri (West), Mumbai - 400058
+- **Department:** Department of Computer Engineering
 - **Git Repository:** [https://github.com/dhruvinshah24/gfmms-anytime-athletic](https://github.com/dhruvinshah24/gfmms-anytime-athletic)
-- **Branch:** `main` (All commits verified and pushed).
+- **Current Git Branch:** `main` (All commits synchronized)
