@@ -589,8 +589,8 @@
   <!-- ══════════════════════════════════════════════════════════════════
        TOP NAVIGATION BAR
        ══════════════════════════════════════════════════════════════════ -->
-  <nav id="topNavbar" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-transparent py-4 border-b border-transparent">
-    <div class="max-w-7xl mx-auto px-6 sm:px-8 flex items-center justify-between">
+  <nav id="topNavbar" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-dark-950/95 backdrop-blur-md py-3.5 border-b border-white/10 shadow-2xl">
+    <div class="w-full px-4 sm:px-8 lg:px-10 flex items-center justify-between">
       
       <!-- Brand Logo -->
       <a href="#" onclick="switchPage('home'); return false;" class="flex items-center gap-3.5 group">
@@ -621,7 +621,7 @@
       </a>
 
       <!-- Desktop Nav Items -->
-      <div class="hidden lg:flex items-center gap-8">
+      <div id="desktopNavLinks" class="hidden lg:flex items-center gap-7">
         <button onclick="switchPage('home')" id="nav-home" class="nav-btn text-sm font-rajdhani font-bold tracking-widest uppercase text-silver-200 hover:text-white transition-colors relative py-1 text-electric-red">
           Dashboard
           <span class="nav-indicator absolute -bottom-1 left-0 right-0 h-0.5 bg-electric-red"></span>
@@ -664,7 +664,7 @@
 
     <!-- Mobile Navigation Drawer -->
     <div id="mobileMenu" class="hidden lg:hidden bg-dark-950/98 border-b border-electric-red/30 px-6 py-6 transition-all duration-300">
-      <div class="flex flex-col gap-4 font-rajdhani font-bold text-base tracking-widest uppercase">
+      <div id="mobileNavLinks" class="flex flex-col gap-4 font-rajdhani font-bold text-base tracking-widest uppercase">
         <button onclick="switchPage('home'); toggleMobileMenu();" class="text-left text-silver-200 hover:text-electric-red py-2 border-b border-white/5">
           <i class="fa-solid fa-gauge mr-3 text-electric-red"></i>Dashboard
         </button>
@@ -1759,6 +1759,9 @@
         if (activeIndicator) activeIndicator.classList.remove('hidden');
       }
 
+      if (typeof renderNavLinks === 'function') {
+        renderNavLinks();
+      }
       // Smooth scroll to top
       window.scrollTo({ top: 0, behavior: 'smooth' });
 
@@ -2912,8 +2915,65 @@
       showToast('Logged out of Anytime Fitness session.', 'info');
     }
 
+    function renderNavLinks() {
+      const desktop = document.getElementById('desktopNavLinks');
+      const mobile = document.getElementById('mobileNavLinks');
+      if (!desktop || !mobile) return;
+      const user = getStoredUser();
+      const role = user?.role || 'guest';
+
+      let links = [];
+      if (role === 'owner') {
+        links = [
+          { id: 'home', label: 'Overview', icon: 'fa-gauge' },
+          { id: 'members', label: 'Athlete Roster', icon: 'fa-users' },
+          { id: 'classes', label: 'Studio Classes', icon: 'fa-dumbbell' },
+          { id: 'payments', label: 'Financial Ledger', icon: 'fa-receipt' },
+          { id: 'kiosk', label: 'Turnstile Kiosk', icon: 'fa-qrcode' },
+        ];
+      } else if (role === 'member') {
+        const memberId = user.member?.membershipID || '';
+        links = [
+          { id: 'member-portal', label: 'My Dashboard', icon: 'fa-user-ninja' },
+          { id: 'my-pass', label: 'My 24/7 QR Pass', icon: 'fa-qrcode', action: `viewMemberPassModal('${memberId}')` },
+          { id: 'classes', label: 'Book Classes', icon: 'fa-dumbbell' },
+          { id: 'kiosk', label: 'Access Kiosk', icon: 'fa-camera' },
+        ];
+      } else {
+        links = [
+          { id: 'home', label: 'Dashboard', icon: 'fa-gauge' },
+          { id: 'register', label: 'Join Now', icon: 'fa-id-card' },
+          { id: 'classes', label: 'Studio Classes', icon: 'fa-dumbbell' },
+          { id: 'kiosk', label: 'Turnstile Kiosk', icon: 'fa-qrcode' },
+        ];
+      }
+
+      desktop.innerHTML = links.map(l => {
+        const isAction = !!l.action;
+        const onClick = isAction ? l.action : `switchPage('${l.id}')`;
+        const isActive = !isAction && appState.activePage === l.id;
+        return `
+          <button onclick="${onClick}" id="nav-${l.id}" class="nav-btn text-sm font-rajdhani font-bold tracking-widest uppercase transition-colors relative py-1 ${isActive ? 'text-electric-red' : 'text-silver-300 hover:text-white'}">
+            ${l.label}
+            <span class="nav-indicator absolute -bottom-1 left-0 right-0 h-0.5 bg-electric-red ${isActive ? '' : 'hidden'}"></span>
+          </button>
+        `;
+      }).join('');
+
+      mobile.innerHTML = links.map(l => {
+        const isAction = !!l.action;
+        const onClick = isAction ? `${l.action}; toggleMobileMenu();` : `switchPage('${l.id}'); toggleMobileMenu();`;
+        return `
+          <button onclick="${onClick}" class="text-left text-silver-200 hover:text-electric-red py-2 border-b border-white/5 flex items-center gap-3">
+            <i class="fa-solid ${l.icon} text-electric-red"></i>${l.label}
+          </button>
+        `;
+      }).join('');
+    }
+
     function renderAuthNav() {
       const container = document.getElementById('authNavContainer');
+      renderNavLinks();
       if (!container) return;
       const user = getStoredUser();
 
