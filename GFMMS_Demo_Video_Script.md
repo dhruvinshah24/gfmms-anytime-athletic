@@ -1,136 +1,122 @@
-# GFMMS / ANYTIME ATHLETIC — 3-MINUTE DUAL-SPEAKER DEMO SCRIPT
-## Complete System Presentation & Technical Walkthrough
+# GFMMS / ANYTIME ATHLETIC — 3-MINUTE VIDEO SCRIPT
+## Two-Part Continuous Presentation (1.5 Minutes Each)
 
-**Total Video Runtime:** Exactly 3 Minutes (0:00 – 3:00)  
-**Speakers:** **Dhruvin Shah** & **Rishi Shah**  
-**Resolution:** 1080p Full HD (1920x1080) / 60 FPS  
-**Application URL:** `http://localhost:3000`  
+**Total Duration:** Exactly 3 Minutes (0:00 – 3:00)  
+**Structure:** Two contiguous 1.5-minute blocks (Single clean hand-off at 1:30)  
+- **Part 1 (`0:00 – 1:30`):** **Dhruvin Shah** — Vision, Stack, 1-Click Auth, Athlete Portal & Module A Enrollment  
+- **Part 2 (`1:30 – 3:00`):** **Rishi Shah** — Kiosk Turnstile, Anti-Passback, Classes & FIFO, Owner Command Center & Tests  
+
+**Screen Resolution:** 1080p Full HD (1920x1080) at 60 FPS  
+**App URL:** `http://localhost:3000`  
 **GitHub Repository:** `https://github.com/dhruvinshah24/gfmms-anytime-athletic`  
 
 ---
 
-### Speaker Turn Quick-Reference
+### Timing & Responsibility Breakdown
 
-| Scene | Timestamp | Topic | Primary Screen View | Speaker 1 (Dhruvin) | Speaker 2 (Rishi) |
-|:---:|:---:|---|---|---|---|
-| **1** | `0:00 – 0:30` | Introduction, Vision & Stack | Home Page (`/`) | Brand ethos & full-stack tech | Dual modules & RBAC architecture |
-| **2** | `0:30 – 1:00` | 1-Click Auth & Athlete Portal | Auth Modal -> Member Portal | 1-Click Google OAuth & personas | 24/7 Vector QR Pass & logs |
-| **3** | `1:00 – 1:35` | Module A: Plans & Enrollment | Join Now (`/register`) | 4 Plan tiers & onboarding form | Atomic payment & duplicate guard |
-| **4** | `1:35 – 2:10` | Module B: Kiosk & Anti-Passback | Kiosk Scanner (`/kiosk`) | Optical webcam scan & audio chime | 60-min anti-passback rejection |
-| **5** | `2:10 – 2:35` | Module B: Classes & FIFO Waitlist | Classes (`/classes`) | 8 studio classes & live gauges | FIFO waitlist auto-promotion |
-| **6** | `2:35 – 3:00` | Owner Center, Tests & Wrap-Up | Owner View -> Terminal | Roster dossiers & 18% GST invoice | 13 Jest / 32 E2E tests & closing |
-
----
-
-### Full Scene-by-Scene Script with Spoken Dialogue
+```
+[0:00 ───────────────────── 1:30] ───► [1:30 ───────────────────── 3:00]
+         PART 1: DHRUVIN SHAH                      PART 2: RISHI SHAH
+ • Brand Vision & Parallax Hero           • Optical Webcam Kiosk Scanner
+ • Node/Express/TS/PostgreSQL Stack       • Audio Chime & 60-Min Anti-Passback
+ • 1-Click Google Auth & Personas         • 8 Fitness Classes & FIFO Waitlists
+ • Athlete Portal & 24/7 Vector QR Pass   • Owner Command Center & Dossiers
+ • Module A: 4 Plan Tiers & Enrollment    • 18% GST Invoicing & 32 E2E Tests
+```
 
 ---
 
-#### Scene 1: Introduction, Brand Vision & Stack
-- **Timing:** `0:00 – 0:30` (30 Seconds)
-- **Screen View:** `http://localhost:3000` (Home Page)
+## PART 1: DHRUVIN SHAH (0:00 – 1:30 | 1.5 Minutes)
+### Vision, Architecture, Athlete Portal & Subscription Onboarding
+
+#### Segment 1A: Introduction, Brand Vision & Tech Stack (`0:00 – 0:30`)
+- **Screen View:** `http://localhost:3000` (Landing Page)
 - **Visual Action:**
-  - Start on hero header.
-  - Hover over the glowing kinetic crest (`AF·24`).
-  - Smoothly scroll down through the 3D parallax hero with high-performance typography: *"Where Discipline Meets Destiny"*.
+  - Start at the top of the page.
+  - Hover over the kinetic crest (`AF·24`) with fiery orange-red glow.
+  - Slowly scroll down through the 3D parallax hero, showcasing the athletic typography: *"Where Discipline Meets Destiny"*.
+  - Point to the clean top navigation with left-aligned branding.
+- **Spoken Voiceover — Dhruvin Shah:**
+  > *"Hello everyone! Welcome to Anytime Athletic, an enterprise Gym and Fitness Management System engineered by myself, Dhruvin Shah, and Rishi Shah. Built on Node.js, Express, TypeScript, PostgreSQL, and Prisma ORM, this platform delivers an industrial-grade solution for modern 24/7 athletic facilities.
+  >
+  > Our architecture is anchored by strict Role-Based Access Control: public visitors explore plans, members access a dedicated self-service portal, and administrators manage financial and member operations securely."*
 
-- **[Dhruvin Shah] (0:00 – 0:15):**
-  > *"Hello everyone! Welcome to Anytime Athletic, an enterprise-grade Gym and Fitness Center Management System. Built with Node.js, Express, TypeScript, PostgreSQL, and Prisma ORM, this platform is engineered for modern 24/7 facilities requiring industrial precision and luxury athlete experiences."*
-
-- **[Rishi Shah] (0:15 – 0:30):**
-  > *"Our architecture implements two core modules: Module A for member registration and subscription lifecycles, and Module B for biometric turnstile security and studio scheduling. A strict Role-Based Access Control model completely isolates private member portals from administrative owner controls."*
-
----
-
-#### Scene 2: 1-Click Authentication & The Athlete Member Portal
-- **Timing:** `0:30 – 1:00` (30 Seconds)
-- **Screen View:** Top Navbar -> Click **"SIGN IN WITH GOOGLE"** -> Dedicated Member Portal (`#view-member-portal`)
+#### Segment 1B: 1-Click Authentication & The Athlete Member Portal (`0:30 – 0:55`)
+- **Screen View:** Header -> Click **"SIGN IN WITH GOOGLE"** -> Dedicated Member Portal (`#view-member-portal`)
 - **Visual Action:**
-  - Click **"SIGN IN WITH GOOGLE"** to reveal the 6 athlete personas (Alice, Bob, Charlie, Diana, Evan, Fiona) and Owner profile.
+  - Click **"SIGN IN WITH GOOGLE"** to show the 6 seeded athlete personas (Alice, Bob, Charlie, Diana, Evan, Fiona).
   - Click **Alice Johnson** (`alice.johnson@example.com`).
-  - Interface immediately loads the dedicated **Athlete Member Portal**.
-  - Highlight Alice's **24/7 Digital QR Pass**, her active Annual VIP tier, personal turnstile check-in timeline, and booked classes.
+  - Show the interface instantly loading the **Athlete Member Portal**.
+  - Highlight Alice's **24/7 Digital QR Pass** (crisp vector matrix), active Annual VIP tier, personal turnstile check-in timeline, and booked classes.
+- **Spoken Voiceover — Dhruvin Shah:**
+  > *"To ensure frictionless onboarding, we integrated 1-Click Google Authentication with personas representing every membership state. Let’s sign in as Alice Johnson, our VIP annual athlete.
+  >
+  > In her private Athlete Portal, Alice's 24/7 Digital Pass is generated dynamically using client-side vector graphics, ensuring it scans reliably on any screen with zero offline degradation. Below her pass, she tracks her attendance timestamps and upcoming studio class reservations in complete privacy."*
 
-- **[Dhruvin Shah] (0:30 – 0:45):**
-  > *"To ensure frictionless onboarding, we integrated 1-Click Google Authentication with seeded personas representing every membership state. Let's sign in as Alice Johnson, our VIP annual member. Notice how the navbar immediately pins Alice's active pass directly to the header."*
-
-- **[Rishi Shah] (0:45 – 1:00):**
-  > *"In her private Athlete Portal, Alice's 24/7 Digital Pass is generated dynamically using client-side vector graphics, ensuring instant scanning on any screen with zero offline degradation. Below her pass, she tracks her attendance timestamps and upcoming studio class reservations."*
-
----
-
-#### Scene 3: Module A — Membership Plans, Smart Enrollment & Automated Invoicing
-- **Timing:** `1:00 – 1:35` (35 Seconds)
+#### Segment 1C: Module A — Membership Plans & Smart Enrollment (`0:55 – 1:30`)
 - **Screen View:** Navigation -> Click **"JOIN NOW"** (`#view-register`)
 - **Visual Action:**
-  - Showcase the 4 membership plan tiers: 1-Month Flex, 3-Month Transformation, 6-Month Elite, and 12-Month All-Access.
-  - Fill in enrollment fields or test re-enrollment to show the interactive **Amber "Account Already Registered"** alert with 1-click sign-in button.
-  - Submit enrollment with payment method `CreditCard` to show instant activation and token dispatch.
-
-- **[Dhruvin Shah] (1:00 – 1:17):**
-  > *"In Module A, athletes choose from four transparent membership tiers. When enrolling, our system features smart account recovery: existing active accounts are automatically identified and directed to sign in, protecting the member database from duplicate conflicts."*
-
-- **[Rishi Shah] (1:17 – 1:35):**
-  > *"Enrollment is atomic: only upon verified payment does the membership transition to Active status. The system instantly provisions a unique QR token and dispatches an automated transactional welcome packet with an official GST invoice directly to the member's email."*
+  - Scroll across the 4 membership tiers: 1-Month Flex, 3-Month Transformation, 6-Month Elite, and 12-Month All-Access.
+  - Show the registration form with built-in smart account recovery: demonstrate how existing accounts receive an interactive Amber alert with 1-click login.
+  - Select a plan, submit payment, and show instant activation with automated transactional welcome email and invoice dispatch.
+- **Spoken Voiceover — Dhruvin Shah:**
+  > *"Module A manages member registration across four transparent plan tiers. Our enrollment pipeline is completely atomic: applicant details and payment authorization settle together, instantly activating the membership, issuing a unique QR token, and dispatching a welcome packet with an official GST invoice via Gmail SMTP.
+  >
+  > If an existing athlete attempts re-registration, intelligent guards prevent database collisions and offer instant sign-in.
+  >
+  > Now, I'll hand over to Rishi to demonstrate our biometric access kiosk, group class scheduling, and owner analytics."*
 
 ---
 
-#### Scene 4: Module B — Hardware Kiosk Simulator & 60-Minute Anti-Passback
-- **Timing:** `1:35 – 2:10` (35 Seconds)
+## PART 2: RISHI SHAH (1:30 – 3:00 | 1.5 Minutes)
+### Biometric Turnstile Kiosk, Class Scheduling, Owner Center & Audit
+
+#### Segment 2A: Module B — Hardware Kiosk Simulator & Anti-Passback Defense (`1:30 – 2:05`)
 - **Screen View:** Top Navigation Bar -> Click **"KIOSK SCANNER"** (`#view-kiosk`)
 - **Visual Action:**
-  - Click **"START LIVE CAMERA SCANNER"** to show the live optical webcam feed with red laser sweep.
-  - Click **Alice Johnson's Quick-Scan button** (`AF-QR-ALICE001`): Web Audio chime sounds, green **"ACCESS GRANTED"** banner displays, turnstile unlatches.
-  - **Immediately click the scan button again:** Red **"ACCESS DENIED — 60-Minute Anti-Passback Guard Active"** rejection banner displays.
+  - Click **"START LIVE CAMERA SCANNER"** to show the webcam feed with the optical red laser sweep.
+  - Click **Alice Johnson's Quick-Scan button** (`AF-QR-ALICE001`): Web Audio chime plays, green **"ACCESS GRANTED"** banner illuminates, turnstile unlocks.
+  - **Immediately click the scan button again:** Red **"ACCESS DENIED — 60-Minute Anti-Passback Guard Active"** banner triggers.
   - Click **Charlie Davis**: Expired account rejected.
+- **Spoken Voiceover — Rishi Shah:**
+  > *"Thanks Dhruvin! Module B oversees physical access control through our interactive turnstile kiosk simulator, featuring real-time optical webcam scanning.
+  >
+  > When Alice scans her QR code at the turnstile, the backend validates her credentials in PostgreSQL, triggers an authentic audio chime, and logs her entrance.
+  >
+  > To eliminate tailgating and pass-sharing, we built an industrial 60-minute anti-passback rule. If Alice re-scans her pass within an hour, the system rejects it immediately with an HTTP 403 Forbidden. Expired accounts outside our grace period are locked out just as strictly, protecting the club 24/7."*
 
-- **[Dhruvin Shah] (1:35 – 1:52):**
-  > *"Module B manages physical security through our hardware kiosk simulator, featuring live optical camera scanning. When Alice scans her QR code at the turnstile, the backend validates her credentials in PostgreSQL, triggers an audio chime, and unlocks the entrance."*
-
-- **[Rishi Shah] (1:52 – 2:10):**
-  > *"To eliminate tailgating and pass-sharing, we enforce a strict 60-minute anti-passback rule. Scanning the same pass again immediately triggers an HTTP 403 duplicate block. Expired accounts outside our grace period are likewise locked out, ensuring 24/7 security."*
-
----
-
-#### Scene 5: Module B — Studio Fitness Classes & FIFO Waitlist Engine
-- **Timing:** `2:10 – 2:35` (25 Seconds)
+#### Segment 2B: Module B — Studio Fitness Classes & FIFO Waitlist Engine (`2:05 – 2:30`)
 - **Screen View:** Navigation -> Click **"CLASSES"** (`#view-classes`)
 - **Visual Action:**
-  - Display the schedule of **8 Studio Fitness Classes** across Cardio, HIIT, Strength, and Mind & Body disciplines.
-  - Highlight real-time capacity progress meters.
+  - Showcase the schedule of **8 Studio Fitness Classes** across Cardio, HIIT, Strength, and Mind & Body disciplines.
+  - Point to real-time occupancy meters with dynamic badges.
   - Book an open seat on *Pilates Core* (instant confirmation).
-  - Open a full class (*High Intensity Spinning*) and inspect the ordered **FIFO Waitlist Queue**.
+  - Open a full session (*High Intensity Spinning*) and inspect the ordered **FIFO Waitlist Queue**.
+- **Spoken Voiceover — Rishi Shah:**
+  > *"Module B also orchestrates group fitness scheduling with eight distinct classes across HIIT, Strength, Cardio, and Yoga. Every session displays live seat occupancy meters and certified trainer bios.
+  >
+  > Open seats confirm instantly. When a session reaches maximum capacity, members join a strict First-In, First-Out waitlist queue. If a confirmed athlete cancels more than two hours prior, our automated engine immediately promotes the earliest waitlisted member to confirmed status."*
 
-- **[Dhruvin Shah] (2:10 – 2:22):**
-  > *"Module B also orchestrates group fitness scheduling with eight distinct classes across HIIT, Strength, Cardio, and Yoga. Every session displays live seat occupancy meters and verified trainer credentials."*
-
-- **[Rishi Shah] (2:22 – 2:35):**
-  > *"Open seats confirm instantly. When a session is full, members join a strict First-In, First-Out waitlist. If a confirmed athlete cancels more than two hours prior, the first waitlisted member is automatically promoted to confirmed status."*
-
----
-
-#### Scene 6: Owner Command Center, Automated Tests & Wrap-Up
-- **Timing:** `2:35 – 3:00` (25 Seconds)
-- **Screen View:** Switch to **Owner Dhruvin** (`/members` & `/payments`) -> Split Screen to Terminal
+#### Segment 2C: Owner Command Center, Automated Tests & Wrap-Up (`2:30 – 3:00`)
+- **Screen View:** Sign in as **Owner Dhruvin** (`/members` & `/payments`) -> Split Screen to Terminal
 - **Visual Action:**
-  - Authenticate as **Club Owner Dhruvin**: Top nav unlocks **Members** and **Payments**.
-  - Show Member Directory Cards & Table view; click **"DOSSIER"** on Alice to display full multi-tab history.
+  - Switch session to **Club Owner Dhruvin**: Top nav unlocks **Members** and **Payments**.
+  - Show Member Directory Cards & Table view; click **"DOSSIER"** on Alice to display her multi-tab history.
   - Open **Payments**, click **"INVOICE"** to show printable 18% GST tax invoice.
   - Switch to Terminal showing:
     - `npm test`: **13/13 passed**
     - `npm run audit`: **32/32 PASSED**
-  - Both speakers deliver closing lines.
-
-- **[Dhruvin Shah] (2:35 – 2:48):**
-  > *"In the Owner Command Center, gym operators have complete oversight. The Member Directory offers detailed athlete dossiers tracking check-in timelines and emergency contacts, alongside financial ledgers that generate compliant 18% GST tax invoices."*
-
-- **[Rishi Shah] (2:48 – 3:00):**
-  > *"Every feature is verified by thirteen Jest unit tests and thirty-two end-to-end audit checks running with a 100% pass rate. Anytime Athletic delivers an industrial-grade gym management solution. Thank you for watching!"*
+- **Spoken Voiceover — Rishi Shah:**
+  > *"Finally, the Owner Command Center provides executive oversight. Administrators can inspect comprehensive athlete dossiers tracking check-in timelines and emergency contacts, alongside financial audit ledgers that generate compliant 18% GST tax invoices.
+  >
+  > Underpinning the entire platform is our verification suite: thirteen Jest unit tests and thirty-two end-to-end integration checks running with a 100% pass rate.
+  >
+  > Anytime Athletic delivers a complete, enterprise-grade gym management solution. Thank you for watching!"*
 
 ---
 
-### Rehearsal & Recording Checklist
-1. **Speaking Speed:** Keep a brisk, confident pace (~140–145 words/minute).
-2. **Audio Hand-off:** Let Speaker 2 start immediately as Speaker 1 finishes each sentence; avoid dead air.
-3. **Screen Zoom:** 100% browser zoom at 1920x1080 Full HD.
-4. **Volume Check:** Ensure both microphones are balanced so transitions between Dhruvin and Rishi sound uniform.
+### Speaker Delivery Tips for Recording
+1. **Cadence:** Maintain an even, confident pace (~135–140 words per minute).
+2. **The Hand-off at 1:30:** Dhruvin finishes naturally with *"Now, I'll hand over to Rishi..."*, and Rishi begins immediately with *"Thanks Dhruvin!"*.
+3. **Screen Setup:** Full HD 1920x1080 at 100% browser zoom for optimal layout.
+4. **Volume:** Keep both microphones balanced for seamless sound across both speakers.
