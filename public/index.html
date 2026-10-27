@@ -1732,6 +1732,16 @@
 
     // ── PAGE NAVIGATION ───────────────────────────────────────────
     function switchPage(pageName) {
+      const user = getStoredUser();
+      const role = user?.role || 'guest';
+      if (role === 'member' && (pageName === 'members' || pageName === 'payments')) {
+        showToast('Access Restricted: Athlete accounts cannot view club administrative rosters.', 'error');
+        pageName = 'member-portal';
+      } else if (role === 'guest' && (pageName === 'members' || pageName === 'payments')) {
+        showToast('Restricted: Club Owner credentials required to access management ledger.', 'error');
+        openGoogleModal();
+        return;
+      }
       appState.activePage = pageName;
 
       // Toggle views
@@ -3107,18 +3117,69 @@
             <span class="text-xs font-rajdhani font-bold text-silver-400 group-hover:text-yellow-400 group-hover:translate-x-1 transition-transform">LOGIN →</span>
           </div>
 
-          <!-- Quick Account 4: Club Owner Dhruvin -->
-          <div onclick="loginWithGoogle('dynamitedhruvin@gmail.com', 'Dhruvin Owner')" class="p-4 bg-dark-900/90 hover:bg-dark-800 border border-electric-red/30 hover:border-electric-red rounded-xl cursor-pointer transition-all flex items-center justify-between group shadow-lg">
+          <!-- Quick Account 4: Diana Prince (6-Month Elite) -->
+          <div onclick="loginWithGoogle('diana.prince@example.com', 'Diana Prince')" class="p-3.5 bg-dark-900/90 hover:bg-dark-800 border border-white/10 hover:border-neon-green rounded-xl cursor-pointer transition-all flex items-center justify-between group shadow-lg">
+            <div class="flex items-center gap-3">
+              <div class="w-9 h-9 rounded-full bg-neon-green/10 text-neon-green font-bebas text-lg flex items-center justify-center border border-neon-green/30">
+                DP
+              </div>
+              <div>
+                <div class="text-xs font-bold text-white flex items-center gap-2">
+                  Diana Prince
+                  <span class="px-2 py-0.5 rounded text-[8px] font-rajdhani font-bold bg-neon-green/20 text-neon-green">6-MONTH ELITE</span>
+                </div>
+                <div class="text-[11px] text-silver-400 font-inter">diana.prince@example.com • Pass: Anytime@2026</div>
+              </div>
+            </div>
+            <span class="text-xs font-rajdhani font-bold text-silver-400 group-hover:text-neon-green group-hover:translate-x-1 transition-transform">LOGIN →</span>
+          </div>
+
+          <!-- Quick Account 5: Evan Wright (12-Month All-Access) -->
+          <div onclick="loginWithGoogle('evan.wright@example.com', 'Evan Wright')" class="p-3.5 bg-dark-900/90 hover:bg-dark-800 border border-white/10 hover:border-electric-red rounded-xl cursor-pointer transition-all flex items-center justify-between group shadow-lg">
+            <div class="flex items-center gap-3">
+              <div class="w-9 h-9 rounded-full bg-electric-red/10 text-electric-red font-bebas text-lg flex items-center justify-center border border-electric-red/30">
+                EW
+              </div>
+              <div>
+                <div class="text-xs font-bold text-white flex items-center gap-2">
+                  Evan Wright
+                  <span class="px-2 py-0.5 rounded text-[8px] font-rajdhani font-bold bg-electric-red/20 text-electric-red">ANNUAL ALL-ACCESS</span>
+                </div>
+                <div class="text-[11px] text-silver-400 font-inter">evan.wright@example.com • Pass: Anytime@2026</div>
+              </div>
+            </div>
+            <span class="text-xs font-rajdhani font-bold text-silver-400 group-hover:text-electric-red group-hover:translate-x-1 transition-transform">LOGIN →</span>
+          </div>
+
+          <!-- Quick Account 6: Fiona Gallagher (Pending Applicant) -->
+          <div onclick="loginWithGoogle('fiona.g@example.com', 'Fiona Gallagher')" class="p-3.5 bg-dark-900/90 hover:bg-dark-800 border border-white/10 hover:border-silver-500 rounded-xl cursor-pointer transition-all flex items-center justify-between group shadow-lg">
+            <div class="flex items-center gap-3">
+              <div class="w-9 h-9 rounded-full bg-white/10 text-silver-300 font-bebas text-lg flex items-center justify-center">
+                FG
+              </div>
+              <div>
+                <div class="text-xs font-bold text-white flex items-center gap-2">
+                  Fiona Gallagher
+                  <span class="px-2 py-0.5 rounded text-[8px] font-rajdhani font-bold bg-white/10 text-silver-400">PENDING APPLICANT</span>
+                </div>
+                <div class="text-[11px] text-silver-400 font-inter">fiona.g@example.com • Pass: Anytime@2026</div>
+              </div>
+            </div>
+            <span class="text-xs font-rajdhani font-bold text-silver-400 group-hover:translate-x-1 transition-transform">LOGIN →</span>
+          </div>
+
+          <!-- Quick Account 7: Club Owner Dhruvin -->
+          <div onclick="loginWithGoogle('dynamitedhruvin@gmail.com', 'Dhruvin Owner')" class="p-4 bg-dark-900/90 hover:bg-dark-800 border border-electric-red/40 hover:border-electric-red rounded-xl cursor-pointer transition-all flex items-center justify-between group shadow-glow-red">
             <div class="flex items-center gap-3.5">
               <div class="w-10 h-10 rounded-full bg-gradient-to-br from-electric-red to-fire-orange text-white font-bebas text-xl flex items-center justify-center shadow-glow-red">
                 DO
               </div>
               <div>
                 <div class="text-sm font-bold text-white flex items-center gap-2">
-                  Dhruvin (Club Owner)
-                  <span class="px-2 py-0.5 rounded text-[9px] font-rajdhani font-bold bg-electric-red/20 text-electric-red border border-electric-red/30">ADMINISTRATOR</span>
+                  Dhruvin (Club Owner &amp; Admin)
+                  <span class="px-2 py-0.5 rounded text-[9px] font-rajdhani font-bold bg-electric-red/20 text-electric-red border border-electric-red/30">MASTER ACCESS</span>
                 </div>
-                <div class="text-xs text-silver-400 font-inter">dynamitedhruvin@gmail.com</div>
+                <div class="text-xs text-silver-400 font-inter">dynamitedhruvin@gmail.com • Pass: IronPeak@2026</div>
               </div>
             </div>
             <span class="text-xs font-rajdhani font-bold text-electric-red group-hover:translate-x-1 transition-transform">ADMIN LOGIN →</span>
@@ -3164,11 +3225,14 @@
           closeModal();
           showToast(`Signed in successfully as ${json.data.user?.name || json.data.member?.fullName}!`, 'success');
 
-          // If member has active pass, auto-open their pass
+          // Role-based post-login destination
           if (json.data.member) {
+            switchPage('member-portal');
             setTimeout(() => {
               viewMemberPassModal(json.data.member.membershipID);
-            }, 300);
+            }, 350);
+          } else {
+            switchPage('home');
           }
         } else {
           showToast(json.message || 'Google authentication failed.', 'error');
