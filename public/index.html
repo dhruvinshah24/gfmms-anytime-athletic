@@ -1268,6 +1268,44 @@
                   TEST →
                 </button>
               </div>
+
+              <!-- Preset 4: Diana Prince Active 6-Month Pass -->
+              <div onclick="executePresetScan('AF-QR-DIANA004', 'Diana Prince')" class="p-3.5 bg-dark-900/90 hover:bg-dark-800 border border-white/10 hover:border-neon-green rounded-xl cursor-pointer transition-all flex items-center justify-between group shadow-md">
+                <div class="flex items-center gap-3">
+                  <div class="w-9 h-9 rounded-full bg-neon-green/10 text-neon-green font-bebas text-lg flex items-center justify-center border border-neon-green/30">
+                    DP
+                  </div>
+                  <div>
+                    <div class="text-xs font-bold text-white flex items-center gap-2">
+                      Diana Prince
+                      <span class="px-1.5 py-0.5 rounded text-[9px] font-rajdhani font-bold bg-neon-green/20 text-neon-green">ACTIVE 6-MO</span>
+                    </div>
+                    <div class="font-mono text-[11px] text-silver-400">AF-QR-DIANA004</div>
+                  </div>
+                </div>
+                <button class="px-3 py-1 bg-white/10 text-silver-300 rounded text-xs font-rajdhani font-bold uppercase group-hover:bg-neon-green group-hover:text-dark-950 transition-colors">
+                  SCAN →
+                </button>
+              </div>
+
+              <!-- Preset 5: Evan Wright Active 1-Year Pass -->
+              <div onclick="executePresetScan('AF-QR-EVAN005', 'Evan Wright')" class="p-3.5 bg-dark-900/90 hover:bg-dark-800 border border-white/10 hover:border-electric-red rounded-xl cursor-pointer transition-all flex items-center justify-between group shadow-md">
+                <div class="flex items-center gap-3">
+                  <div class="w-9 h-9 rounded-full bg-electric-red/10 text-electric-red font-bebas text-lg flex items-center justify-center border border-electric-red/30">
+                    EW
+                  </div>
+                  <div>
+                    <div class="text-xs font-bold text-white flex items-center gap-2">
+                      Evan Wright
+                      <span class="px-1.5 py-0.5 rounded text-[9px] font-rajdhani font-bold bg-electric-red/20 text-electric-red">ACTIVE 1-YEAR</span>
+                    </div>
+                    <div class="font-mono text-[11px] text-silver-400">AF-QR-EVAN005</div>
+                  </div>
+                </div>
+                <button class="px-3 py-1 bg-white/10 text-silver-300 rounded text-xs font-rajdhani font-bold uppercase group-hover:bg-electric-red group-hover:text-white transition-colors">
+                  SCAN →
+                </button>
+              </div>
             </div>
           </div>
 
@@ -3539,11 +3577,15 @@
       closeModal();
       switchPage('kiosk');
       setTimeout(() => {
-        const input = document.getElementById('kioskInput');
+        const input = document.getElementById('kioskMemberIdInput') || document.getElementById('kioskInput');
         if (input) {
           input.value = qrId;
           input.focus();
-          showToast(`QR Token ${qrId} loaded into Kiosk. Ready for check-in!`, 'info');
+          showToast(`QR Token ${qrId} loaded into Kiosk sensor.`, 'info');
+          // Automatically trigger the verification scan
+          setTimeout(() => {
+            handleCheckIn({ preventDefault: () => {} });
+          }, 300);
         }
       }, 250);
     }
@@ -4185,10 +4227,10 @@
 
       try {
         playScannerBeep();
-        const res = await fetch('/attendance/check-in', {
+        const res = await fetch('/attendance/checkin', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ identifier: qrId, checkInMethod: 'QR' }),
+          body: JSON.stringify({ membershipID: qrId, method: 'QR' }),
         });
         const json = await res.json();
         if (res.ok && json.status === 'success') {

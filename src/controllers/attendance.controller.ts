@@ -4,7 +4,8 @@ import { attendanceService } from '../services/attendance.service';
 export class AttendanceController {
   async checkIn(req: Request, res: Response) {
     try {
-      const { membershipID, method } = req.body;
+      const membershipID = req.body.membershipID || req.body.identifier || req.body.qrCodeIdentifier;
+      const method = req.body.method || req.body.checkInMethod || 'QR';
       if (!membershipID) {
         return res.status(400).json({ status: 'error', message: 'membershipID is required' });
       }
