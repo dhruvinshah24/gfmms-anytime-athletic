@@ -133,6 +133,18 @@ export class FitnessClassService {
   async listClasses() {
     return prisma.fitnessClass.findMany({
       orderBy: { schedule: 'asc' },
+      include: {
+        bookings: {
+          where: {
+            status: { in: ['Booked', 'Waitlisted'] },
+          },
+          select: {
+            bookingID: true,
+            membershipID: true,
+            status: true,
+          },
+        },
+      },
     });
   }
 }
