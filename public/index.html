@@ -989,7 +989,7 @@
           <p class="text-silver-400 text-sm mt-3">Full floor access, luxury amenities, complimentary fitness assessment, and class booking privileges.</p>
         </div>
 
-        <div id="homePlansContainer" class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+        <div id="homePlansContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 w-full items-stretch">
           <!-- Loaded dynamically via loadPlans() -->
         </div>
 
@@ -2150,37 +2150,37 @@
             const entitlements = (p.featureEntitlements || []).slice(0, 5);
 
             return `
-              <div class="luxury-card relative glass-panel rounded-2xl p-8 border ${isFeatured ? 'border-electric-red shadow-glow-red' : 'border-white/10'} flex flex-col justify-between">
+              <div class="luxury-card relative glass-panel rounded-2xl p-6 lg:p-7 border ${isFeatured ? 'border-electric-red shadow-glow-red' : 'border-white/10'} flex flex-col justify-between h-full hover:border-electric-red/60 transition-all">
                 ${isFeatured ? `
-                  <div class="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-gradient-to-r from-electric-red to-fire-orange px-4 py-1 rounded-full text-[10px] font-rajdhani font-bold uppercase tracking-widest text-white shadow-glow-red">
+                  <div class="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-gradient-to-r from-electric-red to-fire-orange px-3.5 py-1 rounded-full text-[10px] font-rajdhani font-bold uppercase tracking-widest text-white shadow-glow-red whitespace-nowrap z-20">
                     MOST POPULAR
                   </div>
                 ` : ''}
 
-                <div>
-                  <div class="mb-4">
+                <div class="flex-1 flex flex-col">
+                  <div class="mb-3">
                     <span class="font-rajdhani font-bold text-xs uppercase tracking-widest text-electric-red">TIER ${idx + 1}</span>
-                    <h3 class="font-bebas text-3xl text-white tracking-wider mt-1">${p.name}</h3>
+                    <h3 class="font-bebas text-2xl xl:text-3xl text-white tracking-wider mt-1 min-h-[58px] flex items-center leading-tight">${p.name}</h3>
                     <p class="text-xs text-silver-400 font-inter mt-1">${p.durationDays} Days Unlimited Access</p>
                   </div>
 
-                  <div class="my-6 pb-6 border-b border-white/10 flex items-baseline gap-1">
-                    <span class="font-bebas text-2xl text-electric-red">₹</span>
-                    <span class="font-bebas text-5xl text-white tracking-wider">${Number(p.price).toLocaleString('en-IN')}</span>
+                  <div class="my-4 pb-4 border-b border-white/10 flex items-baseline gap-1">
+                    <span class="font-bebas text-xl text-electric-red">₹</span>
+                    <span class="font-bebas text-4xl xl:text-5xl text-white tracking-wider">${Number(p.price).toLocaleString('en-IN')}</span>
                     <span class="text-xs text-silver-400 font-inter ml-1.5">/ package</span>
                   </div>
 
-                  <ul class="space-y-3 mb-8">
+                  <ul class="space-y-2.5 mb-6 flex-1">
                     ${entitlements.map(feat => `
-                      <li class="flex items-center gap-3 text-xs font-inter text-silver-300">
-                        <i class="fa-solid fa-check text-electric-red"></i>
-                        <span>${feat}</span>
+                      <li class="flex items-start gap-2.5 text-xs font-inter text-silver-300">
+                        <i class="fa-solid fa-check text-electric-red text-xs mt-1 shrink-0"></i>
+                        <span class="leading-relaxed">${feat}</span>
                       </li>
                     `).join('')}
                   </ul>
                 </div>
 
-                <button onclick="document.getElementById('regPlanSelect').value='${p.planID}'; switchPage('register');" class="${isFeatured ? 'btn-fire-primary w-full py-3.5 rounded text-xs' : 'btn-ghost-luxury w-full py-3.5 rounded text-xs'} cursor-pointer">
+                <button onclick="document.getElementById('regPlanSelect').value='${p.planID}'; switchPage('register');" class="${isFeatured ? 'btn-fire-primary w-full py-3.5 rounded-xl text-xs font-bold tracking-wider uppercase' : 'btn-ghost-luxury w-full py-3.5 rounded-xl text-xs font-bold tracking-wider uppercase'} cursor-pointer mt-auto">
                   CLAIM MEMBERSHIP
                 </button>
               </div>
